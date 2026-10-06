@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS Device Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/css/jfresh.css">
+<style>
+  .picker { display: flex; flex-wrap: wrap; gap: 8px; }
+  .picker button { min-height: 46px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--white); color: var(--blue); font-weight: 700; cursor: pointer; }
+  .picker button[aria-pressed="true"] { background: var(--blue); color: var(--white); border-color: var(--blue); }
+  .stage { display: grid; grid-template-columns: 5.2fr 2.6fr 1.3fr; gap: 24px; align-items: end; }
+  .dev { display: grid; gap: 10px; justify-items: center; min-width: 0; }
+  .shell { position: relative; width: 100%; background: #12304F; border-radius: 22px; padding: 12px; box-shadow: var(--shadow-lift); }
+  .shell.pc { border-radius: 16px 16px 6px 6px; padding: 10px; }
+  .shell.ph { border-radius: 30px; padding: 10px; }
+  .screen { position: relative; width: 100%; overflow: hidden; border-radius: 10px; background: var(--white); }
+  .shell.ph .screen { border-radius: 22px; }
+  .screen iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; background: var(--white); }
+  .cap { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: var(--blue); color: var(--white); font-weight: 800; }
+  .cap .i { width: 18px; height: 18px; }
+  .sub2 { font-size: 13.5px; color: var(--muted); text-align: center; }
+  @media (max-width: 1239px) { .stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .dev.pcw { grid-column: 1 / -1; } }
+  @media (max-width: 699px) { .stage { grid-template-columns: minmax(0, 1fr); } .dev.pcw { grid-column: auto; } }
+</style>
+</head>
+<body data-root="" data-visual="0">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span data-en="Phase 1 · Device Preview">Fase 1 · Pratinjau Perangkat</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1 data-en="One visual, three form factors">Satu visual, tiga perangkat</h1>
+      <p class="sub" data-en="Each frame loads the same live page at a real device width, so you can compare the PC Report, Operational iPad and Mobile versions side by side.">Setiap bingkai memuat halaman yang sama pada lebar perangkat sebenarnya, sehingga versi PC Report, Operational iPad dan Mobile bisa dibandingkan berdampingan.</p>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="picker" id="picker" role="group" aria-label="Pilih visual"></div>
+  <div class="stage">
+    <div class="dev pcw"><div class="shell pc"><div class="screen" data-w="1440" data-h="900"></div></div><span class="cap"><i data-icon="monitor"></i>PC Report</span><span class="sub2">1440 × 900</span></div>
+    <div class="dev"><div class="shell"><div class="screen" data-w="834" data-h="1112"></div></div><span class="cap"><i data-icon="tablet"></i>Operational iPad</span><span class="sub2">834 × 1112</span></div>
+    <div class="dev"><div class="shell ph"><div class="screen" data-w="390" data-h="844"></div></div><span class="cap"><i data-icon="phone"></i>Mobile</span><span class="sub2">390 × 844</span></div>
+  </div>
+  <p class="note" data-en="Scroll inside each frame to see the whole page. Use the ID | EN switch above, then pick a visual again to reload the frames in that language.">Gulir di dalam setiap bingkai untuk melihat seluruh halaman. Pakai tombol ID | EN di atas, lalu pilih visual lagi untuk memuat ulang bingkai dalam bahasa itu.</p>
+</main>
+
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/jfresh.js"></script>
+<script>
+(function () {
+  var screens = document.querySelectorAll('.screen');
+  var picker = document.getElementById('picker');
+  var current = 1;
+  try { var h = (location.hash || '').replace('#v', ''); if (+h >= 1 && +h <= 7) current = +h; } catch (e) {}
+  function fit() {
+    screens.forEach(function (s) {
+      var w = +s.dataset.w, h = +s.dataset.h, k = s.clientWidth / w;
+      s.style.height = Math.round(h * k) + 'px';
+      var f = s.querySelector('iframe');
+      if (f) { f.style.width = w + 'px'; f.style.height = h + 'px'; f.style.transform = 'scale(' + k + ')'; }
+    });
+  }
+  function load(n) {
+    current = n;
+    var v = JF.VISUALS[n - 1];
+    screens.forEach(function (s) {
+      s.innerHTML = '<iframe title="' + v.t + ' ' + s.dataset.w + 'px" src="visuals/' + v.f + '" loading="lazy"></iframe>';
+    });
+    picker.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.n === n ? 'true' : 'false'); });
+    fit();
+  }
+  picker.innerHTML = JF.VISUALS.map(function (v) { return '<button type="button" data-n="' + v.n + '">0' + v.n + ' ' + v.t + '</button>'; }).join('');
+  picker.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) load(+b.dataset.n); });
+  window.addEventListener('resize', fit);
+  load(current);
+})();
+</script>
+</body>
+</html>

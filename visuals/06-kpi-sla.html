@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — Performance &amp; SLA Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<style>
+  .layers4 { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr); align-items: stretch; }
+  .lyr { border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--white); padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+  .lyr-h { display: flex; gap: 10px; align-items: center; }
+  .lyr-h .n { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--blue); color: var(--white); font-weight: 800; }
+  .lyr-h h3 { font-size: 16.5px; }
+  .lyr-h h3 small { display: block; font-size: 13px; font-weight: 500; color: var(--muted); }
+  .lyr.l4 { border-color: var(--orange-100); background: linear-gradient(180deg, var(--orange-50), var(--white) 50%); }
+  .lyr.l4 .n { background: var(--orange); color: #3A1D00; }
+  .lyr .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .lyr .tile { min-height: 0; padding: 8px; font-size: 13.5px; flex-direction: row; text-align: left; gap: 8px; }
+  .lyr .tile .ic { width: 34px; height: 34px; border-radius: 10px; }
+  .lyr .tile .ic .i { width: 19px; height: 19px; }
+  .lyr .tags .tag { font-size: 13.5px; }
+  .lyr .rows .row { min-height: 0; padding: 8px 10px; }
+  .lyr .rows .row .ic { width: 34px; height: 34px; }
+  .lyr .rows .row .tx b { font-size: 14.5px; }
+  .sep { display: grid; place-items: center; color: var(--fresh); }
+  .sep .i { width: 22px; height: 22px; }
+
+  .kpis.k8 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .level { border-radius: var(--r-lg); border: 1px solid var(--line); padding: 18px; display: grid; gap: 12px; align-content: start; background: var(--white); }
+  .level-h { display: flex; gap: 12px; align-items: center; }
+  .level-h .ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--blue); color: var(--white); }
+  .level-h.o .ic { background: var(--orange); color: #3A1D00; }
+  .level-h h3 { font-size: 18px; }
+  .level-h h3 small { display: block; font-size: 13.5px; font-weight: 500; color: var(--muted); }
+  .minis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .minis > div { text-align: center; padding: 10px 4px; border-radius: 12px; background: var(--bg); }
+  .minis b { display: block; font-size: 22px; color: var(--blue-ink); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .minis span { font-size: 12.5px; color: var(--muted); font-weight: 600; line-height: 1.2; display: block; margin-top: 4px; }
+  .minis .w b { color: var(--warn); } .minis .c b { color: var(--crit); } .minis .g b { color: var(--ok); }
+  .needs { font-size: 13.5px; color: var(--muted); }
+
+  .sla-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .timeline { display: grid; gap: 10px; }
+  .bar { position: relative; height: 18px; border-radius: 999px; background: linear-gradient(90deg, var(--ok-50) 0 75%, var(--warn-50) 75% 100%); border: 1px solid var(--line); }
+  .bar .fill { position: absolute; inset: 2px auto 2px 2px; width: 82%; border-radius: 999px; background: linear-gradient(90deg, var(--fresh), var(--blue) 70%, var(--orange)); }
+  .bar .mk { position: absolute; top: -6px; bottom: -6px; width: 2px; background: var(--ink); }
+  .ticks { display: grid; grid-template-columns: 75fr 25fr 12fr; font-size: 13px; font-weight: 700; }
+  .ticks span:nth-child(1) { color: var(--ok); } .ticks span:nth-child(2) { color: var(--warn); } .ticks span:nth-child(3) { color: var(--crit); text-align: right; }
+  .alert-card { display: grid; gap: 10px; padding: 16px; border-radius: var(--r-lg); border: 1.5px solid var(--warn-line); background: var(--warn-50); }
+  .alert-card.crit { border-color: var(--crit-line); background: var(--crit-50); }
+  .alert-card .top { display: flex; gap: 10px; align-items: flex-start; }
+  .alert-card .top .i { color: var(--warn); width: 26px; height: 26px; flex: none; }
+  .alert-card.crit .top .i { color: var(--crit); }
+  .alert-card b { font-size: 17px; color: var(--ink); }
+  .alert-card .meta { font-size: 14px; color: var(--muted); }
+
+  /* iPad & mobile operational dashboard */
+  .dash-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .kpis.k6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .alerts2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .alerts2 .alert-card .num-big { font-size: 34px; font-weight: 800; line-height: 1; color: var(--warn); }
+  .alerts2 .alert-card.crit .num-big { color: var(--crit); }
+  .orders { display: grid; gap: 10px; }
+  .order { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px 14px; align-items: center; padding: 12px 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--white); min-height: 64px; }
+  .order .id { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 700; color: var(--muted); }
+  .order b { display: block; color: var(--blue-ink); font-size: 16.5px; }
+  .order .t { font-weight: 800; font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
+
+  @media (max-width: 1239px) {
+    .sla-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .sla-grid .timeline { grid-column: 1 / -1; order: -1; }
+  }
+  @media (max-width: 699px) {
+    .kpis.k6 { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .alerts2 { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .order { grid-template-columns: minmax(0, 1fr) auto; }
+    .order .chip { grid-column: 1; justify-self: start; }
+    .order .t { grid-row: 1; grid-column: 2; }
+  }
+</style>
+</head>
+<body data-root="../" data-visual="6">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">06</span><span data-en="Phase 1 · Business Foundation">Fase 1 · Fondasi Bisnis</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Performance &amp; SLA Architecture</h1>
+      <p class="sub" data-en="How daily operational activity becomes KPI, alerts and management intelligence, before problems happen.">Bagaimana aktivitas operasional harian menjadi KPI, alert, dan informasi manajemen, sebelum masalah terjadi.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">From Operation to <b>Real Impact</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- ================= PC REPORT ================= -->
+  <section class="panel hide-t hide-m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="layers"></i></span>
+      <div class="ttl"><h2 data-en="Data Flow: From Operations to Insight">Alur Data: Dari Operasional ke Insight</h2>
+        <p class="desc" data-en="Four layers. Staff only do layer 1, the system does the rest.">Empat lapisan. Staf hanya mengerjakan lapisan 1, sisanya dikerjakan sistem.</p></div>
+    </div>
+    <div class="layers4">
+      <div class="lyr">
+        <div class="lyr-h"><span class="n">1</span><h3><span data-en="Operational Activities">Aktivitas Operasional</span><small data-en="Daily field work">Pekerjaan harian di lapangan</small></h3></div>
+        <div class="tiles">
+          <div class="tile"><span class="ic"><i data-icon="truck"></i></span>Pickup</div>
+          <div class="tile"><span class="ic"><i data-icon="basket"></i></span>Receiving</div>
+          <div class="tile"><span class="ic"><i data-icon="washer"></i></span>Production</div>
+          <div class="tile"><span class="ic"><i data-icon="shield"></i></span>QC</div>
+          <div class="tile"><span class="ic"><i data-icon="package"></i></span>Packing</div>
+          <div class="tile"><span class="ic"><i data-icon="pin"></i></span>Delivery</div>
+          <div class="tile"><span class="ic"><i data-icon="invoice"></i></span>Billing</div>
+          <div class="tile"><span class="ic"><i data-icon="card"></i></span>Payment</div>
+        </div>
+      </div>
+      <div class="sep"><i data-icon="arrow"></i></div>
+      <div class="lyr">
+        <div class="lyr-h"><span class="n">2</span><h3><span data-en="Automatic Data Capture">Data Tercatat Otomatis</span><small data-en="No extra typing">Tanpa ketik ulang</small></h3></div>
+        <div class="tags">
+          <span class="tag"><i data-icon="weight"></i>kg</span><span class="tag"><i data-icon="shirt"></i>pcs</span><span class="tag"><i data-icon="clock"></i>timestamp</span>
+          <span class="tag"><i data-icon="user"></i>user</span><span class="tag"><i data-icon="status"></i>status</span><span class="tag"><i data-icon="pin"></i><span data-en="location">lokasi</span></span>
+          <span class="tag"><i data-icon="building"></i><span data-en="client">klien</span></span><span class="tag o"><i data-icon="alert"></i><span data-en="issue">masalah</span></span><span class="tag"><i data-icon="card"></i><span data-en="payment status">status bayar</span></span>
+        </div>
+      </div>
+      <div class="sep"><i data-icon="arrow"></i></div>
+      <div class="lyr">
+        <div class="lyr-h"><span class="n">3</span><h3><span data-en="Calculated Metrics">Metrik Terhitung</span><small data-en="KPI computed by the system">KPI dihitung sistem</small></h3></div>
+        <div class="tags">
+          <span class="tag">Revenue</span><span class="tag">Volume</span><span class="tag">Turnaround Time</span><span class="tag">SLA On-Time %</span>
+          <span class="tag">Rewash Rate</span><span class="tag">Complaint Rate</span><span class="tag">Productivity</span><span class="tag">Outstanding AR</span><span class="tag">Client Performance</span>
+        </div>
+      </div>
+      <div class="sep"><i data-icon="arrow"></i></div>
+      <div class="lyr l4">
+        <div class="lyr-h"><span class="n">4</span><h3><span>Dashboard · Alert · Report</span><small data-en="Right info for each level">Info tepat untuk tiap level</small></h3></div>
+        <ul class="rows">
+          <li class="row"><span class="ic"><i data-icon="grid"></i></span><span class="tx"><b>Dashboard</b><span>Frontline · Supervisor · Owner</span></span></li>
+          <li class="row"><span class="ic o"><i data-icon="bell"></i></span><span class="tx"><b>Alert</b><span data-en="Warning &amp; critical">Peringatan &amp; kritis</span></span></li>
+          <li class="row"><span class="ic"><i data-icon="file"></i></span><span class="tx"><b data-en="Reports">Laporan</b><span data-en="Daily, weekly, monthly">Harian, mingguan, bulanan</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel hide-t hide-m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="gauge"></i></span>
+      <div class="ttl"><h2 data-en="Key Metric Examples">Contoh Metrik Utama</h2>
+        <p class="desc" data-en="Illustrative figures for one plant, today vs yesterday.">Angka ilustrasi untuk satu plant, hari ini dibanding kemarin.</p></div>
+    </div>
+    <div class="kpis k8">
+      <div class="kpi"><span class="ic"><i data-icon="weight"></i></span><span class="v" data-en="1,250&lt;small&gt;kg&lt;/small&gt;">1.250<small>kg</small></span><span class="k" data-en="Total processed">Total diproses</span><span class="d up" data-en="+12% vs yesterday">+12% vs kemarin</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="file"></i></span><span class="v">320</span><span class="k" data-en="Orders">Jumlah order</span><span class="d up" data-en="+8% vs yesterday">+8% vs kemarin</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="clock"></i></span><span class="v">96<small>%</small></span><span class="k">On-time delivery (SLA)</span><span class="d tg">Target ≥ 95%</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="hourglass"></i></span><span class="v" data-en="28&lt;small&gt;hrs&lt;/small&gt;">28<small>jam</small></span><span class="k">Turnaround time</span><span class="d tg" data-en="Average">Rata-rata</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="refresh"></i></span><span class="v" data-en="1.8&lt;small&gt;%&lt;/small&gt;">1,8<small>%</small></span><span class="k">Rewash rate</span><span class="d tg">Target &lt; 2%</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="message"></i></span><span class="v" data-en="0.6&lt;small&gt;%&lt;/small&gt;">0,6<small>%</small></span><span class="k">Complaint rate</span><span class="d tg">Target &lt; 1%</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="coins"></i></span><span class="v" data-en="Rp 15.2&lt;small&gt;M&lt;/small&gt;">Rp 15,2<small>jt</small></span><span class="k">Outstanding AR</span><span class="d tg" data-en="12 clients">12 klien</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="users"></i></span><span class="v">85<small>%</small></span><span class="k" data-en="Productivity">Produktivitas</span><span class="d tg">Target &gt; 80%</span></div>
+    </div>
+  </section>
+
+  <section class="panel hide-t hide-m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="users"></i></span>
+      <div class="ttl"><h2 data-en="Dashboards by User Level">Dashboard per Level Pengguna</h2>
+        <p class="desc" data-en="Same data, different depth. Each level sees what helps it act.">Data sama, kedalaman berbeda. Setiap level melihat yang membantu untuk bertindak.</p></div>
+    </div>
+    <div class="levels">
+      <div class="level">
+        <div class="level-h o"><span class="ic"><i data-icon="pointer"></i></span><h3>Frontline<small data-en="Today's work">Pekerjaan hari ini</small></h3></div>
+        <div class="minis">
+          <div class="g"><b>28</b><span data-en="Today's work">Pekerjaan hari ini</span></div>
+          <div class="w"><b>12</b><span data-en="Waiting">Menunggu proses</span></div>
+          <div class="c"><b>3</b><span data-en="Late">Terlambat</span></div>
+          <div class="c"><b>2</b><span data-en="Problems">Masalah</span></div>
+        </div>
+        <p class="needs" data-en="Big numbers, no charts. Tap a number to see the list.">Angka besar, tanpa grafik. Tekan angka untuk melihat daftarnya.</p>
+      </div>
+      <div class="level">
+        <div class="level-h"><span class="ic"><i data-icon="clipboard"></i></span><h3>Supervisor<small data-en="Operational control">Kontrol operasional</small></h3></div>
+        <div class="minis">
+          <div><b class="num">850</b><span data-en="Workload (kg)">Workload (kg)</span></div>
+          <div class="w"><b>3</b><span>Bottleneck</span></div>
+          <div class="w"><b>5</b><span data-en="SLA risk">Risiko SLA</span></div>
+          <div class="c"><b>2</b><span>Rewash</span></div>
+        </div>
+        <p class="needs" data-en="Workload, bottleneck, SLA risk, rewash and productivity per area.">Workload, bottleneck, risiko SLA, rewash dan produktivitas per area.</p>
+      </div>
+      <div class="level">
+        <div class="level-h"><span class="ic"><i data-icon="briefcase"></i></span><h3>Owner / CEO<small data-en="Business performance">Performa bisnis</small></h3></div>
+        <div class="minis">
+          <div class="g"><b data-en="Rp 125M">Rp 125jt</b><span data-en="Revenue this month">Revenue bulan ini</span></div>
+          <div class="g"><b>96%</b><span data-en="SLA performance">Performa SLA</span></div>
+          <div class="g"><b>+24%</b><span data-en="Client growth">Pertumbuhan klien</span></div>
+          <div><b>22%</b><span data-en="Profit margin">Margin profit</span></div>
+        </div>
+        <p class="needs" data-en="Revenue, profitability, growth, client performance, quality, trends, forecast and strategic alerts.">Revenue, profitabilitas, pertumbuhan, performa klien, kualitas, tren, forecast dan alert strategis.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ iPad + Mobile operational dashboard ============ -->
+  <section class="panel hide-d">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="gauge"></i></span>
+      <div class="ttl"><h2 data-en="Today's Operational KPI">KPI Operasional Hari Ini</h2>
+        <p class="desc" data-en="Example data · Ubud plant · 6 Oct 2026">Contoh data · Plant Ubud · 6 Okt 2026</p></div>
+    </div>
+    <div class="kpis k6">
+      <div class="kpi"><span class="ic"><i data-icon="weight"></i></span><span class="v" data-en="1,250&lt;small&gt;kg&lt;/small&gt;">1.250<small>kg</small></span><span class="k" data-en="Total processed">Total diproses</span><span class="d up">+12%</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="file"></i></span><span class="v">320</span><span class="k" data-en="Orders">Jumlah order</span><span class="d up">+8%</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="clock"></i></span><span class="v">96<small>%</small></span><span class="k">On-time (SLA)</span><span class="d tg">Target ≥ 95%</span></div>
+      <div class="kpi"><span class="ic"><i data-icon="hourglass"></i></span><span class="v" data-en="28&lt;small&gt;hrs&lt;/small&gt;">28<small>jam</small></span><span class="k">Turnaround time</span><span class="d tg" data-en="Average">Rata-rata</span></div>
+      <div class="kpi hide-m"><span class="ic"><i data-icon="refresh"></i></span><span class="v" data-en="1.8&lt;small&gt;%&lt;/small&gt;">1,8<small>%</small></span><span class="k">Rewash rate</span><span class="d tg">Target &lt; 2%</span></div>
+      <div class="kpi hide-m"><span class="ic"><i data-icon="message"></i></span><span class="v" data-en="0.6&lt;small&gt;%&lt;/small&gt;">0,6<small>%</small></span><span class="k">Complaint rate</span><span class="d tg">Target &lt; 1%</span></div>
+    </div>
+  </section>
+
+  <section class="panel hide-d">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="bell"></i></span>
+      <div class="ttl"><h2 data-en="SLA &amp; Alerts">SLA &amp; Alert</h2>
+        <p class="desc" data-en="Act before an order is late.">Bertindak sebelum order terlambat.</p></div>
+    </div>
+    <div class="alerts2">
+      <div class="alert-card">
+        <div class="top"><i data-icon="alert"></i><div><span class="num-big">3</span><b style="display:block" data-en="SLA warning">Peringatan SLA</b><span class="meta" data-en="Orders at risk of being late">Order berisiko terlambat</span></div></div>
+        <a class="btn btn-warn" href="#orders"><span data-en="See orders">Lihat order</span><i data-icon="arrow"></i></a>
+      </div>
+      <div class="alert-card crit">
+        <div class="top"><i data-icon="xc"></i><div><span class="num-big">2</span><b style="display:block" data-en="SLA critical">SLA kritis</b><span class="meta" data-en="Orders already past SLA">Order sudah lewat SLA</span></div></div>
+        <a class="btn btn-crit" href="#orders"><span data-en="See orders">Lihat order</span><i data-icon="arrow"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel hide-d" id="orders">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="list"></i></span>
+      <div class="ttl"><h2 data-en="Orders Needing Attention">Order Perlu Perhatian</h2>
+        <p class="desc" data-en="Sorted by urgency.">Diurutkan dari yang paling mendesak.</p></div>
+    </div>
+    <div class="orders">
+      <div class="order"><div><span class="id">JF-2610-0142</span><b>Grand Vista Hotel</b></div><span class="chip crit"><i data-icon="xc"></i><span data-en="Late">Terlambat</span></span><span class="t dn" data-en="+4 hrs">+4 jam</span></div>
+      <div class="order"><div><span class="id">JF-2610-0156</span><b>Hotel ABC Kuta</b></div><span class="chip warn"><i data-icon="alert"></i><span data-en="SLA risk">Risiko SLA</span></span><span class="t" style="color:var(--warn)" data-en="2 hrs left">sisa 2 jam</span></div>
+      <div class="order"><div><span class="id">JF-2610-0161</span><b>Villa Sunset Canggu</b></div><span class="chip warn"><i data-icon="refresh"></i><span data-en="Rewash">Rewash</span></span><span class="t" style="color:var(--warn)" data-en="5 hrs left">sisa 5 jam</span></div>
+      <div class="order hide-m"><div><span class="id">JF-2610-0170</span><b>Lotus Spa &amp; Wellness</b></div><span class="chip info"><i data-icon="shield"></i><span>QC</span></span><span class="t" style="color:var(--muted)" data-en="9 hrs left">sisa 9 jam</span></div>
+      <div class="order hide-m"><div><span class="id">JF-2610-0174</span><b>Warung Laut F&amp;B</b></div><span class="chip ok"><i data-icon="checkc"></i><span data-en="Ready to ship">Siap Dikirim</span></span><span class="t" style="color:var(--ok)" data-en="On time">Tepat waktu</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SLA system (PC + iPad) ============ -->
+  <section class="panel tint hide-m">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="clock"></i></span>
+      <div class="ttl"><h2 data-en="SLA System: Prevent, Not Just Report">Sistem SLA: Mencegah, Bukan Hanya Melapor</h2>
+        <p class="desc" data-en="A warning appears before the SLA is broken. Critical appears after it is broken.">Peringatan muncul sebelum SLA dilanggar. Kritis muncul setelah dilanggar.</p></div>
+    </div>
+    <div class="sla-grid">
+      <div class="timeline" style="grid-column: auto">
+        <span class="label" data-en="SLA can differ by">SLA bisa berbeda per</span>
+        <div class="tags"><span class="tag"><i data-icon="building"></i><span data-en="Client">Klien</span></span><span class="tag"><i data-icon="contract"></i><span data-en="Contract">Kontrak</span></span><span class="tag"><i data-icon="shirt"></i><span data-en="Service">Layanan</span></span><span class="tag o"><i data-icon="zap"></i><span data-en="Priority">Prioritas</span></span></div>
+        <p class="note" data-en="Example: ABC Resort Ubud, 24 hour SLA. Express service, 8 hours.">Contoh: ABC Resort Ubud, SLA 24 jam. Layanan ekspres, 8 jam.</p>
+      </div>
+      <div class="timeline">
+        <span class="label" data-en="SLA clock for one order (24 hours)">Jam SLA untuk satu order (24 jam)</span>
+        <div class="bar" role="img" aria-label="SLA progress 82%"><span class="fill"></span><span class="mk" style="left:75%"></span></div>
+        <div class="ticks"><span data-en="Normal · 0–18 hrs">Normal · 0–18 jam</span><span data-en="Warning · 18–24 hrs">Peringatan · 18–24 jam</span><span data-en="Critical">Kritis</span></div>
+        <p class="note" data-en="The warning starts at 75% of the SLA time, so the team still has 6 hours to act.">Peringatan mulai di 75% waktu SLA, sehingga tim masih punya 6 jam untuk bertindak.</p>
+      </div>
+      <div class="alert-card">
+        <div class="top"><i data-icon="bell"></i><div><b data-en="Hotel ABC order may be late.">Order Hotel ABC berpotensi terlambat.</b>
+          <div class="meta" data-en="JF-2610-0156 · in Finishing · 4 hrs 20 min left">JF-2610-0156 · di Finishing · sisa 4 jam 20 menit</div></div></div>
+        <span class="chip warn" style="justify-self:start"><i data-icon="alert"></i><span data-en="Warning · sent to Supervisor">Peringatan · dikirim ke Supervisor</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="refresh"></i></span>
+      <div class="ttl"><h2 data-en="Continuous Improvement Cycle">Siklus Perbaikan Berkelanjutan</h2>
+        <p class="sum-preview" data-en="Data, KPI, alert, decision, better service">Data, KPI, alert, keputusan, layanan lebih baik</p></div>
+    </div>
+    <div class="acc-b chain v">
+      <span class="lk"><span class="ic"><i data-icon="database"></i></span><span data-en="Operational data">Data operasional</span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span class="ic"><i data-icon="chart"></i></span><span data-en="Real-time dashboard &amp; KPI">Dashboard &amp; KPI real-time</span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span class="ic"><i data-icon="bulb"></i></span><span>Alert &amp; insight</span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span class="ic"><i data-icon="flag"></i></span><span data-en="Faster decisions">Keputusan lebih cepat</span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk o"><span class="ic"><i data-icon="star"></i></span><span data-en="Better service, happier clients">Layanan lebih baik, klien lebih puas</span></span>
+    </div>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+</body>
+</html>

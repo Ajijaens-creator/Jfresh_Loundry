@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — Master Data Relationship Diagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<style>
+  .clusters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .cl { border-top: 6px solid var(--blue); }
+  .cl .panel-h .ico { font-weight: 800; font-size: 20px; }
+  .cl.c2 { border-top-color: var(--orange); } .cl.c2 .panel-h .ico { background: var(--orange-50); color: var(--orange-ink); }
+  .cl.c3 { border-top-color: var(--fresh); } .cl.c3 .panel-h .ico { background: var(--fresh-50); color: #00648F; }
+  .cl.c4 { border-top-color: var(--c-teal); } .cl.c4 .panel-h .ico { background: var(--c-teal-50); color: var(--c-teal); }
+  .cl.c5 { border-top-color: var(--c-violet); grid-column: 1 / -1; } .cl.c5 .panel-h .ico { background: var(--c-violet-50); color: var(--c-violet); }
+  .cl .acc-b { display: grid; gap: 12px; }
+  .cl .chain .lk { min-height: 46px; padding: 8px 12px; font-size: 15.5px; }
+  .cl .chain .arr.both .i { color: var(--muted); }
+  .card-n { font-size: 11px; font-weight: 800; color: var(--muted); padding: 2px 6px; border-radius: 6px; background: var(--bg-2); margin-left: -4px; }
+  .rules7 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .rules7 .callout { align-items: flex-start; }
+  .rules7 .callout p { font-size: 14.5px; }
+  @media (max-width: 1239px) { .rules7 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 699px) {
+    .clusters, .rules7 { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .cl.c5 { grid-column: auto; }
+  }
+</style>
+</head>
+<body data-root="../" data-visual="7">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">07</span><span data-en="Phase 1 · Business Foundation">Fase 1 · Fondasi Bisnis</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Master Data Relationship Diagram</h1>
+      <p class="sub" data-en="How master data connects across the system, so data is entered once and reused everywhere.">Hubungan antar master data di seluruh sistem, agar data cukup diinput sekali dan dipakai di mana saja.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Connected Data for <b>Consistent Operations</b></div>
+      <div class="values"><span data-en="Integrated">Terintegrasi</span><span data-en="Relational">Relasional</span><span data-en="Scalable">Skalabel</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- PC: business ERD -->
+  <section class="panel hide-t hide-m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="database"></i></span>
+      <div class="ttl"><h2 data-en="Business Relationship Diagram">Diagram Relasi Bisnis</h2>
+        <p class="desc" data-en="Five clusters. Arrows read as &quot;has&quot; or &quot;uses&quot;; 1:N means one record links to many.">Lima kelompok data. Panah dibaca &quot;memiliki&quot; atau &quot;memakai&quot;; 1:N berarti satu data terhubung ke banyak data.</p></div>
+    </div>
+    <div class="diagram" id="erd"></div>
+  </section>
+
+  <!-- iPad + Mobile: clusters -->
+  <div class="clusters hide-d">
+    <section class="panel acc cl c1" data-acc="m" data-open="m">
+      <div class="panel-h"><span class="ico">1</span><div class="ttl"><h2 data-en="Organization">Organisasi</h2><p class="desc" data-en="Company structure and work locations">Struktur perusahaan dan lokasi kerja</p></div></div>
+      <div class="acc-b"><div class="chain">
+        <span class="lk"><span class="ic"><i data-icon="building"></i></span>Company</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="hotel"></i></span>Branch</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="factory"></i></span>Laundry Plant</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="grid"></i></span>Work Area</span>
+      </div></div>
+    </section>
+    <section class="panel acc cl c2" data-acc="m">
+      <div class="panel-h"><span class="ico">2</span><div class="ttl"><h2 data-en="Client &amp; Contract">Klien &amp; Kontrak</h2><p class="desc" data-en="One client company, many properties">Satu perusahaan klien, banyak properti</p></div></div>
+      <div class="acc-b"><div class="chain">
+        <span class="lk"><span class="ic"><i data-icon="building"></i></span>Client Company</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="palm"></i></span>Property <span class="card-n">1:N</span></span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="idcard"></i></span>Contact</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="contract"></i></span>Contract</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk o"><span class="ic"><i data-icon="tag"></i></span>Rate Card</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="clock"></i></span>SLA</span>
+      </div></div>
+    </section>
+    <section class="panel acc cl c3" data-acc="m">
+      <div class="panel-h"><span class="ico">3</span><div class="ttl"><h2 data-en="Service &amp; Item">Layanan &amp; Item</h2><p class="desc" data-en="Services, items, units and work flow">Layanan, item, satuan dan alur kerja</p></div></div>
+      <div class="acc-b"><div class="chain">
+        <span class="lk"><span class="ic"><i data-icon="sparkles"></i></span>Service</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="shirt"></i></span>Item</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="ruler"></i></span>Unit</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="coins"></i></span>Price</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="route"></i></span>Workflow</span>
+      </div>
+      <p class="note" data-en="Billing unit and operational unit may differ, e.g. billed per kg, counted per piece.">Satuan tagih dan satuan operasional bisa berbeda, misalnya ditagih per kg, dihitung per piece.</p></div>
+    </section>
+    <section class="panel acc cl c4" data-acc="m">
+      <div class="panel-h"><span class="ico">4</span><div class="ttl"><h2 data-en="People &amp; Access">Orang &amp; Akses</h2><p class="desc" data-en="Employees, system users and permissions">Karyawan, pengguna sistem dan hak akses</p></div></div>
+      <div class="acc-b"><div class="chain">
+        <span class="lk"><span class="ic"><i data-icon="users"></i></span>Employee</span><span class="arr both"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="user"></i></span>User <span class="card-n">0..1</span></span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="key"></i></span>Role</span><span class="arr"><i data-icon="arrow"></i></span>
+        <span class="lk"><span class="ic"><i data-icon="lock"></i></span>Permission</span>
+      </div>
+      <p class="note" data-en="An employee is a person. A user is system access. An employee can have one user account or none.">Employee adalah orang. User adalah akses sistem. Karyawan bisa punya satu akun user, atau tidak punya akun.</p></div>
+    </section>
+    <section class="panel acc cl c5" data-acc="m">
+      <div class="panel-h"><span class="ico">5</span><div class="ttl"><h2 data-en="Inventory &amp; Control">Inventori &amp; Kontrol</h2><p class="desc" data-en="Supporting data for operations and control">Data pendukung operasional dan kontrol</p></div></div>
+      <div class="acc-b">
+        <div class="chain">
+          <span class="lk"><span class="ic"><i data-icon="truck"></i></span>Supplier</span><span class="arr"><i data-icon="arrow"></i></span>
+          <span class="lk"><span class="ic"><i data-icon="flask"></i></span>Chemical</span><span class="lk"><span class="ic"><i data-icon="package"></i></span>Consumable</span>
+        </div>
+        <div class="chain">
+          <span class="lk"><span class="ic"><i data-icon="truck"></i></span>Vehicle</span><span class="arr"><i data-icon="arrow"></i></span>
+          <span class="lk"><span class="ic"><i data-icon="idcard"></i></span>Driver</span>
+        </div>
+        <div class="chain">
+          <span class="lk o"><span class="ic"><i data-icon="status"></i></span>Status Master</span>
+          <span class="lk o"><span class="ic"><i data-icon="list"></i></span>Reason Master</span><span class="arr"><i data-icon="arrow"></i></span>
+          <span class="lk"><span class="ic"><i data-icon="star"></i></span>Quality Issue</span>
+          <span class="lk"><span class="ic"><i data-icon="globe"></i></span>Language Master</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel tint acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="shield"></i></span>
+      <div class="ttl"><h2 data-en="Master Data Rules">Aturan Master Data</h2>
+        <p class="sum-preview" data-en="5 rules that keep data consistent">5 aturan yang menjaga data tetap konsisten</p></div>
+    </div>
+    <div class="acc-b rules7">
+      <div class="callout blue"><i data-icon="building"></i><p data-en="&lt;b&gt;One client company&lt;/b&gt; can have many properties.">Satu <b>perusahaan klien</b> bisa memiliki banyak properti.</p></div>
+      <div class="callout blue"><i data-icon="ruler"></i><p data-en="&lt;b&gt;Billing unit&lt;/b&gt; and operational unit may differ.">Satuan <b>tagih</b> dan satuan operasional bisa berbeda.</p></div>
+      <div class="callout blue"><i data-icon="user"></i><p data-en="&lt;b&gt;Employee&lt;/b&gt; is a person. &lt;b&gt;User&lt;/b&gt; is system access."><b>Employee</b> adalah orang. <b>User</b> adalah akses sistem.</p></div>
+      <div class="callout"><i data-icon="status"></i><p data-en="&lt;b&gt;Status &amp; Reason&lt;/b&gt; are standard lists. No free-text status for core transactions."><b>Status &amp; Reason</b> memakai daftar baku. Transaksi inti tidak memakai status ketik bebas.</p></div>
+      <div class="callout blue"><i data-icon="globe"></i><p data-en="&lt;b&gt;Language Master:&lt;/b&gt; Indonesian by default, English optional."><b>Language Master:</b> Bahasa Indonesia default, English opsional.</p></div>
+    </div>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script>
+JF.diagram('#erd', function (lang, S) {
+  var W = 1400, H = 720, NW = 140, NH = 52;
+  var out = S.open(W, H, ['Diagram relasi master data', 'Master data relationship diagram']);
+  var CL = [
+    [20, 20, 300, 320, 'blue', '1', ['Organisasi', 'Organization'], ['Struktur perusahaan & lokasi kerja', 'Company structure & work locations']],
+    [345, 20, 570, 320, 'orange', '2', ['Klien & Kontrak', 'Client & Contract'], ['Data klien dan kontrak layanan', 'Client and service contract data']],
+    [940, 20, 440, 320, 'fresh', '3', ['Layanan & Item', 'Service & Item'], ['Layanan, item, satuan & alur kerja', 'Services, items, units & workflow']],
+    [20, 380, 560, 320, 'teal', '4', ['Orang & Akses', 'People & Access'], ['Karyawan, akses sistem & hak akses', 'Employees, system access & permissions']],
+    [605, 380, 775, 320, 'violet', '5', ['Inventori & Kontrol', 'Inventory & Control'], ['Data pendukung operasional & kontrol', 'Supporting operational & control data']]
+  ];
+  CL.forEach(function (c) {
+    var t = S.tones[c[4]];
+    out += S.rect(c[0], c[1], c[2], c[3], { fill: t.f, stroke: t.s, r: 20, sw: 1.5 });
+    out += '<circle cx="' + (c[0] + 30) + '" cy="' + (c[1] + 30) + '" r="15" fill="' + t.a + '"/>';
+    out += S.text(c[0] + 30, c[1] + 31, c[5], { size: 15, weight: 800, fill: '#FFFFFF' });
+    out += S.text(c[0] + 56, c[1] + 24, c[6], { size: 18, weight: 800, fill: t.t, anchor: 'start' });
+    out += S.text(c[0] + 56, c[1] + 45, c[7], { size: 12.5, weight: 600, fill: '#4F6A88', anchor: 'start' });
+  });
+  var N = {};
+  function node(id, x, y, label, icon, o) {
+    o = o || {};
+    var w = o.w || NW;
+    N[id] = { x: x, y: y, w: w, h: NH, cx: x + w / 2, cy: y + NH / 2 };
+    out += S.node(x, y, w, NH, label, { tone: o.tone || 'blue', icon: icon, size: 14, is: 22, r: 12 });
+  }
+  function R(n) { return [N[n].x + N[n].w, N[n].cy]; } function L(n) { return [N[n].x, N[n].cy]; }
+  function T(n, dx) { return [N[n].cx + (dx || 0), N[n].y]; } function B(n, dx) { return [N[n].cx + (dx || 0), N[n].y + NH]; }
+  function card(x, y, txt) { return S.pill(x, y, txt, { tone: 'mute', size: 11 }); }
+  var e = { tone: 'blue', sw: 1.7 };
+
+  // 1 Organization
+  node('co', 100, 90, 'Company', 'building');
+  node('br', 100, 175, 'Branch', 'hotel');
+  node('pl', 32, 268, 'Laundry Plant', 'factory', { w: 140 });
+  node('wa', 180, 268, 'Work Area', 'grid', { w: 125 });
+  out += S.line([B('co'), T('br')], e); out += card(N.co.cx + 26, 161, '1:N');
+  out += S.line([B('br'), [N.br.cx, 248], [N.pl.cx, 248], T('pl')], e);
+  out += S.line([[N.br.cx, 248], [N.wa.cx, 248], T('wa')], e);
+  out += card(N.br.cx + 26, 238, '1:N');
+
+  // 2 Client & Contract
+  node('cc', 370, 100, 'Client Company', 'building', { w: 160 });
+  node('pr', 565, 100, 'Property', 'palm');
+  node('ct', 745, 100, 'Contact', 'idcard', { w: 145 });
+  node('kt', 370, 240, 'Contract', 'contract', { w: 160 });
+  node('rc', 565, 240, 'Rate Card', 'tag', { tone: 'orange' });
+  node('sla', 745, 240, 'SLA', 'clock', { w: 145 });
+  out += S.line([R('cc'), L('pr')], e); out += card((N.cc.x + N.cc.w + N.pr.x) / 2, N.cc.cy - 18, '1:N');
+  out += S.line([R('pr'), L('ct')], e); out += card((N.pr.x + N.pr.w + N.ct.x) / 2, N.pr.cy - 18, '1:N');
+  out += S.line([B('ct'), [N.ct.cx, 200], [N.kt.cx, 200], T('kt')], e);
+  out += S.line([R('kt'), L('rc')], e);
+  out += S.line([R('rc'), L('sla')], e);
+  out += S.text(N.kt.cx, 312, ['Kontrak berlaku per properti', 'Contract applies per property'], { size: 12, fill: '#B85F00', weight: 700 });
+
+  // 3 Service & Item
+  node('sv', 1090, 88, 'Service', 'sparkles');
+  node('it', 1090, 172, 'Item', 'shirt');
+  node('un', 960, 262, 'Unit', 'ruler', { w: 125 });
+  node('pc', 1100, 262, 'Price', 'coins', { w: 120 });
+  node('wf', 1235, 262, 'Workflow', 'route', { w: 130 });
+  out += S.line([B('sv'), T('it')], e); out += card(N.sv.cx + 26, 158, '1:N');
+  out += S.line([B('it'), [N.it.cx, 244], [N.un.cx, 244], T('un')], e);
+  out += S.line([R('un'), L('pc')], e);
+  out += S.line([R('pc'), L('wf')], e);
+  out += S.text(962, 330, ['Satuan tagih ≠ satuan operasional', 'Billing unit ≠ operational unit'], { size: 11.5, fill: '#0B3D78', weight: 700, anchor: 'start' });
+
+  // Cross-cluster: Rate Card uses Service price
+  out += S.line([B('rc'), [N.rc.cx, 362], [N.pc.cx, 362], B('pc')], { tone: 'orange', sw: 2, dash: '6 4' });
+  out += S.pill((N.rc.cx + N.pc.cx) / 2, 362, ['Rate Card memakai Service & Price', 'Rate Card uses Service & Price'], { tone: 'orange', size: 11.5 });
+
+  // 4 People & Access
+  node('em', 50, 470, 'Employee', 'users');
+  node('us', 300, 470, 'User', 'user');
+  node('ro', 300, 600, 'Role', 'key');
+  node('pm', 50, 600, 'Permission', 'lock');
+  out += S.line([R('em'), L('us')], { tone: 'teal', sw: 1.7, both: true }); out += card((N.em.x + N.em.w + N.us.x) / 2, N.em.cy - 18, '1 : 0..1');
+  out += S.line([B('us'), T('ro')], { tone: 'teal', sw: 1.7 });
+  out += S.line([L('ro'), R('pm')], { tone: 'teal', sw: 1.7 }); out += card((N.pm.x + N.pm.w + N.ro.x) / 2, N.ro.cy - 18, '1:N');
+  out += S.rect(462, 470, 102, 182, { fill: '#FFFFFF', stroke: '#7CCBBF', r: 12, sw: 1 });
+  out += S.text(513, 560, ['Employee\n= orang\n\nUser\n= akses\nsistem\n\nBisa tanpa\nakun', 'Employee\n= person\n\nUser\n= system\naccess\n\nAccount\nis optional'], { size: 11.5, weight: 700, fill: '#0A5C53', lh: 14 });
+
+  // 5 Inventory & Control
+  var vt = { tone: 'violet' };
+  node('sp', 630, 470, 'Supplier', 'truck', { tone: 'violet' });
+  node('ch', 795, 470, 'Chemical', 'flask', { tone: 'violet' });
+  node('cs', 960, 470, 'Consumable', 'package', { tone: 'violet', w: 150 });
+  node('vh', 1130, 470, 'Vehicle', 'truck', { tone: 'violet', w: 110 });
+  node('dr', 1255, 470, 'Driver', 'idcard', { tone: 'violet', w: 110 });
+  node('sm', 630, 600, 'Status Master', 'status', { tone: 'orange', w: 160 });
+  node('rm', 805, 600, 'Reason Master', 'list', { tone: 'orange', w: 160 });
+  node('qi', 980, 600, 'Quality Issue', 'star', { tone: 'violet', w: 150 });
+  node('lm', 1145, 600, 'Language Master', 'globe', { tone: 'violet', w: 175 });
+  out += S.line([R('sp'), L('ch')], { tone: 'violet', sw: 1.7 });
+  out += S.line([[N.sp.cx, N.sp.y], [N.sp.cx, 452], [N.cs.cx, 452], T('cs')], { tone: 'violet', sw: 1.7 });
+  out += S.line([R('vh'), L('dr')], { tone: 'violet', sw: 1.7 });
+  out += S.line([R('rm'), L('qi')], { tone: 'violet', sw: 1.7 });
+  out += S.text(N.sm.x, 674, ['Status & Reason baku: tidak ada status ketik bebas', 'Standard Status & Reason: no free-text status'], { size: 12, weight: 700, fill: '#B85F00', anchor: 'start' });
+  out += S.text(N.lm.cx, 674, ['Indonesia default · English opsional', 'Indonesian default · English optional'], { size: 12, weight: 700, fill: '#4A2F99' });
+  out += S.text(N.dr.cx, 540, ['Driver juga Employee', 'Driver is also an Employee'], { size: 11.5, weight: 700, fill: '#4A2F99' });
+  return out + S.close();
+});
+</script>
+</body>
+</html>

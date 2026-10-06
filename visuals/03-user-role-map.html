@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — User &amp; Role Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<style>
+  .groups { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+  .grp { display: flex; flex-direction: column; }
+  .grp .acc-b { display: grid; gap: 14px; }
+  .grp .lvl { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--orange-ink); }
+  .grp .tags .tag { font-size: 13.5px; padding: 6px 10px; }
+  .grp .checks li { font-size: 14.5px; }
+  .grp .panel-h { flex-wrap: wrap; }
+  .grp .panel-h .count { order: 3; margin-left: 58px; }
+  @media (min-width: 1240px) {
+    .grp .panel-h { align-items: flex-start; }
+    .grp .panel-h h2 { font-size: 19px; }
+  }
+  .grp.ext { background: linear-gradient(180deg, var(--bg-2), var(--white) 60%); }
+  .hier { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .hier .i { color: var(--fresh); width: 18px; height: 18px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14.5px; }
+  .pm { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; font-weight: 800; font-size: 13px; }
+  .pm .i { width: 16px; height: 16px; }
+  .pm.F { background: var(--blue); color: var(--white); }
+  .pm.A { background: var(--orange); color: #3A1D00; }
+  .pm.C { background: var(--fresh-50); color: #00648F; box-shadow: inset 0 0 0 1.5px #7FD3F2; }
+  .pm.V { background: var(--white); color: var(--muted); box-shadow: inset 0 0 0 1.5px var(--line-2); }
+  .pm.N { background: transparent; color: var(--line-2); }
+
+  .matrix-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); }
+  table.matrix { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14.5px; }
+  .matrix th, .matrix td { padding: 6px 6px; text-align: center; border-bottom: 1px solid var(--line); }
+  .matrix thead th { position: sticky; top: 0; background: var(--white); font-size: 13px; color: var(--blue-ink); font-weight: 700; vertical-align: bottom; padding-top: 12px; }
+  .matrix thead th .i { display: block; margin: 0 auto 6px; width: 22px; height: 22px; color: var(--blue); }
+  .matrix th.rl { text-align: left; padding-left: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .matrix th.gp { text-align: left; padding: 10px 14px; background: var(--bg-2); color: var(--blue-ink); font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .matrix tr.g-front th.gp { background: var(--orange-50); color: var(--orange-ink); }
+  .matrix tbody tr:hover td, .matrix tbody tr:hover th.rl { background: var(--blue-50); }
+  .mx-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 14px; }
+
+  @media (max-width: 1239px) {
+    .groups { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .grp .acc-b { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; }
+    .grp .tags .tag { font-size: 15px; padding: 8px 12px; }
+    .grp .checks li { font-size: 16px; }
+  }
+  @media (max-width: 699px) {
+    .groups { gap: 12px; }
+    .grp .acc-b { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body data-root="../" data-visual="3">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">03</span><span data-en="Phase 1 · Business Foundation">Fase 1 · Fondasi Bisnis</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>User &amp; Role Map</h1>
+      <p class="sub" data-en="Who uses the system, and what each user is allowed to see and do.">Siapa yang menggunakan sistem, dan apa yang boleh dilihat dan dikerjakan setiap pengguna.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Right Access for <b>Right People</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="hier hide-m"><span data-en="Role groups, from strategic to field to external">Kelompok peran, dari strategis ke lapangan hingga eksternal</span></div>
+
+  <div class="groups">
+    <section class="panel acc grp" data-acc="m">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="briefcase"></i></span>
+        <div class="ttl"><span class="lvl" data-en="Strategic">Strategis</span><h2>Management</h2><p class="desc">Director / Owner / CEO</p></div>
+        <span class="count num" data-en="1 role">1 peran</span>
+      </div>
+      <div class="acc-b">
+        <div class="tags"><span class="tag"><i data-icon="briefcase"></i>Director / Owner / CEO</span></div>
+        <ul class="checks">
+          <li><i data-icon="check"></i><span data-en="Full dashboard &amp; reports">Dashboard &amp; laporan lengkap</span></li>
+          <li><i data-icon="check"></i><span data-en="Approve contracts, billing, finance">Setujui kontrak, billing, keuangan</span></li>
+          <li><i data-icon="check"></i><span data-en="Drill-down to transactions">Drill-down sampai transaksi</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel acc grp" data-acc="m">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="clipboard"></i></span>
+        <div class="ttl"><span class="lvl" data-en="Control">Kontrol</span><h2 data-en="Supervisory">Supervisor</h2><p class="desc" data-en="Operational control">Kontrol operasional</p></div>
+        <span class="count num" data-en="2 roles">2 peran</span>
+      </div>
+      <div class="acc-b">
+        <div class="tags"><span class="tag"><i data-icon="clipboard"></i>Laundry Supervisor</span><span class="tag"><i data-icon="usercheck"></i>Operations Manager</span></div>
+        <ul class="checks">
+          <li><i data-icon="check"></i><span data-en="See all operations">Lihat semua operasional</span></li>
+          <li><i data-icon="check"></i><span data-en="Approve corrections &amp; rewash">Setujui koreksi &amp; rewash</span></li>
+          <li><i data-icon="check"></i><span data-en="Monitor quality &amp; SLA">Pantau kualitas &amp; SLA</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel acc grp" data-acc="m">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="users"></i></span>
+        <div class="ttl"><span class="lvl" data-en="Support">Dukungan</span><h2>Business Support</h2><p class="desc" data-en="Supports operations &amp; clients">Mendukung operasional &amp; klien</p></div>
+        <span class="count num" data-en="4 roles">4 peran</span>
+      </div>
+      <div class="acc-b">
+        <div class="tags"><span class="tag"><i data-icon="building"></i>Sales / Account</span><span class="tag"><i data-icon="headset"></i>Customer Service</span><span class="tag"><i data-icon="flask"></i>Inventory</span><span class="tag"><i data-icon="card"></i>Finance</span></div>
+        <ul class="checks">
+          <li><i data-icon="check"></i><span data-en="Manage clients &amp; contracts">Kelola klien &amp; kontrak</span></li>
+          <li><i data-icon="check"></i><span data-en="Handle requests &amp; complaints">Layani permintaan &amp; komplain</span></li>
+          <li><i data-icon="check"></i><span data-en="Stock, invoice &amp; payment">Stok, tagihan &amp; pembayaran</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel acc grp" data-acc="m" data-open="m">
+      <div class="panel-h">
+        <span class="ico o"><i data-icon="pointer"></i></span>
+        <div class="ttl"><span class="lvl" data-en="Field">Lapangan</span><h2>Frontline</h2><p class="desc" data-en="Simple screens, only today's work">Layar sederhana, hanya pekerjaan hari ini</p></div>
+        <span class="count num" data-en="9 roles">9 peran</span>
+      </div>
+      <div class="acc-b">
+        <div class="tags">
+          <span class="tag o"><i data-icon="truck"></i>Pickup Staff</span><span class="tag o"><i data-icon="basket"></i>Receiving</span><span class="tag o"><i data-icon="list"></i>Sorting</span>
+          <span class="tag o"><i data-icon="washer"></i>Washing</span><span class="tag o"><i data-icon="wind"></i>Drying</span><span class="tag o"><i data-icon="iron"></i>Finishing</span>
+          <span class="tag o"><i data-icon="shield"></i>QC</span><span class="tag o"><i data-icon="package"></i>Packing</span><span class="tag o"><i data-icon="truck"></i>Driver</span>
+        </div>
+        <ul class="checks">
+          <li><i data-icon="check"></i><span data-en="See own work list">Lihat daftar kerja sendiri</span></li>
+          <li><i data-icon="check"></i><span data-en="Update process status">Update status proses</span></li>
+          <li><i data-icon="check"></i><span data-en="Report a problem (Ada Masalah)">Lapor Ada Masalah</span></li>
+          <li class="no"><i data-icon="ban"></i><span data-en="Cannot change prices or rates">Tidak bisa ubah harga atau tarif</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel acc grp ext" data-acc="m">
+      <div class="panel-h">
+        <span class="ico g"><i data-icon="hotel"></i></span>
+        <div class="ttl"><span class="lvl" data-en="External">Eksternal</span><h2 data-en="External Client">Klien Eksternal</h2><p class="desc" data-en="Hotel / partner, own property only">Hotel / mitra, hanya properti sendiri</p></div>
+        <span class="count num" data-en="4 roles">4 peran</span>
+      </div>
+      <div class="acc-b">
+        <div class="tags"><span class="tag"><i data-icon="usercheck"></i>Client Admin</span><span class="tag"><i data-icon="hotel"></i>Hotel Operations</span><span class="tag"><i data-icon="card"></i>Hotel Finance</span><span class="tag"><i data-icon="eye"></i>Viewer</span></div>
+        <ul class="checks">
+          <li><i data-icon="check"></i><span data-en="Request pickup, see order status">Minta pickup, lihat status order</span></li>
+          <li><i data-icon="check"></i><span data-en="Invoice &amp; payment status">Invoice &amp; status pembayaran</span></li>
+          <li class="no"><i data-icon="ban"></i><span data-en="No access to internal settings">Tanpa akses pengaturan internal</span></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- Feature access matrix: PC only -->
+  <section class="panel hide-t hide-m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="grid"></i></span>
+      <div class="ttl"><h2 data-en="Feature Access Matrix per Role">Matriks Akses Fitur per Peran</h2>
+        <p class="desc" data-en="Every role sees only what it needs. No role below Management has full access to everything.">Setiap peran hanya melihat yang dibutuhkan. Tidak ada peran di bawah Management yang punya akses penuh ke semua fitur.</p></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="matrix-wrap" style="margin-top:14px"><table class="matrix" id="matrix"></table></div>
+    <div class="mx-foot">
+      <p class="note" data-en="External client users only see data for their own company and properties.">Pengguna klien eksternal hanya melihat data perusahaan dan properti mereka sendiri.</p>
+      <p class="note" data-en="Pricing &amp; contract changes always need approval.">Perubahan harga &amp; kontrak selalu butuh persetujuan.</p>
+    </div>
+  </section>
+
+  <div class="callout blue hide-d"><i data-icon="monitor"></i><p data-en="The full feature access matrix is shown on the PC Report view.">Matriks akses fitur lengkap ditampilkan di tampilan PC Report.</p></div>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script>
+(function () {
+  var F = [['Dashboard','grid'],['Client','building'],['Contract','contract'],['Pickup','truck'],['Receiving','basket'],['Production','washer'],['Delivery','pin'],['Billing','invoice'],['Finance','card'],['Reports','chart'],['Settings','cog']];
+  var L = { F: ['Akses Penuh','Full Access','F'], A: ['Setujui','Approve','check'], C: ['Buat / Ubah','Create / Update','edit'], V: ['Lihat Saja','View Only','eye'], N: ['Tanpa Akses','No Access','minus'] };
+  var G = [
+    ['Frontline', 'Frontline', 'front', [
+      ['Pickup Staff',  'V--C-------'], ['Receiving', 'V--VC------'], ['Sorting', 'V----C-----'],
+      ['Washing', 'V----C-----'], ['Drying', 'V----C-----'], ['Finishing', 'V----C-----'],
+      ['QC', 'V----C-----'], ['Packing', 'V----CV----'], ['Driver', 'V--C--C----']]],
+    ['Supervisor', 'Supervisory', 'sup', [
+      ['Laundry Supervisor', 'VV-AAAA--V-'], ['Operations Manager', 'FVVAAAAV-F-']]],
+    ['Business Support', 'Business Support', 'bs', [
+      ['Sales / Account', 'VCCV--VV-V-'], ['Customer Service', 'VVVCVVVV---'], ['Inventory', 'V----V---V-'], ['Finance', 'VVV---VFFV-']]],
+    ['Management', 'Management', 'mg', [
+      ['Director / Owner / CEO', 'FAAVVVVAAFF']]],
+    ['Klien Eksternal', 'External Client', 'ext', [
+      ['Client Admin', 'VVVC--VV-V-'], ['Hotel Operations', 'V--C--V----'], ['Hotel Finance', 'V------VV--'], ['Viewer', 'V-----V----']]]
+  ];
+  function cell(k, lang) {
+    if (k === '-') k = 'N';
+    var l = L[k], name = lang === 'en' ? l[1] : l[0];
+    var inner = k === 'F' ? 'F' : JF.ic(l[2]);
+    return '<span class="pm ' + k + '" title="' + name + '"><span class="sr">' + name + '</span>' + inner + '</span>';
+  }
+  function render(lang) {
+    var lg = '';
+    'FACVN'.split('').forEach(function (k) { lg += '<span>' + cell(k, lang) + (lang === 'en' ? L[k][1] : L[k][0]) + '</span>'; });
+    document.getElementById('legend').innerHTML = lg;
+    var h = '<thead><tr><th class="rl">' + (lang === 'en' ? 'Role / Feature' : 'Peran / Fitur') + '</th>';
+    F.forEach(function (f) { h += '<th scope="col">' + JF.ic(f[1]) + f[0] + '</th>'; });
+    h += '</tr></thead><tbody>';
+    G.forEach(function (g) {
+      h += '<tr class="g-' + g[2] + '"><th class="gp" colspan="' + (F.length + 1) + '">' + (lang === 'en' ? g[1] : g[0]) + '</th></tr>';
+      g[3].forEach(function (r) {
+        h += '<tr class="g-' + g[2] + '"><th class="rl" scope="row">' + r[0] + '</th>';
+        r[1].split('').forEach(function (k) { h += '<td>' + cell(k, lang) + '</td>'; });
+        h += '</tr>';
+      });
+    });
+    document.getElementById('matrix').innerHTML = h + '</tbody>';
+  }
+  render(JF.lang());
+  JF.onLang(render);
+})();
+</script>
+</body>
+</html>

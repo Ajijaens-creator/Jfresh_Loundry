@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS Phase 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/css/jfresh.css">
+<style>
+  .home-hero .wrap { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .home-hero h1 { font-size: clamp(30px, 4.4vw, 52px); letter-spacing: -.03em; }
+  .home-hero h1 b { color: var(--orange); }
+  .home-hero .big-logo { width: clamp(180px, 22vw, 300px); height: auto; }
+  .statement { margin-top: 16px; font-size: 19px; color: var(--ink); max-width: 60ch; }
+  .principle { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .principle span { padding: 8px 14px; border-radius: 999px; font-weight: 800; font-size: 15px; background: var(--blue-50); color: var(--blue); }
+  .principle span:nth-child(2) { background: var(--orange-50); color: var(--orange-ink); }
+  .principle span:nth-child(3) { background: var(--blue); color: var(--white); }
+
+  .vcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .vcard { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 16px; padding: 20px; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--white); text-decoration: none; color: inherit; transition: box-shadow .2s, border-color .2s, transform .2s; min-height: 132px; }
+  .vcard:hover { border-color: var(--line-2); box-shadow: var(--shadow-lift); transform: translateY(-2px); }
+  .vcard .vbadge { grid-row: span 3; }
+  .vcard h3 { font-size: 19px; }
+  .vcard p { color: var(--muted); font-size: 15px; }
+  .vcard .go { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--blue); font-size: 14.5px; margin-top: 4px; }
+  .vcard .go .i { width: 18px; height: 18px; }
+  .ffs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+  .ffs span { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 700; color: var(--muted); background: var(--bg); border-radius: 999px; padding: 3px 9px; }
+  .ffs .i { width: 14px; height: 14px; }
+
+  .road { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .road .stage { padding: 10px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--white); font-weight: 800; color: var(--muted); min-height: 46px; display: inline-flex; align-items: center; gap: 8px; }
+  .road .stage.now { background: var(--blue); color: var(--white); border-color: var(--blue); }
+  .road .arr { color: var(--fresh); display: inline-flex; }
+
+  .formf { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .formf .row { align-items: flex-start; padding: 16px; }
+
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .sw { border-radius: var(--r); border: 1px solid var(--line); overflow: hidden; background: var(--white); }
+  .sw i { display: block; height: 56px; }
+  .sw div { padding: 8px 12px; font-size: 13.5px; }
+  .sw b { display: block; color: var(--blue-ink); }
+  .sw code { color: var(--muted); font-size: 12.5px; }
+  .typescale { display: grid; gap: 6px; }
+  .typescale div { display: flex; align-items: baseline; gap: 14px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  .typescale span.lbl { width: 140px; flex: none; font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  .qc { columns: 2; column-gap: 32px; }
+  .qc li { break-inside: avoid; display: flex; gap: 10px; align-items: flex-start; padding: 5px 0; font-size: 15.5px; }
+  .qc li .i { color: var(--ok); margin-top: 2px; }
+  .qc li.pend .i { color: var(--warn); }
+  .brandbox { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 22px; align-items: center; }
+  .brandbox .logo-frame { background: var(--white); border: 1px dashed var(--line-2); border-radius: var(--r); padding: 18px; }
+
+  @media (max-width: 1239px) { .formf { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 699px) {
+    .home-hero .wrap { grid-template-columns: minmax(0, 1fr); }
+    .home-hero .big-logo { order: -1; width: 200px; }
+    .statement { font-size: 17px; }
+    .vcards { grid-template-columns: minmax(0, 1fr); }
+    .qc { columns: 1; }
+    .brandbox { grid-template-columns: minmax(0, 1fr); }
+    .road { flex-direction: column; align-items: stretch; }
+    .road .arr { justify-content: center; transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body data-root="" data-visual="0">
+
+<section class="hero home-hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span data-en="Phase 1 · Business Foundation · Version 1.0">Fase 1 · Fondasi Bisnis · Versi 1.0</span></div>
+      <h1>JFRESH <b>OS</b></h1>
+      <p class="statement" data-en="Easy enough for a laundry employee with very limited digital experience to use confidently, and powerful enough for a Director, CEO or Owner to manage the whole business from reliable operational data.">Cukup mudah untuk dipakai dengan percaya diri oleh karyawan laundry yang jarang memakai teknologi, dan cukup kuat bagi Direktur, CEO atau Owner untuk mengelola seluruh bisnis dari data operasional yang andal.</p>
+      <div class="principle"><span>Simple Frontline.</span><span>Powerful Management.</span><span>One Connected JFRESH OS.</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px"><a class="btn btn-primary" href="visuals/01-business-model.html"><span data-en="Start with Visual 01">Mulai dari Visual 01</span><i data-icon="arrow"></i></a><a class="btn btn-ghost" href="preview.html"><i data-icon="monitor"></i><span data-en="Compare PC, iPad &amp; Mobile">Bandingkan PC, iPad &amp; Mobile</span></a></div>
+    </div>
+    <img class="big-logo" src="assets/brand/jfresh-logo.png" alt="J'Fresh Laundry" width="605" height="373">
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section>
+    <div class="panel-h">
+      <span class="ico"><i data-icon="layers"></i></span>
+      <div class="ttl"><h2 data-en="The 7 Phase 1 visuals">7 Visual Fase 1</h2>
+        <p class="desc" data-en="Each visual has a PC Report, Operational iPad and Mobile layout. Resize the window or open it on a device to see each one.">Setiap visual punya tampilan PC Report, Operational iPad dan Mobile. Ubah ukuran jendela atau buka di perangkat untuk melihat masing-masing.</p></div>
+    </div>
+    <div class="vcards" id="vcards"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="monitor"></i></span>
+      <div class="ttl"><h2 data-en="Three form factors, three jobs">Tiga perangkat, tiga tugas</h2>
+        <p class="desc" data-en="Responsive does not mean shrinking the desktop. Each size shows a different depth.">Responsif bukan berarti mengecilkan desktop. Setiap ukuran menampilkan kedalaman berbeda.</p></div>
+    </div>
+    <div class="formf">
+      <div class="row"><span class="ic"><i data-icon="monitor"></i></span><span class="tx"><b>PC Report</b><span data-en="Owner, CEO, management. Full information, multiple columns, presentation and analytics.">Owner, CEO, manajemen. Informasi lengkap, banyak kolom, presentasi dan analitik.</span><span class="chip info" style="margin-top:8px">≥ 1240 px</span></span></div>
+      <div class="row"><span class="ic"><i data-icon="tablet"></i></span><span class="tx"><b>Operational iPad</b><span data-en="Supervisor, receiving, production, QC. Touch first, large cards, fewer columns, no tiny tables.">Supervisor, receiving, produksi, QC. Sentuh dulu, kartu besar, kolom lebih sedikit, tanpa tabel kecil.</span><span class="chip info" style="margin-top:8px">700–1239 px</span></span></div>
+      <div class="row"><span class="ic o"><i data-icon="phone"></i></span><span class="tx"><b>Mobile</b><span data-en="Pickup, driver, alerts. Single column, one main action, body text at least 16 px.">Pickup, driver, alert. Satu kolom, satu aksi utama, teks minimal 16 px.</span><span class="chip info" style="margin-top:8px">&lt; 700 px</span></span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="route"></i></span>
+      <div class="ttl"><h2 data-en="Where Phase 1 sits">Posisi Fase 1</h2>
+        <p class="desc" data-en="These visuals are the business foundation every next phase builds on.">Visual ini menjadi fondasi bisnis untuk semua fase berikutnya.</p></div>
+    </div>
+    <div class="road">
+      <span class="stage now"><i data-icon="checkc"></i><span data-en="Phase 1 Foundation">Fase 1 Fondasi</span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="stage">NB</span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="stage">NV</span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="stage">DV</span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="stage">NP</span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="stage">Build</span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="stage">Testing</span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="stage">UAT</span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="stage">Go-Live</span>
+    </div>
+  </section>
+
+  <section class="panel acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="droplet"></i></span>
+      <div class="ttl"><h2 data-en="Design system">Design system</h2>
+        <p class="desc" data-en="One palette, one type family, one component set for all seven visuals.">Satu palet, satu jenis huruf, satu set komponen untuk ketujuh visual.</p></div>
+    </div>
+    <div class="acc-b" style="display:grid;gap:22px">
+      <div class="brandbox">
+        <div class="logo-frame"><img src="assets/brand/jfresh-logo.png" alt="J'Fresh Laundry" width="605" height="373"></div>
+        <div style="display:grid;gap:8px">
+          <h3 data-en="Official logo">Logo resmi</h3>
+          <p data-en="Uses the uploaded original, cropped from its circular frame with its ratio, colors and artwork untouched. Always placed on white with clear space around it.">Memakai file asli yang diunggah, dipotong dari bingkai bulatnya tanpa mengubah rasio, warna maupun gambarnya. Selalu diletakkan di atas putih dengan ruang kosong di sekelilingnya.</p>
+          <p class="note"><code>assets/brand/jfresh-logo.png</code></p>
+        </div>
+      </div>
+      <div class="swatches">
+        <div class="sw"><i style="background:#0754A6"></i><div><b>Deep Blue</b><code>#0754A6</code></div></div>
+        <div class="sw"><i style="background:#00A8E8"></i><div><b>Fresh Blue</b><code>#00A8E8</code></div></div>
+        <div class="sw"><i style="background:#F7931E"></i><div><b>Orange</b><code>#F7931E</code></div></div>
+        <div class="sw"><i style="background:#FFC72C"></i><div><b>Yellow</b><code>#FFC72C</code></div></div>
+        <div class="sw"><i style="background:#F6F9FC"></i><div><b>Soft Background</b><code>#F6F9FC</code></div></div>
+        <div class="sw"><i style="background:#138A4B"></i><div><b data-en="Success">Sukses</b><code>#138A4B</code></div></div>
+        <div class="sw"><i style="background:#E8890C"></i><div><b data-en="Warning">Peringatan</b><code>#E8890C</code></div></div>
+        <div class="sw"><i style="background:#C8281C"></i><div><b data-en="Critical">Kritis</b><code>#C8281C</code></div></div>
+      </div>
+      <div class="typescale">
+        <div><span class="lbl">Page title · 34 / 28 / 24</span><span style="font-size:34px;font-weight:800;color:var(--blue-ink)">Terima Cucian</span></div>
+        <div><span class="lbl">Section · 22 / 20 / 19</span><span style="font-size:22px;font-weight:800;color:var(--blue-ink)">Proses Laundry</span></div>
+        <div><span class="lbl">KPI · 34 / 30 / 28</span><span style="font-size:34px;font-weight:800;color:var(--blue-ink)" class="num">1.250 kg</span></div>
+        <div><span class="lbl">Body · 16 / 17 / 16</span><span>Siap Dikirim, Bukti Pengiriman, Cocokkan Data</span></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+        <span class="btn btn-primary"><i data-icon="basket"></i>Terima Cucian</span>
+        <span class="btn btn-blue"><i data-icon="washer"></i>Mulai Proses</span>
+        <span class="btn btn-warn"><i data-icon="alert"></i>Ada Masalah</span>
+        <span class="chip ok"><i data-icon="checkc"></i>Selesai</span>
+        <span class="chip warn"><i data-icon="clock"></i>Menunggu</span>
+        <span class="chip crit"><i data-icon="xc"></i>Terlambat</span>
+        <span class="chip appr"><i data-icon="usercheck"></i>Perlu persetujuan</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="clipboard"></i></span>
+      <div class="ttl"><h2 data-en="Phase 1 quality check">Pemeriksaan kualitas Fase 1</h2>
+        <p class="desc" data-en="From section 22 of the master prompt.">Dari bagian 22 master prompt.</p></div>
+    </div>
+    <ul class="acc-b qc">
+      <li><i data-icon="checkc"></i><span data-en="Visuals 01–07 complete">Visual 01–07 lengkap</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Desktop, iPad and mobile versions for every visual">Versi desktop, iPad dan mobile untuk setiap visual</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Logo uses the original uploaded asset, not recreated">Logo memakai file asli yang diunggah, tidak dibuat ulang</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Brand blue and orange consistent, white dominant">Biru dan oranye brand konsisten, putih dominan</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Bubble and water DNA kept subtle">DNA gelembung dan air dibuat halus</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Frontline: large text, one obvious main action">Frontline: teks besar, satu aksi utama yang jelas</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Natural Bahasa Indonesia by default, ID | EN switch">Bahasa Indonesia natural sebagai default, tombol ID | EN</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Management drill-down, KPI and SLA logic visible">Drill-down manajemen, logika KPI dan SLA terlihat</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Roles separated, pricing protected">Peran terpisah, harga terlindungi</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Audit, duplicate prevention and exceptions represented">Audit, cegah duplikat dan penanganan masalah ditampilkan</span></li>
+      <li><i data-icon="checkc"></i><span data-en="Master data relational, scope boundaries clear">Master data relasional, batas cakupan jelas</span></li>
+      <li><i data-icon="checkc"></i><span data-en="No horizontal page scroll; touch targets at least 44 px">Tanpa geser horizontal; area sentuh minimal 44 px</span></li>
+    </ul>
+  </section>
+
+</main>
+
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/jfresh.js"></script>
+<script>
+(function () {
+  var el = document.getElementById('vcards');
+  function render(lang) {
+    el.innerHTML = JF.VISUALS.map(function (v) {
+      return '<a class="vcard" href="visuals/' + v.f + '"><span class="vbadge">0' + v.n + '</span><h3>' + v.t + '</h3><p>' + (lang === 'en' ? v.en : v.id) + '</p>' +
+        '<span class="ffs">' + '<span>' + JF.ic('monitor') + 'PC</span><span>' + JF.ic('tablet') + 'iPad</span><span>' + JF.ic('phone') + 'Mobile</span></span></a>';
+    }).join('');
+  }
+  render(JF.lang());
+  JF.onLang(render);
+})();
+</script>
+</body>
+</html>

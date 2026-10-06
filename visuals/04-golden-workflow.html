@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — End-to-End Operational Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<style>
+  .strip .flow { grid-auto-columns: minmax(0, 1fr); }
+  .strip .step .ic { width: 48px; height: 48px; border-radius: 14px; }
+  .strip .step .ic .i { width: 24px; height: 24px; }
+  .strip .step b { font-size: 13.5px; }
+  .strip .step:not(:last-child)::after { left: calc(50% + 20px); right: calc(-50% + 20px); }
+
+  .phases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: ph; }
+  .phase { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; align-items: start; padding: 18px; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--white); min-width: 0; }
+  .phase .n { grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--blue); color: var(--white); font-weight: 800; font-size: 19px; }
+  .phase.o .n { background: var(--orange); color: #3A1D00; }
+  .phase h3 { display: flex; align-items: center; gap: 10px; font-size: 19px; }
+  .phase h3 .i { color: var(--blue); width: 24px; height: 24px; }
+  .phase ul { display: grid; gap: 4px; margin-top: 6px; }
+  .phase li { display: flex; gap: 8px; align-items: baseline; color: var(--muted); font-size: 16px; }
+  .phase li::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--fresh); transform: translateY(-2px); }
+  .phase .exc { grid-column: 2; margin-top: 10px; }
+
+  .excs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .exc-card { display: grid; gap: 10px; padding: 18px; border-radius: var(--r-lg); border: 1.5px solid var(--warn-line); background: var(--warn-50); min-width: 0; }
+  .exc-card.crit { border-color: var(--crit-line); background: var(--crit-50); }
+  .exc-card h3 { display: flex; align-items: center; gap: 10px; color: var(--warn); }
+  .exc-card.crit h3 { color: var(--crit); }
+  .exc-card h3 .i { width: 24px; height: 24px; }
+  .exc-card p { color: var(--ink); }
+  .exc-card .chain .lk { min-height: 40px; padding: 6px 12px; font-size: 14.5px; background: var(--white); }
+  .exc-card .chain { flex-direction: column; align-items: stretch; gap: 0; }
+  .exc-card .chain .arr { justify-content: center; transform: rotate(90deg); height: 18px; }
+  .exc-card .chain .arr .i { width: 16px; height: 16px; }
+  .phase .exc { white-space: normal; }
+
+  .sys { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+  .sys .row { min-height: 60px; }
+  .wins { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+
+  @media (max-width: 1239px) {
+    .sys { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .wins { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 699px) {
+    .phases { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .phase { border: 0; border-radius: 0; padding: 12px 0 18px; position: relative; background: transparent; }
+    .phase:not(:last-child)::after { content: ""; position: absolute; left: 21px; top: 60px; bottom: -4px; width: 2px; background: repeating-linear-gradient(180deg, var(--line-2) 0 6px, transparent 6px 10px); }
+    .phase h3 { font-size: 18px; }
+    .excs, .sys { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  }
+</style>
+</head>
+<body data-root="../" data-visual="4">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">04</span><span data-en="Phase 1 · Business Foundation · Golden Workflow">Fase 1 · Fondasi Bisnis · Golden Workflow</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>End-to-End Operational Flow</h1>
+      <p class="sub" data-en="The complete laundry lifecycle, from client request to payment, including what happens when something goes wrong.">Siklus laundry lengkap, dari permintaan klien sampai pembayaran, termasuk penanganan saat ada masalah.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Integrated Operations, <b>Maximum Results</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- PC: 14-step strip + swimlane -->
+  <section class="panel strip hide-t hide-m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="route"></i></span>
+      <div class="ttl"><h2 data-en="End-to-End Operational Flow">Alur Operasional End-to-End</h2>
+        <p class="desc" data-en="Every step is connected, visible and controlled in one system.">Setiap proses terhubung, terlihat, dan terkontrol dalam satu sistem.</p></div>
+    </div>
+    <ol class="flow">
+      <li class="step"><span class="n">1</span><span class="ic"><i data-icon="contract"></i></span><b data-en="Contract / Request">Kontrak / Request</b></li>
+      <li class="step"><span class="n">2</span><span class="ic"><i data-icon="truck"></i></span><b>Pickup</b></li>
+      <li class="step"><span class="n">3</span><span class="ic"><i data-icon="factory"></i></span><b>Receiving</b></li>
+      <li class="step o"><span class="n">4</span><span class="ic"><i data-icon="weight"></i></span><b data-en="Receive &amp; Weigh">Terima &amp; Timbang</b></li>
+      <li class="step"><span class="n">5</span><span class="ic"><i data-icon="basket"></i></span><b>Sorting</b></li>
+      <li class="step"><span class="n">6</span><span class="ic"><i data-icon="washer"></i></span><b>Washing</b></li>
+      <li class="step"><span class="n">7</span><span class="ic"><i data-icon="wind"></i></span><b>Drying</b></li>
+      <li class="step"><span class="n">8</span><span class="ic"><i data-icon="iron"></i></span><b>Finishing</b></li>
+      <li class="step"><span class="n">9</span><span class="ic"><i data-icon="shield"></i></span><b>QC</b></li>
+      <li class="step"><span class="n">10</span><span class="ic"><i data-icon="package"></i></span><b>Packing</b></li>
+      <li class="step"><span class="n">11</span><span class="ic"><i data-icon="checkc"></i></span><b data-en="Ready for Delivery">Siap Dikirim</b></li>
+      <li class="step"><span class="n">12</span><span class="ic"><i data-icon="truck"></i></span><b>Delivery &amp; POD</b></li>
+      <li class="step"><span class="n">13</span><span class="ic"><i data-icon="invoice"></i></span><b>Billing &amp; Invoice</b></li>
+      <li class="step o"><span class="n">14</span><span class="ic"><i data-icon="card"></i></span><b data-en="Payment">Pembayaran</b></li>
+    </ol>
+  </section>
+
+  <section class="panel hide-t hide-m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="layers"></i></span>
+      <div class="ttl"><h2 data-en="Swimlane: who does what">Swimlane: siapa mengerjakan apa</h2>
+        <p class="desc" data-en="Main path in blue. Exception branches in amber and red. The management system watches every step.">Jalur utama berwarna biru. Cabang masalah berwarna kuning dan merah. Sistem manajemen memantau setiap langkah.</p></div>
+    </div>
+    <div class="diagram" id="swimlane"></div>
+  </section>
+
+  <!-- iPad + Mobile: 6 operational phases -->
+  <section class="panel hide-d">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="route"></i></span>
+      <div class="ttl"><h2 data-en="Main Operational Phases">Tahapan Operasional Utama</h2>
+        <p class="desc" data-en="Six phases, from request to payment.">Enam tahap, dari permintaan sampai pembayaran.</p></div>
+    </div>
+    <ol class="phases">
+      <li class="phase"><span class="n">1</span><h3><i data-icon="truck"></i><span data-en="Request &amp; Pickup">Request &amp; Pickup</span></h3>
+        <ul><li data-en="Active contract or pickup request">Kontrak aktif atau permintaan pickup</li><li data-en="Pickup on schedule">Pickup sesuai jadwal</li></ul></li>
+      <li class="phase o"><span class="n">2</span><h3><i data-icon="basket"></i><span data-en="Receiving">Terima Cucian</span></h3>
+        <ul><li data-en="Goods arrive at the plant">Barang tiba di plant</li><li data-en="Receive &amp; weigh">Terima &amp; timbang</li></ul>
+        <span class="exc chip warn hide-t"><i data-icon="alert"></i><span data-en="If different: review &amp; correct">Jika selisih: review &amp; koreksi</span></span></li>
+      <li class="phase"><span class="n">3</span><h3><i data-icon="washer"></i><span data-en="Production">Proses Laundry</span></h3>
+        <ul><li>Sorting · Washing</li><li>Drying · Finishing</li></ul></li>
+      <li class="phase"><span class="n">4</span><h3><i data-icon="shield"></i><span>QC &amp; Packing</span></h3>
+        <ul><li>Quality check</li><li data-en="Rewash if needed">Rewash (jika perlu)</li><li>Packing</li></ul>
+        <span class="exc chip crit hide-t"><i data-icon="xc"></i><span data-en="QC fail: rewash, then QC again">QC gagal: rewash, lalu QC ulang</span></span></li>
+      <li class="phase"><span class="n">5</span><h3><i data-icon="pin"></i><span>Delivery</span></h3>
+        <ul><li data-en="Ready for delivery">Siap dikirim</li><li data-en="Delivery &amp; proof of delivery">Delivery &amp; bukti pengiriman</li></ul>
+        <span class="exc chip warn hide-t"><i data-icon="alert"></i><span data-en="Issue: follow-up &amp; reschedule">Kendala: follow-up &amp; jadwal ulang</span></span></li>
+      <li class="phase o"><span class="n">6</span><h3><i data-icon="card"></i><span>Finance</span></h3>
+        <ul><li>Billing &amp; invoice</li><li data-en="Payment received">Pembayaran diterima</li></ul></li>
+    </ol>
+  </section>
+
+  <!-- Exceptions: all form factors -->
+  <section class="panel acc" data-acc="m" data-open="m">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="alert"></i></span>
+      <div class="ttl"><h2 data-en="Exceptions &amp; Handling">Penanganan Masalah</h2>
+        <p class="desc" data-en="When something is wrong, the flow does not stop silently. It branches, gets reviewed, and returns to the main path.">Saat ada yang salah, alur tidak berhenti diam-diam. Alur bercabang, ditinjau, lalu kembali ke jalur utama.</p></div>
+    </div>
+    <div class="acc-b excs">
+      <div class="exc-card">
+        <h3><i data-icon="scale"></i><span data-en="Receiving Difference">Selisih Receiving</span></h3>
+        <p data-en="Pickup quantity or weight differs from what was received at the plant.">Jumlah atau berat saat pickup berbeda dengan yang diterima di plant.</p>
+        <div class="chain"><span class="lk" data-en="Flag difference">Tandai selisih</span><span class="arr"><i data-icon="arrow"></i></span><span class="lk">Review</span><span class="arr"><i data-icon="arrow"></i></span><span class="lk" data-en="Correct / confirm">Koreksi / konfirmasi</span></div>
+      </div>
+      <div class="exc-card crit">
+        <h3><i data-icon="xc"></i><span data-en="QC Fail">QC Gagal</span></h3>
+        <p data-en="Pass goes to packing. Fail goes back for rewash or reprocess, then QC again.">Lulus lanjut ke packing. Gagal kembali ke rewash atau proses ulang, lalu QC lagi.</p>
+        <div class="chain"><span class="lk" data-en="QC fail">QC gagal</span><span class="arr"><i data-icon="arrow"></i></span><span class="lk" data-en="Rewash / reprocess">Rewash / proses ulang</span><span class="arr"><i data-icon="arrow"></i></span><span class="lk" data-en="QC again">QC ulang</span></div>
+      </div>
+      <div class="exc-card">
+        <h3><i data-icon="truck"></i><span data-en="Delivery Issue">Kendala Delivery</span></h3>
+        <p data-en="Delivery cannot be completed: late, refused, or the recipient is not available.">Delivery tidak bisa selesai: terlambat, ditolak, atau penerima tidak ada.</p>
+        <div class="chain"><span class="lk" data-en="Report issue">Lapor kendala</span><span class="arr"><i data-icon="arrow"></i></span><span class="lk">Follow-up</span><span class="arr"><i data-icon="arrow"></i></span><span class="lk" data-en="Reschedule / correct">Jadwal ulang / koreksi</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Management system layer -->
+  <section class="panel tint acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="monitor"></i></span>
+      <div class="ttl"><h2 data-en="Management System Layer">Lapisan Sistem Manajemen</h2>
+        <p class="desc hide-m" data-en="Runs in the background across every step, without extra work for frontline staff.">Berjalan di belakang setiap langkah, tanpa pekerjaan tambahan untuk staf frontline.</p>
+        <p class="sum-preview" data-en="SLA, real-time status, alerts, KPI, reports, audit trail">SLA, status real-time, alert, KPI, laporan, audit trail</p></div>
+    </div>
+    <div class="acc-b sys">
+      <div class="row"><span class="ic"><i data-icon="clock"></i></span><span class="tx"><b>SLA tracking</b></span></div>
+      <div class="row"><span class="ic"><i data-icon="zap"></i></span><span class="tx"><b data-en="Real-time status">Status real-time</b></span></div>
+      <div class="row"><span class="ic o"><i data-icon="bell"></i></span><span class="tx"><b>Alert</b></span></div>
+      <div class="row"><span class="ic"><i data-icon="gauge"></i></span><span class="tx"><b>KPI</b></span></div>
+      <div class="row"><span class="ic"><i data-icon="chart"></i></span><span class="tx"><b data-en="Reports">Laporan</b></span></div>
+      <div class="row"><span class="ic"><i data-icon="history"></i></span><span class="tx"><b>Audit trail</b></span></div>
+    </div>
+  </section>
+
+  <div class="wins hide-m">
+    <div class="row"><span class="ic"><i data-icon="eye"></i></span><span class="tx"><b data-en="Full visibility">Visibilitas penuh</b><span data-en="Every step can be monitored in real time.">Setiap proses dapat dipantau secara real-time.</span></span></div>
+    <div class="row"><span class="ic o"><i data-icon="alert"></i></span><span class="tx"><b data-en="Exception handling">Penanganan masalah</b><span data-en="Early detection and fast resolution.">Deteksi dini dan penyelesaian cepat.</span></span></div>
+    <div class="row"><span class="ic"><i data-icon="link"></i></span><span class="tx"><b data-en="Integrated system">Sistem terintegrasi</b><span data-en="From operations to payment in one platform.">Dari operasional sampai pembayaran dalam satu platform.</span></span></div>
+  </div>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script>
+JF.diagram('#swimlane', function (lang, S) {
+  var W = 1500, LH = 76, Y0 = 6, LX = 182, NW = 86, NH = 44;
+  var lanes = [
+    [['Klien', 'Client'], 'hotel', ['Hotel · Villa · Spa · F&B', 'Hotel · Villa · Spa · F&B']],
+    [['Pickup / Logistik', 'Pickup / Logistics'], 'truck'],
+    [['Receiving', 'Receiving'], 'basket'],
+    [['Produksi', 'Production'], 'washer'],
+    [['QC & Packing', 'QC & Packing'], 'shield'],
+    [['Delivery', 'Delivery'], 'pin'],
+    [['Finance', 'Finance'], 'card'],
+    [['Manajemen', 'Management'], 'monitor', ['Sistem JFRESH OS', 'JFRESH OS system']]
+  ];
+  var H = Y0 * 2 + lanes.length * LH;
+  function cx(c) { return 240 + (c - 1) * 90.5; }
+  function cy(l) { return Y0 + l * LH + LH / 2; }
+  var out = S.open(W, H, ['Swimlane alur operasional', 'Operational flow swimlane']);
+  lanes.forEach(function (ln, i) {
+    var y = Y0 + i * LH;
+    out += S.rect(LX - 4, y + 3, W - LX + 2, LH - 6, { fill: i % 2 ? '#FFFFFF' : '#F6F9FC', stroke: '#E4ECF6', r: 12, sw: 1 });
+    var tone = i === 7 ? '#0B3D78' : (i === 2 || i === 5 ? '#E07F0A' : '#0754A6');
+    out += S.rect(0, y + 6, 166, LH - 12, { fill: tone, r: 12 });
+    out += S.icon(ln[1], 12, y + LH / 2 - 11, 22, '#FFFFFF');
+    out += S.text(42, y + LH / 2 - (ln[2] ? 7 : 0), ln[0], { size: 14, weight: 800, fill: '#FFFFFF', anchor: 'start' });
+    if (ln[2]) out += S.text(42, y + LH / 2 + 10, ln[2], { size: 10.5, weight: 600, fill: '#D6E6F8', anchor: 'start' });
+  });
+  var N = {};
+  function node(id, lane, col, label, o) {
+    o = o || {};
+    var w = o.w || NW, x = cx(col) - w / 2, y = cy(lane) - NH / 2;
+    N[id] = { x: x, y: y, w: w, h: NH, cx: x + w / 2, cy: y + NH / 2 };
+    out += S.node(x, y, w, NH, label, { tone: o.tone || 'blue', size: o.size || 12, dash: o.dash });
+  }
+  function R(n) { return [N[n].x + N[n].w, N[n].cy]; }
+  function Lf(n) { return [N[n].x, N[n].cy]; }
+  function Tp(n, dx) { return [N[n].cx + (dx || 0), N[n].y]; }
+  function Bt(n, dx) { return [N[n].cx + (dx || 0), N[n].y + NH]; }
+  function elbow(a, b, o) {
+    var p = R(a), q = Lf(b);
+    if (Math.abs(p[1] - q[1]) < 1) return S.line([p, q], o);
+    var mx = p[0] + (q[0] - p[0]) / 2;
+    return S.line([p, [mx, p[1]], [mx, q[1]], q], o);
+  }
+  // main path
+  node('req', 0, 1, ['Kontrak aktif /\nRequest pickup', 'Active contract /\nPickup request']);
+  node('pu', 1, 2, ['Pickup\nsesuai jadwal', 'Pickup\non schedule']);
+  node('rcv', 2, 3, ['Barang tiba\ndi plant', 'Goods arrive\nat plant']);
+  node('tt', 2, 4, ['Terima &\nTimbang', 'Receive &\nWeigh'], { tone: 'orange' });
+  node('srt', 3, 5, 'Sorting');
+  node('wsh', 3, 6, 'Washing');
+  node('dry', 3, 7, 'Drying');
+  node('fin', 3, 8, 'Finishing');
+  node('qc', 4, 9, 'QC Check');
+  node('pack', 4, 10, 'Packing');
+  node('rdy', 5, 11, ['Siap\nDikirim', 'Ready for\nDelivery']);
+  node('del', 5, 12, ['Delivery\n& POD', 'Delivery\n& POD']);
+  node('rcvc', 0, 12, ['Terima barang\nbersih & POD', 'Receives clean\nitems & POD'], { tone: 'ok' });
+  node('inv', 6, 13, ['Billing &\nInvoice', 'Billing &\nInvoice']);
+  node('pay', 6, 14, ['Pembayaran\nditerima', 'Payment\nreceived'], { tone: 'ok' });
+  // exceptions
+  node('exA', 2, 5.6, ['Selisih Receiving\nReview & Koreksi', 'Receiving Difference\nReview & Correct'], { tone: 'warn', w: 150, dash: '5 4' });
+  node('exB', 3, 9.5, ['QC Gagal\nRewash / Proses Ulang', 'QC Fail\nRewash / Reprocess'], { tone: 'crit', w: 150, dash: '5 4' });
+  node('exC', 5, 13.6, ['Kendala Delivery\nFollow-up / Jadwal Ulang', 'Delivery Issue\nFollow-up / Reschedule'], { tone: 'warn', w: 160, dash: '5 4' });
+
+  var b = { tone: 'blue', sw: 1.8 };
+  out += S.line([Bt('req'), [N.req.cx, N.pu.cy], Lf('pu')], b);
+  out += S.line([Bt('pu'), [N.pu.cx, N.rcv.cy], Lf('rcv')], b);
+  out += elbow('rcv', 'tt', b);
+  out += S.line([Bt('tt'), [N.tt.cx, N.srt.cy], Lf('srt')], b);
+  out += elbow('srt', 'wsh', b); out += elbow('wsh', 'dry', b); out += elbow('dry', 'fin', b);
+  out += S.line([Bt('fin'), [N.fin.cx, N.qc.cy], Lf('qc')], b);
+  out += elbow('qc', 'pack', b);
+  out += S.pill((N.qc.x + N.qc.w + N.pack.x) / 2, N.qc.cy - 16, ['Lulus', 'Pass'], { tone: 'ok', size: 10.5 });
+  out += S.line([Bt('pack'), [N.pack.cx, N.rdy.cy], Lf('rdy')], b);
+  out += elbow('rdy', 'del', b);
+  out += S.line([Tp('del'), Bt('rcvc')], { tone: 'ok', sw: 1.6, dash: '2 4' });
+  out += S.line([Bt('del'), [N.del.cx, N.inv.cy], Lf('inv')], b);
+  out += elbow('inv', 'pay', b);
+  // exception wiring
+  out += S.line([R('tt'), Lf('exA')], { tone: 'warn', dash: '5 4' });
+  out += S.line([Bt('exA'), [N.exA.cx, N.srt.y - 8], [N.srt.cx + 20, N.srt.y - 8], Tp('srt', 20)], { tone: 'warn', dash: '5 4' });
+  out += S.text(N.exA.cx + 10, N.srt.y - 18, ['dikonfirmasi', 'confirmed'], { size: 10.5, fill: '#B86A00', anchor: 'start' });
+  out += S.line([Tp('qc', 18), [N.qc.cx + 18, N.exB.y + NH]], { tone: 'crit', dash: '5 4' });
+  out += S.line([[N.qc.cx - 6, N.exB.y + NH], Tp('qc', -6)], { tone: 'crit', dash: '5 4' });
+  out += S.text(N.qc.cx + 24, N.qc.y - 10, ['gagal', 'fail'], { size: 10.5, fill: '#C8281C', anchor: 'start' });
+  out += S.text(N.qc.cx - 12, N.qc.y - 10, ['QC ulang', 'QC again'], { size: 10.5, fill: '#C8281C', anchor: 'end' });
+  out += S.line([R('del'), Lf('exC')], { tone: 'warn', dash: '5 4' });
+  out += S.line([Bt('exC'), [N.exC.cx, N.del.y + NH + 12], [N.del.cx + 18, N.del.y + NH + 12], Bt('del', 18)], { tone: 'warn', dash: '5 4' });
+  // management lane
+  var items = [['clock', 'SLA tracking', 'SLA tracking'], ['zap', 'Status real-time', 'Real-time status'], ['bell', 'Alert & notifikasi', 'Alerts & notifications'], ['gauge', 'Dashboard & KPI', 'Dashboard & KPI'], ['chart', 'Laporan & analitik', 'Reports & analytics'], ['history', 'Audit trail lengkap', 'Complete audit trail']];
+  var my = cy(7), span = (W - LX - 20) / items.length;
+  items.forEach(function (it, i) {
+    var x = LX + 10 + i * span;
+    out += S.node(x + 6, my - 20, span - 12, 40, [it[1], it[2]], { tone: 'fresh', icon: it[0], size: 12.5, is: 18 });
+  });
+  out += S.text(LX + 14, Y0 + 7 * LH - 14, ['data tercatat otomatis dari setiap langkah', 'data captured automatically at every step'], { size: 11, fill: '#7F95AE', anchor: 'start', weight: 600 });
+  return out + S.close();
+});
+</script>
+</body>
+</html>

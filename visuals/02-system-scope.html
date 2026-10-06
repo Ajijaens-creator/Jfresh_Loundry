@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — System Scope Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<style>
+  .v02 { display: flex; flex-direction: column; gap: 14px; }
+  .portal .tiles { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .link-strip { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 8px 24px; color: var(--muted); font-size: 14px; font-weight: 600; }
+  .link-strip span { display: inline-flex; align-items: center; gap: 8px; }
+  .link-strip .i { color: var(--fresh); width: 20px; height: 20px; }
+
+  .core { border: 2.5px solid var(--blue); border-radius: 28px; padding: 22px; background: linear-gradient(180deg, var(--blue-50), var(--white) 40%); display: grid; gap: 18px; }
+  .core-h { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; }
+  .core-h .seal { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 20px; background: var(--blue); color: var(--white); }
+  .core-h .seal .i { width: 34px; height: 34px; }
+  .core-h h2 { font-size: 26px; font-weight: 800; }
+  .core-h h2 b { color: var(--orange); }
+  .core-h p { color: var(--muted); }
+  .core-h .sor { padding: 10px 16px; border-radius: 14px; background: var(--white); border: 1px solid var(--blue-100); color: var(--blue); font-weight: 700; font-size: 14px; max-width: 280px; }
+  .layers { display: grid; grid-template-columns: 6fr 8fr 7fr; gap: 18px; }
+  .layer .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .layer.l2 .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .layer.l3 .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .lnum { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--orange-ink); }
+
+  .oos { border: 2px dashed var(--line-2); background: repeating-linear-gradient(135deg, var(--bg), var(--bg) 12px, var(--white) 12px, var(--white) 24px); }
+  .oos .panel-h h2 { color: var(--muted); }
+  .oos-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) 1.4fr; gap: 12px; }
+  .oos .tile { background: var(--white); color: var(--muted); border-style: dashed; }
+  .oos .tile .ic { background: var(--bg-2); color: var(--faint); }
+  .oos .callout { align-self: stretch; align-items: center; }
+
+  @media (max-width: 1239px) {
+    .core { display: contents; }
+    .core-h, .link-strip { display: none; }
+    .layers { display: contents; }
+    .layer.l1 { order: 1; } .layer.l2 { order: 2; } .layer.l3 { order: 3; } .portal { order: 4; } .oos { order: 5; }
+    .layer .tiles, .layer.l2 .tiles, .layer.l3 .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .portal .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .oos-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .oos-grid .callout { grid-column: 1 / -1; }
+  }
+  @media (max-width: 699px) {
+    .layer .tiles, .layer.l2 .tiles, .layer.l3 .tiles, .portal .tiles, .oos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+</head>
+<body data-root="../" data-visual="2">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">02</span><span data-en="Phase 1 · Business Foundation">Fase 1 · Fondasi Bisnis</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>System Scope Architecture</h1>
+      <p class="sub" data-en="What is inside JFRESH OS, and what stays outside the initial release.">Apa saja yang masuk ke dalam JFRESH OS, dan apa yang belum masuk rilis awal.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">One System for <b>Professional Laundry Operations</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="v02">
+
+    <!-- Client portal -->
+    <section class="panel acc portal" data-acc="tm" data-open="t">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="globe"></i></span>
+        <div class="ttl"><h2>Client Portal</h2>
+          <p class="desc" data-en="Access for hotel, resort, villa clients and partners.">Akses untuk klien hotel, resort, villa dan mitra.</p></div>
+        <span class="count num">8</span>
+      </div>
+      <div class="acc-b tiles">
+        <div class="tile"><span class="ic"><i data-icon="truck"></i></span><span data-en="Request Pickup">Minta Pickup</span></div>
+        <div class="tile"><span class="ic"><i data-icon="clock"></i></span><span data-en="Order Status">Status Order</span></div>
+        <div class="tile"><span class="ic"><i data-icon="pin"></i></span><span>Delivery</span></div>
+        <div class="tile"><span class="ic"><i data-icon="invoice"></i></span><span>Invoice</span></div>
+        <div class="tile"><span class="ic"><i data-icon="card"></i></span><span data-en="Payment">Pembayaran</span></div>
+        <div class="tile o"><span class="ic"><i data-icon="message"></i></span><span data-en="Complaint">Komplain</span></div>
+        <div class="tile"><span class="ic"><i data-icon="file"></i></span><span data-en="Documents">Dokumen</span></div>
+        <div class="tile"><span class="ic"><i data-icon="bell"></i></span><span data-en="Notifications">Notifikasi</span></div>
+      </div>
+    </section>
+
+    <div class="link-strip" aria-hidden="true">
+      <span><i data-icon="refresh"></i><span data-en="Integrated portal">Portal terintegrasi</span></span>
+      <span><i data-icon="zap"></i><span data-en="Real-time data">Data real-time</span></span>
+      <span><i data-icon="eye"></i><span data-en="Service transparency">Transparansi layanan</span></span>
+    </div>
+
+    <!-- Core system -->
+    <div class="core">
+      <div class="core-h">
+        <span class="seal"><i data-icon="layers"></i></span>
+        <div><h2>JFRESH <b>OS</b> · Core System</h2><p data-en="In scope for the initial release: operations, business control and management in one system.">Masuk cakupan rilis awal: operasional, kontrol bisnis dan manajemen dalam satu sistem.</p></div>
+        <span class="sor">Single Operational System of Record</span>
+      </div>
+      <div class="layers">
+        <section class="panel acc layer l1" data-acc="tm" data-open="t">
+          <div class="panel-h">
+            <span class="ico o"><i data-icon="pointer"></i></span>
+            <div class="ttl"><span class="lnum">Layer 1</span><h2 data-en="Frontline Operations">Operasional Frontline</h2>
+              <p class="desc hide-m" data-en="End-to-end laundry work.">Alur kerja laundry dari awal sampai akhir.</p>
+              <p class="sum-preview" data-en="Pickup, Receiving, Production, QC, Packing, Delivery">Pickup, Terima Cucian, Proses, QC, Packing, Delivery</p></div>
+            <span class="count num">6</span>
+          </div>
+          <div class="acc-b tiles">
+            <div class="tile o"><span class="ic"><i data-icon="truck"></i></span><span>Pickup</span></div>
+            <div class="tile o"><span class="ic"><i data-icon="basket"></i></span><span data-en="Receiving">Terima Cucian</span></div>
+            <div class="tile o"><span class="ic"><i data-icon="washer"></i></span><span data-en="Production">Proses Laundry</span></div>
+            <div class="tile o"><span class="ic"><i data-icon="shield"></i></span><span>QC</span></div>
+            <div class="tile o"><span class="ic"><i data-icon="package"></i></span><span>Packing</span></div>
+            <div class="tile o"><span class="ic"><i data-icon="pin"></i></span><span>Delivery</span></div>
+          </div>
+        </section>
+        <section class="panel acc layer l2" data-acc="tm" data-open="t">
+          <div class="panel-h">
+            <span class="ico"><i data-icon="briefcase"></i></span>
+            <div class="ttl"><span class="lnum">Layer 2</span><h2 data-en="Business Control">Kontrol Bisnis</h2>
+              <p class="desc hide-m" data-en="Clients, contracts, pricing and resources.">Klien, kontrak, harga dan sumber daya.</p>
+              <p class="sum-preview" data-en="Client, Property, Contract, Pricing, Billing, Quality, Inventory, Fleet">Klien, Properti, Kontrak, Harga, Billing, Kualitas, Stok, Armada</p></div>
+            <span class="count num">8</span>
+          </div>
+          <div class="acc-b tiles">
+            <div class="tile"><span class="ic"><i data-icon="building"></i></span><span data-en="Client">Klien</span></div>
+            <div class="tile"><span class="ic"><i data-icon="palm"></i></span><span data-en="Property">Properti</span></div>
+            <div class="tile"><span class="ic"><i data-icon="contract"></i></span><span data-en="Contract">Kontrak</span></div>
+            <div class="tile"><span class="ic"><i data-icon="tag"></i></span><span data-en="Pricing">Harga</span></div>
+            <div class="tile"><span class="ic"><i data-icon="invoice"></i></span><span>Billing</span></div>
+            <div class="tile"><span class="ic"><i data-icon="star"></i></span><span data-en="Quality">Kualitas</span></div>
+            <div class="tile"><span class="ic"><i data-icon="flask"></i></span><span data-en="Inventory">Stok</span></div>
+            <div class="tile"><span class="ic"><i data-icon="truck"></i></span><span data-en="Fleet">Armada</span></div>
+          </div>
+        </section>
+        <section class="panel acc layer l3" data-acc="tm" data-open="t">
+          <div class="panel-h">
+            <span class="ico"><i data-icon="cog"></i></span>
+            <div class="ttl"><span class="lnum">Layer 3</span><h2 data-en="Management &amp; Administration">Manajemen &amp; Administrasi</h2>
+              <p class="desc hide-m" data-en="System settings and governance.">Pengaturan sistem dan tata kelola.</p>
+              <p class="sum-preview" data-en="Dashboard, Reports, Users, Roles, Audit, Settings, Integration">Dashboard, Laporan, Pengguna, Peran, Audit, Pengaturan, Integrasi</p></div>
+            <span class="count num">7</span>
+          </div>
+          <div class="acc-b tiles">
+            <div class="tile"><span class="ic"><i data-icon="grid"></i></span><span>Dashboard</span></div>
+            <div class="tile"><span class="ic"><i data-icon="chart"></i></span><span data-en="Reports">Laporan</span></div>
+            <div class="tile"><span class="ic"><i data-icon="users"></i></span><span data-en="Users">Pengguna</span></div>
+            <div class="tile"><span class="ic"><i data-icon="key"></i></span><span data-en="Roles">Peran</span></div>
+            <div class="tile"><span class="ic"><i data-icon="history"></i></span><span>Audit</span></div>
+            <div class="tile"><span class="ic"><i data-icon="cog"></i></span><span data-en="Settings">Pengaturan</span></div>
+            <div class="tile"><span class="ic"><i data-icon="plug"></i></span><span data-en="Integration">Integrasi</span></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="link-strip" aria-hidden="true">
+      <span><i data-icon="database"></i><span data-en="One data foundation">Satu basis data</span></span>
+      <span><i data-icon="link"></i><span data-en="Integrated data">Integrasi data</span></span>
+      <span><i data-icon="trend"></i><span data-en="Scalable for growth">Skalabel untuk pertumbuhan</span></span>
+    </div>
+
+    <!-- Out of scope -->
+    <section class="panel acc oos" data-acc="m">
+      <div class="panel-h">
+        <span class="ico g"><i data-icon="hourglass"></i></span>
+        <div class="ttl"><h2 data-en="Out of Initial Scope · Future Expansion">Di Luar Cakupan Awal · Pengembangan Nanti</h2>
+          <p class="desc hide-m" data-en="Not part of the first release of JFRESH OS. Can be added in later phases.">Belum termasuk rilis pertama JFRESH OS. Bisa dikembangkan di fase berikutnya.</p>
+          <p class="sum-preview" data-en="Full payroll, full HRIS, full GL, hotel PMS, consumer app">Payroll penuh, HRIS penuh, GL penuh, PMS hotel, aplikasi konsumen</p></div>
+      </div>
+      <div class="acc-b oos-grid">
+        <div class="tile"><span class="ic"><i data-icon="coins"></i></span><span data-en="Full Payroll">Payroll Penuh</span></div>
+        <div class="tile"><span class="ic"><i data-icon="users"></i></span><span data-en="Full HRIS">HRIS Penuh</span></div>
+        <div class="tile"><span class="ic"><i data-icon="list"></i></span><span data-en="Full General Ledger">General Ledger Penuh</span></div>
+        <div class="tile"><span class="ic"><i data-icon="hotel"></i></span><span data-en="Hotel PMS (internal)">PMS Hotel (internal)</span></div>
+        <div class="tile"><span class="ic"><i data-icon="phone"></i></span><span data-en="Consumer retail laundry app">Aplikasi laundry retail konsumen</span></div>
+        <div class="callout blue"><i data-icon="hourglass"></i><p data-en="Developed later based on business needs and the roadmap. JFRESH OS can connect to these systems through Integration.">Dikembangkan nanti sesuai kebutuhan bisnis dan roadmap. JFRESH OS dapat terhubung ke sistem ini lewat Integrasi.</p></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+</body>
+</html>

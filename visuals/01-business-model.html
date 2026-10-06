@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — Business Model Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<style>
+  .v01 { display: grid; gap: 22px; grid-template-columns: 300px minmax(0, 1fr) 340px;
+    grid-template-areas: "klien nilai model" "klien alur model" "klien relasi model" "duo duo duo" "loop loop loop"; }
+  .a-klien { grid-area: klien; } .a-nilai { grid-area: nilai; } .a-alur { grid-area: alur; } .a-model { grid-area: model; }
+  .a-relasi { grid-area: relasi; } .duo { grid-area: duo; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; } .a-loop { grid-area: loop; }
+
+  .seg .ic { width: 46px; height: 46px; }
+  .headline { font-size: 19px; font-weight: 800; color: var(--blue-ink); margin-bottom: 14px; }
+  .headline b { color: var(--orange-ink); }
+  .pricing { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line-2); display: grid; gap: 12px; }
+  .pricing .chain .lk { min-height: 46px; padding: 8px 12px; font-size: 15px; }
+  .model-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .front-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .a-nilai .tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .pricing .chain { flex-direction: column; align-items: stretch; gap: 2px; }
+  .pricing .chain .arr { justify-content: center; transform: rotate(90deg); height: 18px; }
+  .demo { grid-template-columns: auto 1fr; align-items: center; }
+  .demo .cap { grid-column: 1 / -1; }
+  .demo .btn { justify-self: end; }
+  .principles { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .demo { border-radius: var(--r-lg); border: 2px solid var(--blue-100); background: linear-gradient(180deg, var(--white), var(--blue-50)); padding: 18px; display: grid; gap: 14px; align-content: start; }
+  .demo .cap { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .demo .big { display: flex; align-items: center; gap: 14px; }
+  .demo .big .ic { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: var(--orange-50); color: var(--orange-ink); }
+  .demo .big .ic .i { width: 30px; height: 30px; }
+  .demo .big b { font-size: 40px; line-height: 1; color: var(--blue-ink); font-variant-numeric: tabular-nums; }
+  .demo .big span { display: block; font-weight: 700; color: var(--blue-ink); }
+  .mgmt-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mgmt-tiles .tile { min-height: 92px; }
+  .drill { margin-top: 14px; }
+  .drill .lk { min-height: 44px; padding: 6px 12px; font-size: 14.5px; }
+  .loopnote { display: flex; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); font-size: var(--fs-small); }
+  .loopnote .i { color: var(--fresh); }
+
+  @media (max-width: 1239px) {
+    .v01 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px;
+      grid-template-areas: "klien klien" "nilai nilai" "alur alur" "model relasi" "duo duo" "loop loop"; }
+    .a-klien .rows { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .a-relasi .chain { flex-direction: column; align-items: stretch; }
+    .a-relasi .chain .arr { justify-content: center; transform: rotate(90deg); height: 20px; }
+    .duo { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  }
+  @media (max-width: 699px) {
+    .v01 { grid-template-columns: minmax(0, 1fr); gap: 12px;
+      grid-template-areas: "klien" "nilai" "alur" "model" "relasi" "duo" "loop"; }
+    .duo { gap: 12px; }
+    .a-nilai .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .demo { grid-template-columns: minmax(0, 1fr); }
+    .demo .btn { justify-self: stretch; }
+    .a-klien .rows { grid-template-columns: minmax(0, 1fr); }
+    .front-grid { grid-template-columns: minmax(0, 1fr); }
+    .front-grid .demo { order: -1; }
+    .principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .model-tiles, .mgmt-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+</head>
+<body data-root="../" data-visual="1">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">01</span><span data-en="Phase 1 · Business Foundation">Fase 1 · Fondasi Bisnis</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Business Model Overview</h1>
+      <p class="sub" data-en="Who JFRESH serves, the value it provides, how service flows, how revenue is earned and how management controls the business.">Siapa yang dilayani JFRESH, nilai yang diberikan, alur layanan, cara pendapatan dihasilkan, dan cara manajemen mengendalikan bisnis.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Simple Frontline • <b>Powerful Management</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="v01">
+
+    <!-- A. Client segments -->
+    <section class="panel tint acc a-klien" data-acc="m">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="hotel"></i></span>
+        <div class="ttl"><h2 data-en="Our Clients">Klien Kami</h2>
+          <p class="desc hide-m" data-en="Trusted by hospitality businesses.">Dipercaya berbagai bisnis hospitality.</p>
+          <p class="sum-preview" data-en="Hotel, Resort, Villa, Spa, F&amp;B, Other">Hotel, Resort, Villa, Spa, F&amp;B, Lainnya</p></div>
+      </div>
+      <div class="acc-b">
+        <ul class="rows seg">
+          <li class="row"><span class="ic"><i data-icon="hotel"></i></span><span class="tx"><b>Hotel</b><span data-en="Room linen, towels, uniforms">Linen kamar, handuk, seragam</span></span></li>
+          <li class="row"><span class="ic"><i data-icon="palm"></i></span><span class="tx"><b>Resort</b><span data-en="Pool towels, high volume">Handuk kolam, volume besar</span></span></li>
+          <li class="row"><span class="ic"><i data-icon="home"></i></span><span class="tx"><b>Villa</b><span data-en="Flexible scheduled pickup">Pickup terjadwal fleksibel</span></span></li>
+          <li class="row"><span class="ic"><i data-icon="spa"></i></span><span class="tx"><b data-en="Spa &amp; Wellness">Spa &amp; Wellness</b><span data-en="Treatment towels, robes">Handuk treatment, jubah</span></span></li>
+          <li class="row"><span class="ic"><i data-icon="utensils"></i></span><span class="tx"><b data-en="Restaurant / F&amp;B">Restoran / F&amp;B</b><span data-en="Napkins, table linen, aprons">Serbet, taplak, apron</span></span></li>
+          <li class="row"><span class="ic"><i data-icon="sparkles"></i></span><span class="tx"><b data-en="Other Hospitality">Hospitality Lainnya</b><span data-en="Guest houses, clubs, events">Guest house, klub, event</span></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- B. Value proposition -->
+    <section class="panel acc a-nilai" data-acc="m">
+      <div class="panel-h">
+        <span class="ico o"><i data-icon="star"></i></span>
+        <div class="ttl"><h2 data-en="Core Value">Nilai Utama</h2>
+          <p class="desc hide-m" data-en="Our commitment to every client.">Komitmen kami untuk setiap klien.</p>
+          <p class="sum-preview" data-en="Scheduled pickup, QC, on-time delivery, transparent billing">Pickup terjadwal, QC, delivery tepat waktu, billing transparan</p></div>
+      </div>
+      <div class="acc-b">
+        <p class="headline">Professional Laundry. <b>Reliable Service.</b> Clear Control.</p>
+        <div class="tiles">
+          <div class="tile"><span class="ic"><i data-icon="calendar"></i></span><span data-en="Scheduled Pickup">Pickup Terjadwal</span></div>
+          <div class="tile"><span class="ic"><i data-icon="shirt"></i></span><span data-en="Professional Laundry">Laundry Profesional</span></div>
+          <div class="tile"><span class="ic"><i data-icon="shield"></i></span><span>Quality Control</span></div>
+          <div class="tile"><span class="ic"><i data-icon="truck"></i></span><span data-en="On-time Delivery">Delivery Tepat Waktu</span></div>
+          <div class="tile"><span class="ic"><i data-icon="pin"></i></span><span data-en="Traceable">Bisa Dilacak</span></div>
+          <div class="tile"><span class="ic"><i data-icon="invoice"></i></span><span data-en="Transparent Billing">Billing Transparan</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- C. Golden service flow -->
+    <section class="panel acc a-alur" data-acc="m">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="route"></i></span>
+        <div class="ttl"><h2 data-en="JFRESH Service Flow">Alur Layanan JFRESH</h2>
+          <p class="desc hide-m" data-en="Eight connected stages from order to payment.">Delapan tahap terhubung dari order hingga pembayaran.</p>
+          <p class="sum-preview" data-en="8 stages: Order to Billing &amp; Payment">8 tahap: Order sampai Billing &amp; Payment</p></div>
+      </div>
+      <div class="acc-b">
+        <ol class="flow">
+          <li class="step"><span class="n">1</span><span class="ic"><i data-icon="file"></i></span><span class="txt"><b>Order</b></span></li>
+          <li class="step"><span class="n">2</span><span class="ic"><i data-icon="truck"></i></span><span class="txt"><b>Pickup</b></span></li>
+          <li class="step o"><span class="n">3</span><span class="ic"><i data-icon="basket"></i></span><span class="txt"><b data-en="Receive Laundry">Terima Cucian</b></span></li>
+          <li class="step"><span class="n">4</span><span class="ic"><i data-icon="washer"></i></span><span class="txt"><b data-en="Laundry Process">Proses Laundry</b></span></li>
+          <li class="step"><span class="n">5</span><span class="ic"><i data-icon="shield"></i></span><span class="txt"><b>Quality Check</b></span></li>
+          <li class="step"><span class="n">6</span><span class="ic"><i data-icon="package"></i></span><span class="txt"><b>Packing</b></span></li>
+          <li class="step"><span class="n">7</span><span class="ic"><i data-icon="truck"></i></span><span class="txt"><b>Delivery</b></span></li>
+          <li class="step"><span class="n">8</span><span class="ic"><i data-icon="card"></i></span><span class="txt"><b>Billing &amp; Payment</b></span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- D. Revenue model -->
+    <section class="panel acc a-model" data-acc="m">
+      <div class="panel-h">
+        <span class="ico o"><i data-icon="coins"></i></span>
+        <div class="ttl"><h2 data-en="Revenue Model">Model Pendapatan</h2>
+          <p class="desc hide-m" data-en="Flexible, follows each client's contract.">Fleksibel, mengikuti kontrak tiap klien.</p>
+          <p class="sum-preview" data-en="Per kg, per piece, contract rate, additional service">Per kg, per piece, contract rate, layanan tambahan</p></div>
+      </div>
+      <div class="acc-b">
+        <div class="tiles model-tiles">
+          <div class="tile o"><span class="ic"><i data-icon="weight"></i></span><span>Per Kilogram<small data-en="Priced by weight">Harga berdasarkan berat</small></span></div>
+          <div class="tile o"><span class="ic"><i data-icon="shirt"></i></span><span>Per Piece<small data-en="Priced per item">Harga per item</small></span></div>
+          <div class="tile o"><span class="ic"><i data-icon="contract"></i></span><span>Contract Rate<small data-en="Special client rate">Harga khusus per klien</small></span></div>
+          <div class="tile o"><span class="ic"><i data-icon="sparkles"></i></span><span>Additional Service<small data-en="Express, special stains">Ekspres, noda khusus</small></span></div>
+        </div>
+        <div class="pricing">
+          <span class="label" data-en="Pricing logic">Logika harga</span>
+          <div class="chain">
+            <span class="lk"><span class="ic"><i data-icon="list"></i></span>Service Master</span><span class="arr"><i data-icon="arrow"></i></span>
+            <span class="lk"><span class="ic"><i data-icon="contract"></i></span>Client Contract</span><span class="arr"><i data-icon="arrow"></i></span>
+            <span class="lk"><span class="ic"><i data-icon="tag"></i></span>Rate Card</span><span class="arr"><i data-icon="arrow"></i></span>
+            <span class="lk o"><span class="ic"><i data-icon="invoice"></i></span>Billing</span>
+          </div>
+          <div class="callout"><i data-icon="lock"></i><p data-en="&lt;b&gt;Service Master price is not the client contract price.&lt;/b&gt; Invoices always use the Rate Card from the active contract. Example: base Rp 15,000/kg, ABC Resort contract Rp 12,500/kg.">
+            <b>Harga Service Master tidak sama dengan harga kontrak klien.</b> Tagihan selalu memakai Rate Card dari kontrak aktif. Contoh: harga dasar Rp 15.000/kg, kontrak ABC Resort Rp 12.500/kg.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- E. Client relationship -->
+    <section class="panel acc a-relasi" data-acc="m">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="link"></i></span>
+        <div class="ttl"><h2 data-en="Client Relationship">Struktur Relasi Klien</h2>
+          <p class="desc hide-m" data-en="From client company down to SLA.">Dari perusahaan klien hingga SLA.</p>
+          <p class="sum-preview" data-en="Client Company to Property to Contract to Rate Card to SLA">Client Company ke Property ke Contract ke Rate Card ke SLA</p></div>
+      </div>
+      <div class="acc-b">
+        <div class="chain v">
+          <span class="lk"><span class="ic"><i data-icon="building"></i></span><span>Client Company<small>ABC Hospitality Group</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+          <span class="lk"><span class="ic"><i data-icon="palm"></i></span><span>Property<small>ABC Resort Ubud</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+          <span class="lk"><span class="ic"><i data-icon="contract"></i></span><span>Contract<small data-en="Contract 2026">Kontrak 2026</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+          <span class="lk"><span class="ic"><i data-icon="tag"></i></span><span>Rate Card<small>Rate Card A</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+          <span class="lk o"><span class="ic"><i data-icon="clock"></i></span><span>SLA<small data-en="24 hours">24 Jam</small></span></span>
+        </div>
+        <p class="note" style="margin-top:12px" data-en="One client company can have many properties, each with its own contract and SLA.">Satu perusahaan klien bisa memiliki banyak properti, masing-masing dengan kontrak dan SLA sendiri.</p>
+      </div>
+    </section>
+
+    <div class="duo">
+    <!-- F1. Frontline -->
+    <section class="panel acc a-front" data-acc="m" data-open="m">
+      <div class="panel-h">
+        <span class="ico o"><i data-icon="pointer"></i></span>
+        <div class="ttl"><h2>Frontline</h2>
+          <p class="desc" data-en="Very simple operations: one screen, one job.">Operasional super sederhana: satu layar, satu tugas.</p></div>
+      </div>
+      <div class="acc-b front-grid">
+        <div class="tiles principles">
+          <div class="tile o"><span class="ic"><i data-icon="tablet"></i></span><span data-en="One screen">Satu layar</span></div>
+          <div class="tile o"><span class="ic"><i data-icon="target"></i></span><span data-en="One task">Satu tugas</span></div>
+          <div class="tile o"><span class="ic"><i data-icon="pointer"></i></span><span data-en="Big buttons">Tombol besar</span></div>
+          <div class="tile o"><span class="ic"><i data-icon="type"></i></span><span>Bahasa Indonesia</span></div>
+          <div class="tile o"><span class="ic"><i data-icon="zap"></i></span><span data-en="Short flow">Flow singkat</span></div>
+        </div>
+        <div class="demo" aria-label="Contoh layar frontline">
+          <div class="cap"><span class="label" data-en="Example: receiving screen">Contoh: layar receiving</span><span class="chip warn"><i data-icon="clock"></i><span data-en="Waiting">Menunggu</span></span></div>
+          <div class="big"><span class="ic"><i data-icon="basket"></i></span><div><b class="num">12</b><span data-en="Laundry bags waiting">Cucian Menunggu</span></div></div>
+          <a class="btn btn-primary" href="04-golden-workflow.html"><span data-en="Receive Laundry">Terima Cucian</span><i data-icon="arrow"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- F2. Management -->
+    <section class="panel acc a-mgmt" data-acc="m">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="chart"></i></span>
+        <div class="ttl"><h2>Management</h2>
+          <p class="desc hide-m" data-en="Complete view to monitor and grow the business.">Gambaran lengkap untuk memantau dan mengembangkan bisnis.</p>
+          <p class="sum-preview" data-en="Revenue, volume, SLA, quality, finance, profitability">Revenue, volume, SLA, kualitas, keuangan, profitabilitas</p></div>
+      </div>
+      <div class="acc-b">
+        <div class="tiles mgmt-tiles">
+          <div class="tile"><span class="ic"><i data-icon="trend"></i></span><span>Revenue</span></div>
+          <div class="tile"><span class="ic"><i data-icon="weight"></i></span><span>Volume</span></div>
+          <div class="tile"><span class="ic"><i data-icon="building"></i></span><span>Client Performance</span></div>
+          <div class="tile"><span class="ic"><i data-icon="clock"></i></span><span>SLA</span></div>
+          <div class="tile"><span class="ic"><i data-icon="shield"></i></span><span>Quality</span></div>
+          <div class="tile"><span class="ic"><i data-icon="users"></i></span><span>Productivity</span></div>
+          <div class="tile"><span class="ic"><i data-icon="card"></i></span><span>Finance</span></div>
+          <div class="tile"><span class="ic"><i data-icon="coins"></i></span><span>Profitability</span></div>
+        </div>
+        <div class="chain drill">
+          <span class="lk">Overview</span><span class="arr"><i data-icon="chevr"></i></span>
+          <span class="lk">Insight</span><span class="arr"><i data-icon="chevr"></i></span>
+          <span class="lk">Drill-down</span><span class="arr"><i data-icon="chevr"></i></span>
+          <span class="lk o" data-en="Transaction detail">Detail transaksi</span>
+        </div>
+      </div>
+    </section>
+
+    </div>
+
+    <!-- G. Data loop -->
+    <section class="panel tint acc a-loop" data-acc="m">
+      <div class="panel-h">
+        <span class="ico"><i data-icon="refresh"></i></span>
+        <div class="ttl"><h2>Data Loop</h2>
+          <p class="desc hide-m" data-en="Every activity produces data, data becomes insight for better decisions.">Setiap aktivitas menghasilkan data, data menjadi insight untuk keputusan yang lebih baik.</p>
+          <p class="sum-preview" data-en="Activity, data, KPI, insight, decision, improvement">Aktivitas, data, KPI, insight, keputusan, perbaikan</p></div>
+      </div>
+      <div class="acc-b">
+        <ol class="flow">
+          <li class="step"><span class="n">1</span><span class="ic"><i data-icon="refresh"></i></span><span class="txt"><b data-en="Operational Activity">Aktivitas Operasional</b></span></li>
+          <li class="step"><span class="n">2</span><span class="ic"><i data-icon="database"></i></span><span class="txt"><b data-en="Data Captured Automatically">Data Tercatat Otomatis</b></span></li>
+          <li class="step"><span class="n">3</span><span class="ic"><i data-icon="chart"></i></span><span class="txt"><b>Dashboard &amp; KPI</b></span></li>
+          <li class="step"><span class="n">4</span><span class="ic"><i data-icon="bulb"></i></span><span class="txt"><b>Insight</b></span></li>
+          <li class="step"><span class="n">5</span><span class="ic"><i data-icon="flag"></i></span><span class="txt"><b data-en="Decision">Keputusan</b></span></li>
+          <li class="step o"><span class="n">6</span><span class="ic"><i data-icon="trend"></i></span><span class="txt"><b data-en="Operational Improvement">Perbaikan Operasional</b></span></li>
+        </ol>
+        <p class="loopnote"><i data-icon="loop"></i><span data-en="Improvements flow back into daily operations, and the loop starts again.">Perbaikan kembali ke operasional harian, dan siklus berulang.</span></p>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+</body>
+</html>

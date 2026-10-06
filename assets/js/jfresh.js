@@ -1,0 +1,251 @@
+/* JFRESH OS — shared page behaviour
+   - Top bar (official logo, visual menu, ID | EN switch) and pager
+   - Language switch: elements carry Indonesian text by default and English in data-en
+   - Responsive accordions: data-acc="m" (collapsible on mobile) or "tm" (iPad + mobile)
+   - Small SVG builder for diagrams that re-render on language change */
+(function () {
+  var body = document.body;
+  var ROOT = body.getAttribute('data-root') || '';
+  var CURRENT = parseInt(body.getAttribute('data-visual') || '0', 10);
+
+  var VISUALS = [
+    { n: 1, f: '01-business-model.html', t: 'Business Model Overview', id: 'Siapa dilayani, nilai, alur & pendapatan', en: 'Who we serve, value, flow & revenue', ic: 'briefcase' },
+    { n: 2, f: '02-system-scope.html', t: 'System Scope Architecture', id: 'Apa yang masuk ke dalam sistem', en: 'What is inside the system', ic: 'layers' },
+    { n: 3, f: '03-user-role-map.html', t: 'User & Role Map', id: 'Siapa memakai sistem & aksesnya', en: 'Who uses the system & their access', ic: 'users' },
+    { n: 4, f: '04-golden-workflow.html', t: 'End-to-End Operational Flow', id: 'Dari permintaan hingga pembayaran', en: 'From request to payment', ic: 'route' },
+    { n: 5, f: '05-business-rules.html', t: 'Business Rules & Control', id: 'Kontrol yang menjaga transaksi', en: 'Controls that protect transactions', ic: 'shield' },
+    { n: 6, f: '06-kpi-sla.html', t: 'Performance & SLA Architecture', id: 'Dari aktivitas menjadi KPI & alert', en: 'From activity to KPI & alerts', ic: 'gauge' },
+    { n: 7, f: '07-master-data.html', t: 'Master Data Relationship Diagram', id: 'Hubungan antar master data', en: 'How master data connects', ic: 'database' }
+  ];
+  function href(v) { return ROOT + 'visuals/' + v.f; }
+  function ic(name, cls) { return '<svg class="i' + (cls ? ' ' + cls : '') + '" aria-hidden="true"><use href="#i-' + name + '"/></svg>'; }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  /* ---------- Language ---------- */
+  var lang = 'id';
+  try { lang = localStorage.getItem('jfresh-lang') === 'en' ? 'en' : 'id'; } catch (e) {}
+  var langListeners = [];
+
+  function applyLang() {
+    document.documentElement.lang = lang;
+    var els = document.querySelectorAll('[data-en]');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (el.__id === undefined) el.__id = el.innerHTML;
+      el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.__id;
+    }
+    var b = document.querySelectorAll('.lang button');
+    for (var j = 0; j < b.length; j++) b[j].setAttribute('aria-pressed', b[j].getAttribute('data-l') === lang ? 'true' : 'false');
+    for (var k = 0; k < langListeners.length; k++) langListeners[k](lang);
+  }
+  function setLang(l) {
+    lang = l;
+    try { localStorage.setItem('jfresh-lang', l); } catch (e) {}
+    applyLang();
+  }
+
+  /* ---------- Chrome: top bar + pager ---------- */
+  function topbar() {
+    var items = '<a class="home" href="' + ROOT + 'index.html"' + (CURRENT === 0 ? ' aria-current="page"' : '') + '>' + ic('grid') +
+      '<span data-en="Phase 1 overview">Ringkasan Fase 1</span></a>' +
+      '<a class="home" href="' + ROOT + 'preview.html">' + ic('monitor') + '<span data-en="Device preview">Pratinjau perangkat</span></a>';
+    VISUALS.forEach(function (v) {
+      items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">0' + v.n + '</span><span>' + esc(v.t) + '</span></a>';
+    });
+    var h = '<header class="topbar"><div class="wrap">' +
+      '<a class="brand" href="' + ROOT + 'index.html" aria-label="J\'Fresh Laundry — JFRESH OS">' +
+      '<img class="brand-logo" src="' + ROOT + 'assets/brand/jfresh-logo.png" alt="J\'Fresh Laundry" width="605" height="373">' +
+      '<span class="brand-txt"><span class="wordmark">JFRESH <b>OS</b></span><span class="brand-sub" data-en="Phase 1 · Business Foundation">Fase 1 · Fondasi Bisnis</span></span></a>' +
+      '<span class="topbar-sp"></span>' +
+      '<details class="vmenu"><summary aria-label="Menu visual">' + ic('menu') + '<span class="vlabel" data-en="7 Visuals">7 Visual</span></summary><nav class="vmenu-list">' + items + '</nav></details>' +
+      '<div class="lang" role="group" aria-label="Bahasa / Language"><button type="button" data-l="id">ID</button><button type="button" data-l="en">EN</button></div>' +
+      '</div></header>';
+    body.insertAdjacentHTML('afterbegin', h);
+    var bs = document.querySelectorAll('.lang button');
+    for (var i = 0; i < bs.length; i++) bs[i].addEventListener('click', function () { setLang(this.getAttribute('data-l')); });
+    document.addEventListener('click', function (e) {
+      var m = document.querySelector('.vmenu[open]');
+      if (m && !m.contains(e.target)) m.removeAttribute('open');
+    });
+  }
+
+  function pager() {
+    if (!CURRENT) return;
+    var prev = VISUALS[CURRENT - 2], next = VISUALS[CURRENT];
+    var h = '<nav class="wrap pager" aria-label="Navigasi visual">';
+    h += prev ? '<a href="' + href(prev) + '">' + ic('arrowl') + '<span><small data-en="Previous">Sebelumnya</small>0' + prev.n + ' ' + esc(prev.t) + '</span></a>' : '<span></span>';
+    h += '<a class="home" href="' + ROOT + 'index.html">' + ic('grid') + '<span data-en="All Phase 1 visuals">Semua visual Fase 1</span></a>';
+    h += next ? '<a class="nx" href="' + href(next) + '"><span><small data-en="Next">Berikutnya</small>0' + next.n + ' ' + esc(next.t) + '</span>' + ic('arrow') + '</a>' : '<span></span>';
+    h += '</nav>';
+    var main = document.querySelector('main');
+    if (main) main.insertAdjacentHTML('afterend', h);
+  }
+
+  function footer() {
+    body.insertAdjacentHTML('beforeend', '<footer class="foot"><div class="wrap"><span><b>JFRESH OS</b> · <span data-en="Phase 1 Business Foundation · Version 1.0">Fase 1 Fondasi Bisnis · Versi 1.0</span></span>' +
+      '<span data-en="Simple Frontline. Powerful Management. One Connected JFRESH OS.">Simple Frontline. Powerful Management. One Connected JFRESH OS.</span></div></footer>');
+  }
+
+  /* Form-factor indicator in the hero */
+  function formFactor() {
+    var el = document.querySelector('[data-ff]');
+    if (!el) return;
+    el.innerHTML =
+      '<span class="ff hide-t hide-m">' + ic('monitor') + '<span data-en="View: PC Report">Tampilan: PC Report</span></span>' +
+      '<span class="ff hide-d hide-m">' + ic('tablet') + '<span data-en="View: Operational iPad">Tampilan: Operational iPad</span></span>' +
+      '<span class="ff hide-d hide-t">' + ic('phone') + '<span data-en="View: Mobile">Tampilan: Mobile</span></span>';
+  }
+
+  /* Bubble DNA in the hero, subtle and fixed */
+  function bubbles() {
+    var b = document.querySelector('.hero .bubbles');
+    if (!b) return;
+    var spots = [[1, 8, 18], [52, 6, 10], [74, 9, 14], [88, 4, 22], [96, 34, 12]];
+    b.innerHTML = spots.map(function (s) { return '<i style="left:' + s[0] + '%;top:' + s[1] + '%;width:' + s[2] + 'px;height:' + s[2] + 'px"></i>'; }).join('');
+  }
+
+  /* ---------- Responsive accordions ---------- */
+  var mqM = window.matchMedia('(max-width: 699px)');
+  var mqT = window.matchMedia('(min-width: 700px) and (max-width: 1239px)');
+  function mode() { return mqM.matches ? 'm' : (mqT.matches ? 't' : 'd'); }
+
+  function setupAcc() {
+    var accs = document.querySelectorAll('.acc');
+    var m = mode();
+    for (var i = 0; i < accs.length; i++) {
+      var a = accs[i];
+      var head = a.querySelector(':scope > .panel-h, :scope > .acc-h');
+      if (!head) continue;
+      if (!head.querySelector('.chev')) head.insertAdjacentHTML('beforeend', '<span class="chev" aria-hidden="true">' + ic('chevd') + '</span>');
+      var rule = a.getAttribute('data-acc') || 'm';
+      var coll = rule.indexOf(m) !== -1;
+      a.classList.toggle('is-collapsible', coll);
+      if (coll) {
+        head.setAttribute('role', 'button');
+        head.setAttribute('tabindex', '0');
+        if (a.__mode !== m) {
+          var openAttr = a.getAttribute('data-open') || '';
+          a.classList.toggle('is-open', openAttr.indexOf(m) !== -1);
+        }
+        head.setAttribute('aria-expanded', a.classList.contains('is-open') ? 'true' : 'false');
+      } else {
+        head.removeAttribute('role'); head.removeAttribute('tabindex'); head.removeAttribute('aria-expanded');
+        a.classList.add('is-open');
+      }
+      a.__mode = m;
+      if (!head.__bound) {
+        head.__bound = true;
+        head.addEventListener('click', toggle);
+        head.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.call(this); } });
+      }
+    }
+  }
+  function toggle() {
+    var a = this.parentNode;
+    if (!a.classList.contains('is-collapsible')) return;
+    a.classList.toggle('is-open');
+    this.setAttribute('aria-expanded', a.classList.contains('is-open') ? 'true' : 'false');
+  }
+
+  /* ---------- SVG diagram builder ---------- */
+  var TONES = {
+    blue: { f: '#FFFFFF', s: '#9DBDE3', t: '#0B3D78', a: '#0754A6' },
+    solid: { f: '#0754A6', s: '#0754A6', t: '#FFFFFF', a: '#0754A6' },
+    fresh: { f: '#E6F7FD', s: '#7FD3F2', t: '#0B3D78', a: '#0090C8' },
+    orange: { f: '#FFF4E6', s: '#F7B568', t: '#7A3F00', a: '#E07F0A' },
+    warn: { f: '#FFF3DF', s: '#E9A23B', t: '#7A4600', a: '#B86A00' },
+    crit: { f: '#FDECEA', s: '#E0574C', t: '#A41F15', a: '#C8281C' },
+    ok: { f: '#E7F6EE', s: '#6CC497', t: '#0D6B3A', a: '#138A4B' },
+    mute: { f: '#F6F9FC', s: '#C6D6EA', t: '#4F6A88', a: '#7F95AE' },
+    teal: { f: '#E5F6F3', s: '#7CCBBF', t: '#0A5C53', a: '#0E9384' },
+    violet: { f: '#F0ECFB', s: '#B4A3E6', t: '#4A2F99', a: '#6A4BC4' }
+  };
+  function T(v) { return Array.isArray(v) ? (lang === 'en' ? v[1] : v[0]) : v; }
+  var S = {
+    tones: TONES,
+    T: T,
+    open: function (w, h, title) {
+      var d = '<defs>';
+      for (var k in TONES) d += '<marker id="ar-' + k + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="' + TONES[k].a + '"/></marker>';
+      d += '</defs>';
+      return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + esc(T(title || '')) + '" xmlns="http://www.w3.org/2000/svg">' + d;
+    },
+    close: function () { return '</svg>'; },
+    rect: function (x, y, w, h, o) {
+      o = o || {};
+      return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (o.r == null ? 10 : o.r) + '" fill="' + (o.fill || '#fff') + '" stroke="' + (o.stroke || 'none') + '" stroke-width="' + (o.sw || 1.5) + '"' + (o.dash ? ' stroke-dasharray="' + o.dash + '"' : '') + '/>';
+    },
+    text: function (x, y, str, o) {
+      o = o || {};
+      var lines = String(T(str)).split('\n'), size = o.size || 13, lh = o.lh || size * 1.25;
+      var y0 = y - (lines.length - 1) * lh / 2;
+      var out = '<text x="' + x + '" y="' + y0 + '" font-size="' + size + '" font-weight="' + (o.weight || 600) + '" fill="' + (o.fill || '#12304F') + '" text-anchor="' + (o.anchor || 'middle') + '" dominant-baseline="middle"' + (o.ls ? ' letter-spacing="' + o.ls + '"' : '') + '>';
+      lines.forEach(function (l, i) { out += '<tspan x="' + x + '" y="' + (y0 + i * lh) + '">' + esc(l) + '</tspan>'; });
+      return out + '</text>';
+    },
+    icon: function (name, x, y, size, color) {
+      var paths = (window.JF_ICONS || {})[name] || '';
+      return '<g transform="translate(' + x + ' ' + y + ') scale(' + (size / 24) + ')" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + paths + '</g>';
+    },
+    /* node: rounded box with optional icon on the left and 1–2 line label */
+    node: function (x, y, w, h, label, o) {
+      o = o || {};
+      var t = TONES[o.tone || 'blue'];
+      var out = S.rect(x, y, w, h, { fill: t.f, stroke: t.s, r: o.r || 10, dash: o.dash, sw: o.sw });
+      if (o.icon) {
+        var is = o.is || 18;
+        if (o.stack) {
+          out += S.icon(o.icon, x + w / 2 - is / 2, y + 8, is, t.a);
+          out += S.text(x + w / 2, y + h / 2 + is / 2 + 2, label, { size: o.size || 12.5, weight: 700, fill: t.t });
+        } else {
+          out += S.icon(o.icon, x + 10, y + h / 2 - is / 2, is, t.a);
+          out += S.text(x + 10 + is + 8, y + h / 2, label, { size: o.size || 12.5, weight: 700, fill: t.t, anchor: 'start' });
+        }
+      } else {
+        out += S.text(x + w / 2, y + h / 2, label, { size: o.size || 12.5, weight: 700, fill: t.t });
+      }
+      return out;
+    },
+    /* polyline with arrow head; pts = [[x,y],...] */
+    line: function (pts, o) {
+      o = o || {};
+      var t = TONES[o.tone || 'mute'];
+      var d = 'M' + pts.map(function (p) { return p[0] + ' ' + p[1]; }).join('L');
+      return '<path d="' + d + '" fill="none" stroke="' + t.a + '" stroke-width="' + (o.sw || 1.6) + '"' + (o.dash ? ' stroke-dasharray="' + o.dash + '"' : '') +
+        (o.noArrow ? '' : ' marker-end="url(#ar-' + (o.tone || 'mute') + ')"') + (o.both ? ' marker-start="url(#ar-' + (o.tone || 'mute') + ')"' : '') + ' stroke-linejoin="round"/>';
+    },
+    pill: function (x, y, label, o) {
+      o = o || {};
+      var t = TONES[o.tone || 'mute'], s = o.size || 11.5;
+      var w = o.w || (String(T(label)).length * s * 0.58 + 18);
+      return S.rect(x - w / 2, y - 10, w, 20, { fill: t.f, stroke: t.s, r: 10, sw: 1 }) + S.text(x, y + 0.5, label, { size: s, weight: 700, fill: t.t });
+    }
+  };
+
+  var diagrams = [];
+  function diagram(el, render) {
+    if (typeof el === 'string') el = document.querySelector(el);
+    if (!el) return;
+    diagrams.push({ el: el, render: render });
+    el.innerHTML = render(lang, S);
+  }
+  langListeners.push(function () { diagrams.forEach(function (d) { d.el.innerHTML = d.render(lang, S); }); });
+
+  /* ---------- Boot ---------- */
+  window.JF = { ic: ic, diagram: diagram, svg: S, onLang: function (f) { langListeners.push(f); }, lang: function () { return lang; }, VISUALS: VISUALS };
+
+  topbar();
+  formFactor();
+  bubbles();
+  pager();
+  footer();
+
+  // Expand [data-icon] placeholders: <span data-icon="truck"></span>
+  var ph = document.querySelectorAll('[data-icon]');
+  for (var i = 0; i < ph.length; i++) ph[i].outerHTML = ic(ph[i].getAttribute('data-icon'), ph[i].className);
+
+  applyLang();
+  setupAcc();
+  (mqM.addEventListener ? mqM.addEventListener('change', setupAcc) : mqM.addListener(setupAcc));
+  (mqT.addEventListener ? mqT.addEventListener('change', setupAcc) : mqT.addListener(setupAcc));
+})();

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — Business Rules &amp; Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<style>
+  .rules { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr) 440px minmax(0, 1fr);
+    grid-template-areas: "r1 ring r5" "r2 ring r6" "r3 ring r7" "r4 ring r8"; }
+  .r1 { grid-area: r1; } .r2 { grid-area: r2; } .r3 { grid-area: r3; } .r4 { grid-area: r4; }
+  .r5 { grid-area: r5; } .r6 { grid-area: r6; } .r7 { grid-area: r7; } .r8 { grid-area: r8; }
+  .ring { grid-area: ring; align-self: center; display: grid; gap: 16px; }
+  .gw { display: contents; }
+  .gw > .acc-h { display: none; }
+  .gw > .acc-b { display: contents; }
+
+  .rule { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+  .rule-h { display: flex; gap: 12px; align-items: center; }
+  .rule-h .n { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--blue-50); color: var(--blue); }
+  .rule-h h3 { font-size: 17.5px; }
+  .rule-h h3 small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .rule p { font-size: 15.5px; }
+  .rule .ex { font-size: 14px; padding: 10px 12px; border-radius: 12px; background: var(--bg); border: 1px dashed var(--line-2); color: var(--ink); display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+  .rule .ex .label { font-size: 11px; }
+  .code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-weight: 700; color: var(--blue-ink); font-size: 13.5px; }
+  .ids { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ids span { padding: 4px 10px; border-radius: 8px; background: var(--blue); color: var(--white); font-weight: 800; font-size: 13px; letter-spacing: .04em; }
+  .mini { display: grid; gap: 6px; }
+  .mini li { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14.5px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .mini li:last-child { border-bottom: 0; }
+  .ada { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .ada .btn { min-height: 48px; font-size: 16px; padding: 0 16px; }
+
+  #ring svg { min-width: 0; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  .principles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; counter-reset: pr; }
+  .principles li { display: grid; gap: 6px; padding: 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--white); }
+  .principles li b { color: var(--blue-ink); font-size: 15px; }
+  .principles li b::before { counter-increment: pr; content: counter(pr) ". "; color: var(--orange-ink); }
+  .principles li span { font-size: 13.5px; color: var(--muted); }
+  .lifeline .chain .lk { min-height: 44px; padding: 6px 12px; }
+  .lifeline .chain .lk small { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 800; color: var(--orange-ink); }
+
+  @media (max-width: 1239px) {
+    .legend { justify-content: flex-start; }
+    .rules { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "r1 r2" "r3 r4" "r5 r6" "r7 r8"; }
+    .ring { display: none; }
+    .principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 699px) {
+    .rules { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: 12px; }
+    .gw { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 16px; }
+    .gw > .acc-h { display: flex; align-items: center; gap: 12px; }
+    .gw > .acc-h .ico { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--blue-50); color: var(--blue); }
+    .gw > .acc-h .ico.o { background: var(--orange-50); color: var(--orange-ink); }
+    .gw > .acc-h h2 { font-size: var(--fs-h2); flex: 1; }
+    .gw > .acc-b { display: grid; gap: 12px; }
+    .gw .rule { grid-area: auto; padding: 14px; background: var(--bg); }
+    .principles { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body data-root="../" data-visual="5">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">05</span><span data-en="Phase 1 · Business Foundation">Fase 1 · Fondasi Bisnis</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Business Rules &amp; Control</h1>
+      <p class="sub" data-en="The system controls that protect transaction integrity, accountability and financial accuracy.">Kontrol sistem yang menjaga keutuhan transaksi, tanggung jawab, dan ketepatan keuangan.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">System Rules for <b>Reliable Operations</b></div>
+      <div class="legend">
+        <span class="chip ok"><i data-icon="checkc"></i>Normal</span>
+        <span class="chip warn"><i data-icon="alert"></i><span data-en="Warning">Peringatan</span></span>
+        <span class="chip crit"><i data-icon="ban"></i><span data-en="Blocked">Diblokir</span></span>
+        <span class="chip appr"><i data-icon="usercheck"></i><span data-en="Needs approval">Perlu persetujuan</span></span>
+      </div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- iPad: lifecycle as a line -->
+  <section class="panel lifeline hide-d hide-m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="refresh"></i></span>
+      <div class="ttl"><h2 data-en="Core Transaction Lifecycle">Siklus Transaksi Inti</h2>
+        <p class="desc" data-en="Every stage has its own ID and is protected by the eight rules below.">Setiap tahap punya ID sendiri dan dijaga oleh delapan aturan di bawah.</p></div>
+    </div>
+    <div class="chain">
+      <span class="lk"><span>Order<small>ORD</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span>Pickup<small>PU</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span>Receiving<small>RCV</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span data-en="Production">Proses</span><small>BAT</small></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span>QC<small>QC</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span>Delivery<small>DEL</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk"><span>Invoice<small>INV</small></span></span><span class="arr"><i data-icon="arrow"></i></span>
+      <span class="lk o"><span data-en="Payment">Bayar</span><small>PAY</small></span>
+    </div>
+  </section>
+
+  <div class="rules">
+
+    <div class="ring">
+      <div class="diagram" id="ring" style="overflow:visible"></div>
+      <p class="note" style="text-align:center" data-en="Each stage carries a unique ID. Eight control groups guard the cycle from order to payment.">Setiap tahap membawa ID unik. Delapan kelompok kontrol menjaga siklus dari order sampai pembayaran.</p>
+    </div>
+
+    <!-- Group 1: Identity & Audit -->
+    <div class="gw acc" data-acc="m" data-open="m">
+      <div class="acc-h"><span class="ico"><i data-icon="hash"></i></span><h2 data-en="Identity &amp; Audit">Identitas &amp; Audit</h2></div>
+      <div class="acc-b">
+        <article class="rule r1">
+          <div class="rule-h"><span class="n"><i data-icon="hash"></i></span><h3><small data-en="Rule 1">Aturan 1</small><span data-en="Identity Rules">Aturan Identitas</span></h3></div>
+          <p data-en="Every important transaction has a unique ID.">Setiap transaksi penting memiliki ID unik.</p>
+          <div class="ids"><span>ORD</span><span>PU</span><span>RCV</span><span>BAT</span><span>DEL</span><span>INV</span></div>
+          <div class="ex"><span class="label" data-en="Example">Contoh</span><span class="code">RCV-2610-0142</span></div>
+        </article>
+        <article class="rule r2">
+          <div class="rule-h"><span class="n"><i data-icon="history"></i></span><h3><small data-en="Rule 2">Aturan 2</small><span data-en="Audit Rules">Aturan Audit</span></h3></div>
+          <p data-en="No silent deletion. Important changes record who, when, what changed, the old value and the new value.">Tidak ada penghapusan diam-diam. Perubahan penting mencatat siapa, kapan, apa yang berubah, nilai lama dan nilai baru.</p>
+          <div class="ex"><span class="label" data-en="Audit log">Log audit</span><span>Siti (Receiving) · 06/10 14:32</span><span data-en="Weight 12.4 kg → 12.0 kg">Berat 12,4 kg → 12,0 kg</span></div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Group 2: Status & Reconciliation -->
+    <div class="gw acc" data-acc="m">
+      <div class="acc-h"><span class="ico"><i data-icon="status"></i></span><h2 data-en="Status &amp; Reconciliation">Status &amp; Pencocokan</h2></div>
+      <div class="acc-b">
+        <article class="rule r3">
+          <div class="rule-h"><span class="n"><i data-icon="status"></i></span><h3><small data-en="Rule 3">Aturan 3</small><span data-en="Status Rules">Aturan Status</span></h3></div>
+          <p data-en="Statuses follow valid steps. A step cannot be skipped.">Status mengikuti urutan yang sah. Tahap tidak boleh dilompati.</p>
+          <div class="ex"><span data-en="Received → Delivered">Diterima → Terkirim</span><span class="chip crit"><i data-icon="ban"></i><span data-en="Blocked">Diblokir</span></span></div>
+          <div class="ex"><span data-en="Received → Processed → QC → Packed → Delivered">Diterima → Diproses → QC → Dikemas → Terkirim</span><span class="chip ok"><i data-icon="checkc"></i><span data-en="Valid">Sah</span></span></div>
+        </article>
+        <article class="rule r4">
+          <div class="rule-h"><span class="n"><i data-icon="scale"></i></span><h3><small data-en="Rule 4">Aturan 4</small><span data-en="Reconciliation Rules">Aturan Pencocokan</span></h3></div>
+          <ul class="mini">
+            <li><span>Pickup vs Receiving</span><span class="chip warn"><i data-icon="alert"></i><span data-en="2 pcs short">Selisih 2 pcs</span></span></li>
+            <li><span data-en="Receiving vs Production">Receiving vs Produksi</span><span class="chip ok"><i data-icon="checkc"></i><span data-en="Match">Cocok</span></span></li>
+            <li><span>Packing vs Delivery</span><span class="chip ok"><i data-icon="checkc"></i><span data-en="Match">Cocok</span></span></li>
+            <li><span data-en="Invoice vs Payment">Invoice vs Pembayaran</span><span class="chip warn"><i data-icon="clock"></i><span data-en="Partial">Sebagian</span></span></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+
+    <!-- Group 3: Authority & Pricing -->
+    <div class="gw acc" data-acc="m">
+      <div class="acc-h"><span class="ico o"><i data-icon="lock"></i></span><h2 data-en="Authority &amp; Pricing">Wewenang &amp; Harga</h2></div>
+      <div class="acc-b">
+        <article class="rule r5">
+          <div class="rule-h"><span class="n"><i data-icon="usercheck"></i></span><h3><small data-en="Rule 5">Aturan 5</small><span data-en="Authority Rules">Aturan Wewenang</span></h3></div>
+          <ul class="checks">
+            <li class="no"><i data-icon="ban"></i><span data-en="Frontline cannot change prices">Frontline tidak bisa mengubah harga</span></li>
+            <li class="no"><i data-icon="ban"></i><span data-en="Frontline cannot change financial rates">Frontline tidak bisa mengubah tarif keuangan</span></li>
+            <li class="no"><i data-icon="ban"></i><span data-en="Frontline cannot approve sensitive corrections">Frontline tidak bisa menyetujui koreksi sensitif</span></li>
+          </ul>
+          <div class="ex"><span data-en="Weight correction &gt; 5%">Koreksi berat &gt; 5%</span><span class="chip appr"><i data-icon="usercheck"></i><span data-en="Supervisor approval">Persetujuan supervisor</span></span></div>
+        </article>
+        <article class="rule r8">
+          <div class="rule-h"><span class="n"><i data-icon="lock"></i></span><h3><small data-en="Rule 8">Aturan 8</small><span data-en="Price Protection">Perlindungan Harga</span></h3></div>
+          <p data-en="Prices always follow Contract + Rate Card. Frontline cannot change prices.">Harga selalu mengikuti Kontrak + Rate Card. Frontline tidak dapat mengubah harga.</p>
+          <div class="ex"><span>Kontrak 2026 + Rate Card A</span><span class="code" data-en="Bed sheet Rp 9,500/pcs">Bed sheet Rp 9.500/pcs</span><span class="chip info"><i data-icon="lock"></i><span data-en="Locked">Terkunci</span></span></div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Group 4: Exception & Duplicate -->
+    <div class="gw acc" data-acc="m">
+      <div class="acc-h"><span class="ico o"><i data-icon="alert"></i></span><h2 data-en="Exception &amp; Duplicate Protection">Masalah &amp; Cegah Duplikat</h2></div>
+      <div class="acc-b">
+        <article class="rule r6">
+          <div class="rule-h"><span class="n"><i data-icon="alert"></i></span><h3><small data-en="Rule 6">Aturan 6</small><span data-en="Exception Rules">Aturan Masalah</span></h3></div>
+          <p data-en="One easy button, then a structured reason. No free text for the main reason.">Satu tombol yang mudah, lalu alasan terstruktur. Alasan utama tidak diketik bebas.</p>
+          <div class="ada">
+            <span class="btn btn-warn"><i data-icon="alert"></i>Ada Masalah</span>
+          </div>
+          <div class="tags">
+            <span class="tag" data-en="Stain">Noda</span><span class="tag" data-en="Damage">Rusak</span><span class="tag" data-en="Smell">Bau</span>
+            <span class="tag" data-en="Quantity difference">Selisih jumlah</span><span class="tag" data-en="Wrong process">Salah proses</span><span class="tag" data-en="Late">Terlambat</span><span class="tag" data-en="Other">Lainnya</span>
+          </div>
+        </article>
+        <article class="rule r7">
+          <div class="rule-h"><span class="n"><i data-icon="copy"></i></span><h3><small data-en="Rule 7">Aturan 7</small><span data-en="Duplicate Prevention">Cegah Duplikat</span></h3></div>
+          <p data-en="The system blocks duplicate orders, receiving, invoices, POD and payments.">Sistem menolak order, receiving, invoice, POD dan pembayaran ganda.</p>
+          <div class="ex"><span class="code">INV-2610-0088</span><span data-en="already exists for this delivery">sudah ada untuk delivery ini</span><span class="chip crit"><i data-icon="ban"></i><span data-en="Blocked">Diblokir</span></span></div>
+        </article>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="panel tint acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="shield"></i></span>
+      <div class="ttl"><h2 data-en="10 Data &amp; Business Foundation Rules">10 Prinsip Dasar Data &amp; Bisnis</h2>
+        <p class="desc hide-m" data-en="Every JFRESH OS screen in the next phases follows these principles.">Setiap layar JFRESH OS di fase berikutnya mengikuti prinsip ini.</p>
+        <p class="sum-preview" data-en="Enter once, no silent delete, traceability, and 7 more">Input sekali, tanpa hapus diam-diam, bisa dilacak, dan 7 lainnya</p></div>
+    </div>
+    <ol class="acc-b principles">
+      <li><b>Enter once, use everywhere</b><span data-en="Do not ask again for data the system already knows.">Tidak menanyakan ulang data yang sudah diketahui sistem.</span></li>
+      <li><b>No silent delete</b><span data-en="Cancel, void, reverse or adjust. Never delete silently.">Batalkan, void, reverse atau sesuaikan. Tidak pernah dihapus diam-diam.</span></li>
+      <li><b>Traceability</b><span data-en="Every important action can be traced.">Setiap aksi penting bisa ditelusuri.</span></li>
+      <li><b>Role-based visibility</b><span data-en="Users only see what they need.">Pengguna hanya melihat yang dibutuhkan.</span></li>
+      <li><b>Simple frontline</b><span data-en="Backend complexity stays hidden from frontline staff.">Kerumitan sistem tidak ditampilkan ke staf frontline.</span></li>
+      <li><b>Powerful backend</b><span data-en="Enough data for KPI, finance, audit, SLA and reporting.">Data cukup untuk KPI, keuangan, audit, SLA dan laporan.</span></li>
+      <li><b>Exception first</b><span data-en="&quot;Ada Masalah&quot; is always easy to find.">Tombol &quot;Ada Masalah&quot; selalu mudah ditemukan.</span></li>
+      <li><b>Prevent duplicates</b><span data-en="Critical transactions cannot be entered twice.">Transaksi penting tidak bisa dicatat dua kali.</span></li>
+      <li><b>Control price</b><span data-en="Frontline never changes contract prices.">Frontline tidak pernah mengubah harga kontrak.</span></li>
+      <li><b>Data consistency</b><span data-en="Master data is reused, not retyped.">Master data dipakai ulang, tidak diketik ulang.</span></li>
+    </ol>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script>
+JF.diagram('#ring', function (lang, S) {
+  var W = 600, H = 600, C = 300, R = 168;
+  var st = [
+    ['ORD', 'Order', 'Order', 'file'], ['PU', 'Pickup', 'Pickup', 'truck'], ['RCV', 'Receiving', 'Receiving', 'basket'], ['BAT', 'Proses', 'Production', 'washer'],
+    ['QC', 'QC', 'QC', 'shield'], ['DEL', 'Delivery', 'Delivery', 'pin'], ['INV', 'Invoice', 'Invoice', 'invoice'], ['PAY', 'Bayar', 'Payment', 'card']
+  ];
+  var out = S.open(W, H, ['Siklus transaksi inti', 'Core transaction lifecycle']);
+  out += '<circle cx="' + C + '" cy="' + C + '" r="' + R + '" fill="none" stroke="#C6D6EA" stroke-width="2" stroke-dasharray="6 6"/>';
+  out += '<circle cx="' + C + '" cy="' + C + '" r="92" fill="#EAF2FC" stroke="#9DBDE3" stroke-width="1.5"/>';
+  out += S.text(C, C - 18, ['Siklus', 'Core'], { size: 19, weight: 800, fill: '#0B3D78' });
+  out += S.text(C, C + 4, ['Transaksi', 'Transaction'], { size: 19, weight: 800, fill: '#0B3D78' });
+  out += S.text(C, C + 26, ['Inti', 'Lifecycle'], { size: 19, weight: 800, fill: '#0B3D78' });
+  st.forEach(function (s, i) {
+    var a = -Math.PI / 2 + i * Math.PI * 2 / st.length, x = C + R * Math.cos(a), y = C + R * Math.sin(a);
+    var a2 = a + Math.PI / st.length, ax = C + R * Math.cos(a2), ay = C + R * Math.sin(a2);
+    out += '<g transform="translate(' + ax + ' ' + ay + ') rotate(' + (a2 * 180 / Math.PI + 90) + ')"><path d="M-5 -6L5 0L-5 6z" fill="#00A8E8"/></g>';
+    var orange = s[0] === 'PAY' || s[0] === 'RCV';
+    out += '<circle cx="' + x + '" cy="' + y + '" r="36" fill="' + (orange ? '#FFF4E6' : '#FFFFFF') + '" stroke="' + (orange ? '#F7B568' : '#9DBDE3') + '" stroke-width="2"/>';
+    out += S.icon(s[3], x - 11, y - 22, 22, orange ? '#B85F00' : '#0754A6');
+    out += S.text(x, y + 9, s[0], { size: 11.5, weight: 800, fill: orange ? '#B85F00' : '#0B3D78', ls: '.04em' });
+    var off = R + 54 + 34 * Math.abs(Math.cos(a)), lx = C + off * Math.cos(a), ly = C + (R + 54) * Math.sin(a);
+    out += S.text(lx, ly, lang === 'en' ? s[2] : s[1], { size: 15, weight: 700, fill: '#12304F' });
+  });
+  return out + S.close();
+});
+</script>
+</body>
+</html>
