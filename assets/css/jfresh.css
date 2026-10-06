@@ -1,75 +1,71 @@
+@import url("jfos-tokens.css");
 /* ==========================================================================
-   JFRESH OS — Design System (Phase 1 · Business Foundation)
+   JFRESH OS — Page styles (Phase 1 · Business Foundation, tokenised in Phase 3)
    Layout concept: white-dominant canvas, rounded panels on a soft blue ground,
    deep blue structure with selective orange for action and attention.
    Breakpoints:  Mobile < 700px  ·  Operational iPad 700–1239px  ·  PC ≥ 1240px
    ========================================================================== */
 
 :root {
+  /* Phase 3: every legacy name below is an alias of a design token in
+     jfos-tokens.css, so Phase 1, Phase 2 and the app share one system. */
   /* Brand */
-  --blue: #0754A6;          /* primary deep blue: titles, nav, structure */
-  --blue-2: #0A5DB8;
-  --blue-ink: #0B3D78;      /* deepest blue for headings */
-  --fresh: #00A8E8;         /* fresh blue: secondary accent, data */
-  --fresh-2: #12B7F5;
-  --orange: #F7931E;        /* CTA, active, attention */
-  --orange-2: #FF9E00;
-  --orange-ink: #B85F00;    /* orange text on white (AA contrast) */
-  --yellow: #FFC72C;
+  --blue: var(--jf-brand-deep);
+  --blue-2: var(--jf-brand-deep-600);
+  --blue-ink: var(--jf-brand-deep-700);
+  --fresh: var(--jf-brand-fresh);
+  --fresh-2: var(--jf-brand-fresh-400);
+  --orange: var(--jf-brand-orange);
+  --orange-2: var(--jf-brand-orange-400);
+  --orange-ink: var(--jf-brand-orange-700);
+  --yellow: var(--jf-brand-yellow);
 
-  /* Neutrals (blue-biased) */
-  --white: #FFFFFF;
-  --bg: #F6F9FC;
-  --bg-2: #EEF4FB;
-  --line: #DCE6F2;
-  --line-2: #C6D6EA;
-  --ink: #12304F;
-  --muted: #4F6A88;
-  --faint: #7F95AE;
+  /* Neutrals */
+  --white: var(--jf-brand-white);
+  --bg: var(--jf-surface-page);
+  --bg-2: var(--jf-surface-page-2);
+  --line: var(--jf-border);
+  --line-2: var(--jf-border-strong);
+  --ink: var(--jf-text);
+  --muted: var(--jf-text-muted);
+  --faint: var(--jf-text-faint);
 
   /* Tints */
-  --blue-50: #EAF2FC;
-  --blue-100: #D6E6F8;
-  --fresh-50: #E6F7FD;
-  --orange-50: #FFF4E6;
-  --orange-100: #FFE4C2;
-  --yellow-50: #FFF8E1;
+  --blue-50: var(--jf-brand-deep-50);
+  --blue-100: var(--jf-brand-deep-100);
+  --fresh-50: var(--jf-brand-fresh-50);
+  --orange-50: var(--jf-brand-orange-50);
+  --orange-100: var(--jf-brand-orange-100);
+  --yellow-50: var(--jf-brand-yellow-50);
 
   /* Semantic (never decorative) */
-  --ok: #138A4B;     --ok-50: #E7F6EE;
-  --warn: #B86A00;   --warn-50: #FFF3DF;   --warn-line: #F5C77E;
-  --crit: #C8281C;   --crit-50: #FDECEA;   --crit-line: #F1A79F;
-  --info: #0754A6;   --info-50: #EAF2FC;
+  --ok: var(--jf-state-success-ink);     --ok-50: var(--jf-state-success-bg);
+  --warn: var(--jf-state-warning-ink);   --warn-50: var(--jf-state-warning-bg);   --warn-line: var(--jf-state-warning-line);
+  --crit: var(--jf-state-error-ink);     --crit-50: var(--jf-state-error-bg);     --crit-line: var(--jf-state-error-line);
+  --info: var(--jf-brand-deep);          --info-50: var(--jf-brand-deep-50);
 
-  /* Cluster accents (Visual 07) */
-  --c-teal: #0E9384;  --c-teal-50: #E5F6F3;
-  --c-violet: #6A4BC4; --c-violet-50: #F0ECFB;
+  /* Cluster accents (Visual 07 master-data diagram only) */
+  --c-teal: var(--jf-chart-4);  --c-teal-50: var(--jf-state-success-bg);
+  --c-violet: var(--jf-chart-5); --c-violet-50: #F0ECFB;
 
   /* Type */
-  --font: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
-  --fs-title: 34px;
-  --fs-h2: 22px;
-  --fs-h3: 17px;
-  --fs-body: 16px;
-  --fs-small: 14px;
-  --fs-kpi: 34px;
+  --font: var(--jf-font);
+  --fs-title: var(--jf-fs-h1);
+  --fs-h2: var(--jf-fs-h2);
+  --fs-h3: var(--jf-fs-h3);
+  --fs-body: var(--jf-fs-body);
+  --fs-small: var(--jf-fs-label);
+  --fs-kpi: var(--jf-fs-number);
 
   /* Shape */
-  --r-lg: 22px;
-  --r: 16px;
-  --r-sm: 12px;
-  --shadow: 0 1px 2px rgba(11, 61, 120, .05), 0 8px 24px rgba(11, 61, 120, .06);
-  --shadow-lift: 0 2px 4px rgba(11, 61, 120, .06), 0 14px 32px rgba(11, 61, 120, .10);
-  --gutter: 32px;
-  --tap: 48px;
+  --r-lg: var(--jf-radius-lg);
+  --r: var(--jf-radius-card);
+  --r-sm: var(--jf-radius-button);
+  --shadow: var(--jf-shadow-subtle);
+  --shadow-lift: var(--jf-shadow-floating);
+  --gutter: var(--jf-grid-margin);
+  --tap: var(--jf-touch-ops);
   color-scheme: light;
-}
-
-@media (max-width: 1239px) {
-  :root { --fs-title: 28px; --fs-h2: 20px; --fs-h3: 17px; --fs-body: 17px; --fs-kpi: 30px; --gutter: 24px; }
-}
-@media (max-width: 699px) {
-  :root { --fs-title: 24px; --fs-h2: 19px; --fs-h3: 17px; --fs-body: 16px; --fs-small: 14px; --fs-kpi: 28px; --gutter: 16px; --r-lg: 18px; }
 }
 
 /* Form-factor visibility helpers */
@@ -110,8 +106,8 @@ button { font: inherit; color: inherit; }
 .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; min-width: 0; }
 .brand-logo { height: 60px; width: auto; }
 .brand-txt { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
-.wordmark { font-weight: 800; font-size: 20px; color: var(--blue); letter-spacing: -.01em; white-space: nowrap; }
-.wordmark b { color: var(--orange); font-weight: 800; }
+.wordmark { font-weight: 700; font-size: 20px; color: var(--blue); letter-spacing: -.01em; white-space: nowrap; }
+.wordmark b { color: var(--orange); font-weight: 700; }
 .brand-sub { font-size: 13px; color: var(--muted); white-space: nowrap; }
 .topbar-sp { flex: 1; }
 
@@ -127,7 +123,7 @@ button { font: inherit; color: inherit; }
 .vmenu-list a { display: flex; gap: 12px; align-items: center; min-height: var(--tap); padding: 8px 12px; border-radius: 10px; text-decoration: none; color: var(--ink); font-weight: 600; }
 .vmenu-list a:hover { background: var(--blue-50); }
 .vmenu-list a[aria-current="page"] { background: var(--blue); color: var(--white); }
-.vmenu-list .vn { font-weight: 800; color: var(--orange-ink); font-variant-numeric: tabular-nums; min-width: 26px; }
+.vmenu-list .vn { font-weight: 700; color: var(--orange-ink); font-variant-numeric: tabular-nums; min-width: 26px; }
 .vmenu-list a[aria-current="page"] .vn { color: var(--yellow); }
 .vmenu-list .home { border-bottom: 1px solid var(--line); margin-bottom: 4px; border-radius: 10px 10px 0 0; }
 
@@ -145,11 +141,11 @@ button { font: inherit; color: inherit; }
 /* ---------- Hero ---------- */
 .hero { position: relative; overflow: hidden; background: var(--white); border-bottom: 1px solid var(--line); }
 .hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 40px; align-items: end; padding-block: 34px 44px; }
-.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
-.vbadge { display: inline-grid; place-items: center; min-width: 44px; height: 44px; padding: 0 8px; border-radius: 14px; background: var(--blue); color: var(--white); font-size: 20px; font-weight: 800; letter-spacing: 0; font-variant-numeric: tabular-nums; }
-.hero-os { font-size: 18px; font-weight: 800; color: var(--blue); letter-spacing: -.01em; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+.vbadge { display: inline-grid; place-items: center; min-width: 44px; height: 44px; padding: 0 8px; border-radius: 14px; background: var(--blue); color: var(--white); font-size: 20px; font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.hero-os { font-size: 18px; font-weight: 700; color: var(--blue); letter-spacing: -.01em; }
 .hero-os b { color: var(--orange); }
-.hero h1 { font-size: var(--fs-title); font-weight: 800; letter-spacing: -.02em; margin-top: 2px; }
+.hero h1 { font-size: var(--fs-title); font-weight: 700; letter-spacing: -.02em; margin-top: 2px; }
 .hero .sub { margin-top: 10px; font-size: calc(var(--fs-body) + 2px); color: var(--muted); max-width: 62ch; }
 .hero-side { display: grid; gap: 12px; justify-items: end; text-align: right; }
 .tagline { font-weight: 700; color: var(--blue); }
@@ -190,13 +186,13 @@ main.wrap { padding-block: 28px 40px; display: grid; gap: 22px; }
 .panel-h .ico.o { background: var(--orange-50); color: var(--orange-ink); }
 .panel-h .ico.g { background: var(--bg-2); color: var(--muted); }
 .panel-h .ttl { min-width: 0; flex: 1; }
-.panel-h h2 { font-size: var(--fs-h2); font-weight: 800; letter-spacing: -.01em; }
+.panel-h h2 { font-size: var(--fs-h2); font-weight: 700; letter-spacing: -.01em; }
 .panel-h .desc { font-size: var(--fs-small); color: var(--muted); margin-top: 2px; }
 .panel-h .count { flex: none; padding: 4px 12px; border-radius: 999px; background: var(--blue-50); color: var(--blue); font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
 .sum-preview { display: none; }
 .chev { display: none; flex: none; width: 40px; height: 40px; border-radius: 12px; place-items: center; color: var(--blue); background: var(--blue-50); transition: transform .2s; }
-h3 { font-size: var(--fs-h3); font-weight: 800; }
-.label { font-size: 12.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+h3 { font-size: var(--fs-h3); font-weight: 700; }
+.label { font-size: 12.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .note { font-size: var(--fs-small); color: var(--muted); }
 
 /* Accordion behaviour (set by JS per breakpoint) */
@@ -245,7 +241,7 @@ h3 { font-size: var(--fs-h3); font-weight: 800; }
 /* Flow steps (horizontal → vertical stepper) */
 .flow { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; counter-reset: step; }
 .step { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 0 6px; min-width: 0; }
-.step .n { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--blue); color: var(--white); font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; }
+.step .n { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--blue); color: var(--white); font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
 .step .ic { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 18px; background: var(--blue-50); color: var(--blue); }
 .step .ic .i { width: 28px; height: 28px; }
 .step.o .n { background: var(--orange); }
@@ -291,7 +287,7 @@ h3 { font-size: var(--fs-h3); font-weight: 800; }
 .chip.mute { background: var(--bg-2); color: var(--muted); border-color: var(--line); }
 
 /* Buttons */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 24px; border-radius: 16px; border: 0; font-weight: 800; font-size: 18px; text-decoration: none; cursor: pointer; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 24px; border-radius: 16px; border: 0; font-weight: 700; font-size: 18px; text-decoration: none; cursor: pointer; }
 .btn-primary { background: linear-gradient(180deg, var(--orange-2), var(--orange)); color: #3A1D00; box-shadow: 0 6px 16px rgba(247, 147, 30, .32); }
 .btn-blue { background: var(--blue); color: var(--white); }
 .btn-ghost { background: var(--blue-50); color: var(--blue); }
@@ -304,7 +300,7 @@ h3 { font-size: var(--fs-h3); font-weight: 800; }
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .kpi { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; align-items: center; padding: 14px 16px; border-radius: var(--r); border: 1px solid var(--line); background: var(--white); min-width: 0; }
 .kpi .ic { grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--blue-50); color: var(--blue); }
-.kpi .v { font-size: var(--fs-kpi); font-weight: 800; color: var(--blue-ink); line-height: 1.05; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.kpi .v { font-size: var(--fs-kpi); font-weight: 700; color: var(--blue-ink); line-height: 1.05; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
 .kpi .v small { font-size: .5em; font-weight: 700; color: var(--muted); letter-spacing: 0; margin-left: 2px; }
 .kpi .k { font-size: 14px; color: var(--muted); font-weight: 600; }
 .kpi .d { grid-column: 2; font-size: 13px; font-weight: 700; }

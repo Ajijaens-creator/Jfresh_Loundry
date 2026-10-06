@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — Dokumentasi Komponen</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .tools { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--jf-space-3); align-items: end; }
+  .tools .ds-segment { flex-wrap: wrap; }
+  .count { font-size: var(--jf-fs-label); color: var(--jf-text-muted); }
+  .doc { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--jf-space-5); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); padding: var(--jf-space-5); scroll-margin-top: var(--jf-space-4); }
+  .doc[hidden] { display: none; }
+  .doc__h { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--jf-space-2) var(--jf-space-3); }
+  .doc__h h3 { font-size: var(--jf-fs-h3); color: var(--jf-text-strong); }
+  .doc__h .g { padding: 2px var(--jf-space-2); border-radius: var(--jf-radius-sm); background: var(--jf-brand-deep-50); color: var(--jf-brand-deep); font-size: var(--jf-fs-caption); font-weight: var(--jf-weight-semibold); }
+  .doc__h p { flex-basis: 100%; color: var(--jf-text); }
+  .doc dl { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--jf-space-2) var(--jf-space-3); margin: 0; font-size: var(--jf-fs-label); align-content: start; }
+  .doc dt { color: var(--jf-text-muted); font-weight: var(--jf-weight-semibold); display: flex; gap: var(--jf-space-1); align-items: flex-start; }
+  .doc dt .i { width: 16px; height: 16px; margin-top: 2px; flex: none; }
+  .doc dt.ok .i { color: var(--jf-state-success-ink); } .doc dt.no .i { color: var(--jf-state-error-ink); }
+  .doc dd { margin: 0; color: var(--jf-text); min-width: 0; overflow-wrap: anywhere; }
+  .doc .ex { display: grid; gap: var(--jf-space-2); align-content: start; min-width: 0; }
+  .doc .ex > h4 { font-size: var(--jf-fs-caption); font-weight: var(--jf-weight-semibold); color: var(--jf-text-muted); text-transform: uppercase; letter-spacing: .08em; }
+  .doc .ex .p3-stage { overflow: hidden; }
+  .doc .ex .ds-sidebar { max-width: 248px; }
+  .names { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--jf-space-3); }
+  .names > div { padding: var(--jf-space-3) var(--jf-space-4); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); display: grid; gap: var(--jf-space-1); }
+  .names b { color: var(--jf-text-strong); }
+  .names code { justify-self: start; }
+  @media (max-width: 1239px) { .doc { grid-template-columns: minmax(0, 1fr); } .names { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 699px) { .tools { grid-template-columns: minmax(0, 1fr); } .doc { padding: var(--jf-space-4); } .doc dl { grid-template-columns: minmax(0, 1fr); gap: 2px; } .doc dd { margin-bottom: var(--jf-space-2); } .names { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="0">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span data-en="Phase 3 · Design System · Documentation">Fase 3 · Design System · Dokumentasi</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1 data-en="Component Documentation">Dokumentasi Komponen</h1>
+      <p class="sub" data-en="Every reusable component and pattern with its purpose, variants, states, allowed and not-recommended use, responsive behaviour, accessibility, role and a live example.">Setiap komponen dan pola yang dipakai ulang, lengkap dengan tujuan, varian, state, penggunaan yang boleh dan tidak disarankan, perilaku responsif, aksesibilitas, peran dan contoh langsung.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Build once. <b>Use everywhere.</b></div>
+      <div class="values"><span data-en="One source">Satu sumber</span><span data-en="Documented">Terdokumentasi</span><span data-en="Reusable">Dipakai ulang</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, L = DS.L, t = DS.t, ic = DS.ic, esc = DS.esc, B = DS.Button, I = DS.Input;
+  var task = { title: 'Hotel ABC', id: '#LND-20240925-001', qty: [['82.4', 'kg'], ['8', L('Bag', 'Bags')]], time: '10:24', status: 'Waiting', cta: L('Terima', 'Receive') };
+  var menu = [{ icon: 'home', label: L('Beranda', 'Home'), active: true }, { icon: 'clipboard', label: L('Operasional', 'Operations') }, { icon: 'chart', label: L('Laporan', 'Reports') }];
+
+  /* Live example per documented component (real render functions, not pictures) */
+  var EX = {
+    'Button.Primary': function () { return '<div class="ds-btnbar">' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package' }) + B.Primary({ label: L('Simpan', 'Save'), loading: true }) + B.Primary({ label: L('Simpan', 'Save'), disabled: true }) + '</div>'; },
+    'Button.Secondary': function () { return '<div class="ds-btnbar">' + B.Secondary({ label: L('Ada Masalah', 'Report Issue'), icon: 'alert' }) + B.Action({ label: L('Terima', 'Receive') }) + '</div>'; },
+    'Button.Danger': function () { return '<div class="ds-btnbar">' + B.Danger({ label: L('Batalkan', 'Cancel'), icon: 'trash' }) + B.DangerSoft({ label: L('ADA MASALAH', 'HAS ISSUE'), icon: 'alert' }) + '</div>'; },
+    'Button.Ghost': function () { return '<div class="ds-btnbar">' + B.Ghost({ label: L('Kembali', 'Back'), icon: 'arrowl' }) + B.Text({ label: L('Lihat Semua', 'View All'), icon: 'arrow' }) + '</div>'; },
+    'Button.Icon': function () { return '<div class="ds-btnbar">' + B.Icon({ icon: 'scan', label: 'Scan' }) + B.Icon({ icon: 'camera', label: L('Kamera', 'Camera') }) + B.Icon({ icon: 'print', label: L('Cetak', 'Print') }) + '</div>'; },
+    'Input.Text': function () { return I.Text({ label: L('Nama Hotel', 'Hotel Name'), value: 'Hotel ABC', state: 'success' }) + I.Text({ label: L('Nama Hotel', 'Hotel Name'), req: true, state: 'error', help: L('Nama hotel harus diisi.', 'Hotel name is required.') }); },
+    'Input.Number': function () { return I.Number({ label: L('Berat Total', 'Total Weight'), value: '82.4', unit: 'kg', lg: true, req: true }); },
+    'Input.Counter': function () { return I.Counter({ label: L('Jumlah Bag', 'Bag Count'), value: 8 }); },
+    'Input.Select': function () { return I.Select({ label: 'Outlet', options: [L('Semua Outlet', 'All Outlets'), 'Pusat', 'Outlet 1'] }); },
+    'Input.Search': function () { return I.Search({ placeholder: L('Cari hotel, order, atau tag...', 'Search hotel, order or tag...') }); },
+    'Input.Date / Input.Time': function () { return '<div class="p3-grid" style="--cols:2">' + I.Date({ label: L('Tanggal', 'Date'), value: '2024-09-25' }) + I.Time({ label: L('Jam', 'Time'), value: '14:30' }) + '</div>'; },
+    'Input.Textarea': function () { return I.Textarea({ label: L('Catatan (opsional)', 'Note (optional)'), placeholder: L('Tulis catatan...', 'Write a note...') }); },
+    'Input.Checkbox / Radio / Toggle / Options': function () { return I.Checkbox({ label: L('Kebersihan', 'Cleanliness'), checked: true }) + I.Radio({ name: 'dx', label: L('Noda', 'Stain'), checked: true }) + I.Toggle({ label: L('Aktif', 'Active'), checked: true }); },
+    'Status.Waiting · Processing · Completed · Risk · Late · Issue': function () { return '<div class="ds-btnbar">' + ['Waiting', 'Processing', 'Completed', 'Risk', 'Late', 'Issue'].map(function (k) { return DS.Status[k](); }).join('') + '</div>'; },
+    'Card.Task': function () { return DS.Card.Task(task); },
+    'Card.KPI': function () { return DS.Card.KPI({ label: L('Total Cucian', 'Total Laundry'), value: '12.5 ton', trend: '8%', ctx: L('vs minggu lalu', 'vs last week') }); },
+    'Card.Alert': function () { return DS.Card.Alert({ level: 'critical', tag: 'SLA Risk', title: L('5 order berisiko terlambat', '5 orders at risk of being late'), act: L('Lihat Detail', 'View Detail') }); },
+    'Card.Action': function () { return DS.Card.Action({ icon: 'package', title: L('Terima Cucian', 'Receive Laundry'), sub: L('8 menunggu', '8 waiting'), cta: true }); },
+    'Card.Summary · Card.Client': function () { return DS.Card.Summary({ label: L('Order Hari Ini', 'Orders Today'), value: '28', trend: '12%' }) + DS.Card.Client({ name: 'Hotel Indigo', id: '#CLN-0012', meta: L('3 Properti', '3 Properties'), status: 'Active', cta: L('Lihat', 'View') }); },
+    'Nav.Sidebar': function () { return DS.Nav.Sidebar({ root: '../', items: menu }); },
+    'Nav.Topbar': function () { return DS.Nav.Topbar({ name: 'Made Sari', role: 'Manager' }); },
+    'Nav.BottomNav': function () { return DS.Nav.BottomNav({ current: 1 }); },
+    'Nav.Tabs · Nav.Segment · Nav.Breadcrumb': function () { return DS.Nav.Tabs({ items: [L('Semua', 'All'), L('Menunggu', 'Waiting'), L('Selesai', 'Done')] }) + DS.Nav.Segment({ items: [L('Harian', 'Daily'), L('Mingguan', 'Weekly'), L('Bulanan', 'Monthly')] }) + DS.Nav.Breadcrumb({ items: [L('Operasional', 'Operations'), L('Penerimaan', 'Receiving'), 'Detail'] }); },
+    'Stepper.Process': function () { return DS.Stepper.Process({ current: 2 }); },
+    'Stepper.Progress · State.Loading': function () { return DS.State.Loading(); },
+    'Data.Table': function () { return DS.Data.Table({ caption: L('Cucian menunggu', 'Laundry waiting'), cols: [{ k: 'o', l: 'Order ID', strong: true }, { k: 'w', l: L('Berat', 'Weight'), num: true }, { k: 's', l: 'Status', chip: true }], rows: [{ o: '#LND-001', w: '82.4 kg', s: 'Waiting' }, { o: '#LND-002', w: '46.2 kg', s: 'Processing' }] }); },
+    'Data.List · Data.Pagination · Data.FilterBar': function () { return DS.Data.List({ items: [{ icon: 'hotel', title: 'Hotel ABC', sub: '82.4 kg · 8 Bag', status: 'Waiting' }, { icon: 'palm', title: 'Villa Sunset', sub: '46.2 kg · 5 Bag', status: 'Processing' }] }); },
+    'Feedback.Toast': function () { return DS.Feedback.Toast({ type: 'success', text: L('Data berhasil disimpan.', 'Data saved.') }); },
+    'Feedback.Inline': function () { return DS.Feedback.Inline({ type: 'warning', text: L('Stok deterjen hampir habis.', 'Detergent stock is running low.') }); },
+    'Feedback.Dialog': function () { return DS.Feedback.Dialog({ inline: true, title: L('Yakin ingin menyelesaikan order ini?', 'Finish this order?'), text: L('Setelah diselesaikan, data tidak dapat diubah kembali.', 'Once finished, the data cannot be changed.'), ok: L('Ya, Selesaikan', 'Yes, Finish'), cancel: L('Batal', 'Cancel'), icon: 'alert' }); },
+    'Tooltip': function () { return DS.Tooltip({ static: true, text: L('Isi berat cucian sesuai timbangan.', 'Enter the weight shown on the scale.') }); },
+    'Notification': function () { return DS.Notification({ icon: 'package', title: L('Order baru masuk', 'New order'), ctx: 'Hotel ABC • 24.6 kg', time: L('5 menit lalu', '5 min ago'), unread: true }); },
+    'Media.Upload · Media.Photos · Media.Doc': function () { return DS.Media.Upload() + DS.Media.Photos({ items: [1, 2] }); },
+    'State.Empty · Loading · Success · Warning · Error · NoPermission · Offline': function () { return DS.State.Empty({ actions: B.Ghost({ label: L('Muat Ulang', 'Refresh'), icon: 'refresh', block: true }) }); }
+  };
+  var PAT = { WorkQueue: 'np05-operational.html', TaskDetail: 'np05-operational.html', QuickAction: 'np05-operational.html', ProcessStepper: 'np05-operational.html', QCDecision: 'np05-operational.html', IssueFlow: 'np05-operational.html', ExecutiveKPI: 'np06-management.html', DrillDown: 'np06-management.html' };
+
+  function slug(n) { return n.split(/[ ·/]/)[0].replace(/\./g, '-').toLowerCase(); }
+  var groups = []; DS.COMPONENTS.forEach(function (c) { if (groups.indexOf(c.g) < 0) groups.push(c.g); });
+
+  var h = '';
+  h += '<section class="panel"><div class="tools"><div class="ds-field"><span class="ds-label">' + t(L('Kelompok', 'Group')) + '</span><div class="ds-segment" role="group" id="grp">' +
+    ['*'].concat(groups).map(function (g, i) { return '<button type="button" data-g="' + esc(g) + '" aria-pressed="' + (i === 0) + '"' + (i === 0 ? ' class="on"' : '') + '>' + (g === '*' ? t(L('Semua', 'All')) : esc(g)) + '</button>'; }).join('') + '</div></div>' +
+    '<div>' + I.Search({ placeholder: L('Cari komponen...', 'Search components...') }) + '</div></div><p class="count" id="count" aria-live="polite"></p></section>';
+
+  h += '<div id="list" style="display:grid;gap:var(--jf-space-4)">' + DS.COMPONENTS.map(function (c) {
+    var ex = '';
+    try { ex = EX[c.n] ? EX[c.n]() : ''; } catch (e) { ex = ''; }
+    if (!ex && c.g === 'Pattern') { var k = c.fn.split('.').pop(), pg = PAT[k] || 'np05-operational.html'; ex = '<p>' + t(L('Pola ini ditampilkan dalam ukuran asli di halaman pola.', 'This pattern is shown at true size on the pattern page.')) + '</p>' + B.Secondary({ label: pg.indexOf('np05') === 0 ? 'NP-05 Operational Patterns' : 'NP-06 Management Patterns', icon: 'arrow', href: pg }); }
+    var row = function (icn, cls, label, val) { return '<dt class="' + cls + '">' + ic(icn) + t(label) + '</dt><dd>' + (typeof val === 'string' ? esc(val) : t(val)) + '</dd>'; };
+    return '<article class="doc" id="' + slug(c.n) + '" data-g="' + esc(c.g) + '" data-q="' + esc((c.n + ' ' + c.pur[0] + ' ' + c.pur[1] + ' ' + c.cls).toLowerCase()) + '">' +
+      '<div class="doc__h"><h3>' + esc(c.n) + '</h3><span class="g">' + esc(c.g) + '</span><code class="p3-code">' + esc(c.cls) + '</code><p>' + t(c.pur) + '</p></div>' +
+      '<dl>' + row('component', '', L('Varian', 'Variants'), c.v) + row('status', '', 'State', c.s) + row('checkc', 'ok', L('Boleh dipakai', 'Allowed'), c.ok) + row('xc', 'no', L('Tidak disarankan', 'Not recommended'), c.no) +
+        row('monitor', '', L('Responsif', 'Responsive'), c.resp) + row('accessibility', '', L('Aksesibilitas', 'Accessibility'), c.a11y) + row('users', '', L('Peran', 'Role'), c.role) + row('file', '', L('Fungsi', 'Function'), c.fn + '()') + '</dl>' +
+      '<div class="ex"><h4>' + t(L('Contoh', 'Example')) + '</h4><div class="p3-stage p3-stage--white">' + ex + '</div></div></article>';
+  }).join('') + '</div>';
+
+  /* Naming convention (§67) */
+  h += P3.section({ id: 'naming', icon: 'tag', title: L('Konvensi penamaan', 'Naming convention'), desc: L('Nama komponen = Kelompok.Varian. Nama yang sama dipakai di desain, kode (JFDS.*), kelas CSS (.ds-*) dan dokumentasi.', 'Component name = Group.Variant. The same name is used in design, code (JFDS.*), CSS classes (.ds-*) and documentation.'),
+    body: '<div class="names">' + [['Button.Primary', 'JFDS.Button.Primary()', '.ds-btn--primary'], ['Input.Number', 'JFDS.Input.Number()', '.ds-control--lg'], ['Card.Task', 'JFDS.Card.Task()', '.ds-taskcard'], ['Status.Waiting', 'JFDS.Status.Waiting()', '.ds-status--waiting'], ['Pattern.WorkQueue', 'JFDS.Pattern.WorkQueue()', '—'], ['State.Offline', 'JFDS.State.Offline()', '.ds-state'], ['Feedback.Dialog', 'JFDS.Feedback.Dialog()', '.ds-dialog'], ['Nav.BottomNav', 'JFDS.Nav.BottomNav()', '.ds-bottomnav']].map(function (n) {
+      return '<div><b>' + n[0] + '</b><code class="p3-code">' + n[1] + '</code><code class="p3-code">' + n[2] + '</code></div>'; }).join('') + '</div>' +
+      P3.dodont(L('Pakai', 'Use'), [L('Button.Primary, Card.Task, Status.Waiting', 'Button.Primary, Card.Task, Status.Waiting'), L('Varian lewat opsi: Button.Primary({ size: \'lg\' })', 'Variants via options: Button.Primary({ size: \'lg\' })')],
+        L('Hindari', 'Avoid'), [L('OrangeButton2, BigBlueBtn, NewCardFinal', 'OrangeButton2, BigBlueBtn, NewCardFinal'), L('Nama berdasarkan halaman: ReceivingCard, QCCard, PackingCard', 'Page-based names: ReceivingCard, QCCard, PackingCard')]) });
+
+  /* Reuse / no duplication (§DoD) */
+  h += P3.section({ id: 'reuse', icon: 'loop', title: L('Dipakai ulang, tidak diduplikasi', 'Reused, not duplicated'), desc: L('Satu Card.Task melayani semua tahap operasional. Perbedaan per tahap hanya ada di data: status, CTA dan ikon.', 'One Card.Task serves every operational stage. Stages differ only in data: status, CTA and icon.'),
+    body: '<div class="p3-grid" style="--cols:4">' +
+      [[L('Penerimaan', 'Receiving'), 'Waiting', L('Terima', 'Receive')], [L('Proses', 'Process'), 'Processing', L('Lanjut', 'Continue')], ['QC', 'Risk', L('Cek QC', 'Check QC')], [L('Pengiriman', 'Delivery'), 'Completed', L('Kirim', 'Ship')]].map(function (s) {
+        return P3.block(s[0], DS.Card.Task({ title: 'Hotel ABC', id: '#LND-001', qty: [['82.4', 'kg'], ['8', 'Bag']], status: s[1], cta: s[2] }));
+      }).join('') + '</div>' +
+      DS.Feedback.Inline({ type: 'info', text: L('Komponen baru hanya dibuat bila tidak ada komponen yang bisa diperluas dengan opsi, dan dicatat di halaman ini dengan alasannya.', 'A new component is only created when no existing one can be extended with an option, and it is recorded on this page with the reason.') }) });
+
+  P3.mount('#page', h);
+
+  /* Filter + search */
+  var q = '', g = '*';
+  var docs = [].slice.call(document.querySelectorAll('.doc'));
+  function apply() {
+    var n = 0;
+    docs.forEach(function (d) { var show = (g === '*' || d.getAttribute('data-g') === g) && (!q || d.getAttribute('data-q').indexOf(q) > -1); d.hidden = !show; if (show) n++; });
+    document.getElementById('count').innerHTML = t(L(n + ' dari ' + docs.length + ' komponen dan pola', n + ' of ' + docs.length + ' components and patterns'));
+    DS.lang(document.getElementById('count'));
+  }
+  document.getElementById('grp').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    [].forEach.call(this.children, function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
+    g = b.getAttribute('data-g'); apply();
+  });
+  var s = document.querySelector('.tools input'); if (s) s.addEventListener('input', function () { q = this.value.trim().toLowerCase(); apply(); });
+  apply();
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

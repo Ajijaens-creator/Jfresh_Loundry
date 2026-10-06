@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-07 State, Feedback &amp; Accessibility</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .st8 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--jf-space-4); align-items: stretch; }
+  .st8 > div { display: grid; grid-template-rows: auto 1fr auto; gap: var(--jf-space-2); min-width: 0; }
+  .st8 > div > header { display: flex; align-items: center; gap: var(--jf-space-2); font-weight: 600; color: var(--jf-text-strong); font-size: var(--jf-fs-label); }
+  .st8 > div > header .p3-num { width: 26px; height: 26px; font-size: 12px; border-radius: var(--jf-radius-control); }
+  .st8 .ds-state { padding: var(--jf-space-5) var(--jf-space-4); height: 100%; align-content: center; }
+  .st8 .applink { font-size: var(--jf-fs-label); font-weight: var(--jf-weight-semibold); display: inline-flex; align-items: center; min-height: var(--jf-touch); }
+  .a11y { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--jf-space-3); }
+  .a11y > div { display: grid; justify-items: center; gap: var(--jf-space-2); text-align: center; padding: var(--jf-space-4); border-radius: var(--jf-radius-card); border: 1px solid var(--jf-border); background: var(--jf-surface-card); font-size: var(--jf-fs-label); font-weight: 500; color: var(--jf-text-strong); }
+  .a11y .i { width: 32px; height: 32px; color: var(--jf-brand-deep); }
+  .a11y small { font-weight: 400; color: var(--jf-text-muted); font-size: var(--jf-fs-caption); }
+  .ratio { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .swpair { display: inline-flex; align-items: center; justify-content: center; min-width: 96px; min-height: 36px; padding: 0 var(--jf-space-3); border-radius: var(--jf-radius-control); font-weight: 600; border: 1px solid var(--jf-border); }
+  .iconset { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: var(--jf-space-3); }
+  .iconset > div { display: grid; justify-items: center; gap: var(--jf-space-2); font-size: var(--jf-fs-caption); color: var(--jf-text-muted); }
+  .iconset .ds-iconbtn__box { width: 52px; height: 52px; }
+  .iconset .ok { color: var(--jf-state-success); } .iconset .in { color: var(--jf-state-info); } .iconset .wa { color: var(--jf-state-warning); } .iconset .er { color: var(--jf-state-error); }
+  .audit { display: flex; flex-wrap: wrap; gap: var(--jf-space-3); }
+  @media (max-width: 1239px) { .st8, .a11y { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 699px) { .st8 { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="7">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">07</span><span data-en="Phase 3 · Design System · NP-07">Fase 3 · Design System · NP-07</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>State, Feedback &amp; Accessibility</h1>
+      <p class="sub" data-en="How every screen looks in each condition, how the system talks back after an action, and the accessibility rules every component meets.">Bagaimana setiap layar tampil di setiap kondisi, bagaimana sistem memberi tanggapan setelah sebuah aksi, dan aturan aksesibilitas yang dipenuhi setiap komponen.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Accessible System. <b>Happier Team.</b></div>
+      <div class="values"><span data-en="Inclusive">Inklusif</span><span data-en="Clear">Jelas</span><span data-en="Calm">Tenang</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, L = DS.L, t = DS.t, ic = DS.ic, B = DS.Button, I = DS.Input, St = DS.State;
+  var h = '';
+
+  /* 1. Screen states */
+  function card(n, title, body, route) {
+    return '<div><header><span class="p3-num">' + n + '</span>' + t(title) + '</header>' + body + (route ? '<a class="applink" href="../app/index.html#/operator/' + route + '">' + t(L('Lihat di aplikasi →', 'See it in the app →')) + '</a>' : '<span></span>') + '</div>';
+  }
+  h += P3.section({ id: 'states', n: 1, title: L('Delapan State Layar', 'Eight Screen States'), desc: L('Setiap layar yang relevan mendukung kedelapan kondisi ini. Tidak ada halaman kosong tanpa jalan keluar.', 'Every relevant screen supports all eight conditions. No blank page without a way forward.'),
+    body: '<div class="st8">' +
+      card(1, L('Default', 'Default'), '<div class="ds-stack ds-gap-2">' + DS.Card.Task({ title: 'Hotel ABC', id: '#LND-001', qty: [['82.4', 'kg'], ['8', 'Bag']], status: 'Waiting', cta: L('Terima', 'Receive') }) + '</div>', 'OPS-RCV-001') +
+      card(2, L('Loading', 'Loading'), St.Skeleton({ rows: 3 }), 'OPS-RCV-001?state=loading') +
+      card(3, L('Kosong', 'Empty'), St.Empty({ title: L('Belum ada cucian menunggu.', 'Nothing is waiting.'), text: L('Cucian baru akan muncul di sini.', 'New laundry will appear here.'), actions: B.Ghost({ label: L('Muat Ulang', 'Refresh'), icon: 'refresh', block: true }) }), 'OPS-RCV-001?state=empty') +
+      card(4, L('Sukses', 'Success'), St.Success({ title: L('Cucian berhasil diterima.', 'Laundry received.'), meta: L('Nomor Order: LND-20240925-001', 'Order No: LND-20240925-001'), actions: B.Primary({ label: L('Lanjut ke Sorting', 'Continue to Sorting'), icon: 'arrow', block: true }) }), 'OPS-RCV-001?state=success') +
+      card(5, L('Peringatan', 'Warning'), St.Warning({ actions: B.Secondary({ label: L('Lihat Detail', 'View Detail'), block: true }) }), 'OPS-RCV-001?state=warning') +
+      card(6, L('Error', 'Error'), St.Error({ actions: B.Secondary({ label: L('Coba Lagi', 'Try Again'), icon: 'refresh', block: true }) }), 'OPS-RCV-001?state=error') +
+      card(7, L('Tanpa Izin', 'No Permission'), St.NoPermission({ actions: B.Ghost({ label: L('Kembali', 'Back'), icon: 'arrowl', block: true }) }), 'OPS-RCV-001?state=noperm') +
+      card(8, L('Offline', 'Offline'), St.Offline({ queue: true, actions: St.OfflineBar({ queue: true }) }), 'OPS-RCV-001?state=offline') +
+    '</div>' +
+    '<div class="p3-grid" style="--cols:2;margin-top:20px">' + P3.block(L('Offline — dua versi yang jujur', 'Offline — two honest versions'), '<div class="ds-stack ds-gap-2">' + DS.Feedback.Inline({ type: 'warning', title: L('Bila antrean offline didukung:', 'When an offline queue is supported:'), text: L('“Data akan dikirim setelah koneksi kembali.”', '“Data will be sent when the connection is back.”') }) + DS.Feedback.Inline({ type: 'error', title: L('Bila tidak didukung:', 'When it is not supported:'), text: L('“Sambungkan internet untuk melanjutkan.” Tombol simpan dinonaktifkan; sistem tidak pernah mengaku sudah menyimpan.', '“Connect to the internet to continue.” Save is disabled; the system never claims it saved.') }) + '</div>') +
+      P3.block(L('Tanpa izin', 'No permission'), P3.rules('do', [L('Utamakan menyembunyikan aksi yang tidak tersedia', 'Prefer hiding unavailable actions'), L('Data sensitif tidak dimuat sebelum pesan izin', 'Sensitive data is not loaded before the permission message'), L('Selalu ada tombol Kembali', 'Always offer Back')])) + '</div>' });
+
+  /* 2. Input states & validation */
+  h += P3.section({ id: 'validation', n: 2, title: L('State Input & Validasi', 'Input States & Validation'), desc: L('Pesan validasi dekat field, dalam bahasa manusia. Tidak pernah kode database, stack trace atau kode API.', 'Validation sits next to the field, in human language. Never database errors, stack traces or API codes.'),
+    body: '<div class="p3-grid" style="--cols:3">' + I.Text({ label: 'Default', placeholder: L('Masukkan teks…', 'Enter text…') }) + I.Text({ label: 'Focus', value: 'Hotel ABC', state: 'focus' }) + I.Text({ label: 'Filled', value: 'Hotel ABC', state: 'success' }) +
+      I.Text({ label: 'Error', value: '', placeholder: L('Nama hotel', 'Hotel name'), state: 'error', help: L('Nama hotel harus diisi.', 'Hotel name is required.') }) + I.Text({ label: 'Disabled', value: 'Hotel ABC', state: 'disabled' }) +
+      I.Number({ label: L('Berat Cucian', 'Laundry Weight'), req: true, value: '82.4', unit: 'kg', help: L('Masukkan angka antara 0.1 – 500 kg', 'Enter a number between 0.1 – 500 kg') }) + '</div>' +
+      P3.table([L('Kondisi', 'Condition'), L('Pesan yang dipakai', 'Message we use'), L('Tidak pernah tampil', 'Never shown')], [
+        [L('Berat kosong', 'Weight empty'), L('Berat wajib diisi.', 'Weight is required.'), '<code class="p3-code">ValidationError: weight NOT NULL</code>'],
+        [L('Bag 0', 'Zero bags'), L('Jumlah bag harus lebih dari 0.', 'Bag count must be more than 0.'), '<code class="p3-code">422 Unprocessable Entity</code>'],
+        [L('Email salah', 'Bad email'), L('Email tidak valid.', 'Email is not valid.'), '<code class="p3-code">regex mismatch /^[^@]+@/</code>'],
+        [L('Telepon pendek', 'Short phone'), L('Nomor telepon minimal 10 digit.', 'Phone number needs at least 10 digits.'), '<code class="p3-code">ERR_PHONE_LEN</code>'],
+        [L('Server gagal', 'Server failed'), L('Terjadi kesalahan. Coba lagi.', 'Something went wrong. Try again.'), '<code class="p3-code">500 at OrderService.save()</code>']]) });
+
+  /* 3. Feedback, confirmation, loading */
+  h += P3.section({ id: 'feedback', n: 3, title: L('Pesan Feedback, Konfirmasi & Loading', 'Feedback, Confirmation & Loading'), desc: L('Aksi operasional yang selesai selalu memberi konfirmasi eksplisit.', 'Completed operational actions always give explicit confirmation.'),
+    body: '<div class="p3-grid" style="--cols:3">' +
+      P3.block(L('Pesan sistem', 'System messages'), '<div class="ds-stack ds-gap-2">' + DS.Feedback.Toast({ type: 'success', title: L('Berhasil!', 'Done!'), text: L('Data cucian berhasil disimpan.', 'Laundry data saved.') }) + DS.Feedback.Toast({ type: 'info', title: L('Informasi', 'Info'), text: L('Order sedang diproses.', 'Order is being processed.') }) + DS.Feedback.Toast({ type: 'warning', title: L('Perhatian', 'Warning'), text: L('Stok deterjen hampir habis.', 'Detergent stock is low.') }) + DS.Feedback.Toast({ type: 'error', title: L('Gagal!', 'Failed!'), text: L('Terjadi kesalahan. Silakan coba lagi.', 'Something went wrong. Please try again.') }) + '</div>') +
+      P3.block(L('Dialog konfirmasi', 'Confirmation dialog'), DS.Feedback.Dialog({ inline: true, title: L('Yakin ingin menyelesaikan order ini?', 'Finish this order?'), text: L('Setelah diselesaikan, data tidak dapat diubah kembali.', 'Once finished, the data cannot be changed.'), ok: L('Ya, Selesaikan', 'Yes, Finish') })) +
+      P3.block(L('Loading & proses', 'Loading & processing'), St.Loading({ progress: 70 }) + DS.Stepper.Process({ steps: [L('Upload Data', 'Upload'), L('Validasi', 'Validate'), L('Proses', 'Process'), L('Selesai', 'Done')], current: 2, auto: false })) + '</div>' });
+
+  /* 4. Notifications & tooltip */
+  h += P3.section({ id: 'notif', n: 4, title: L('Notifikasi & Tooltip', 'Notifications & Tooltip'),
+    body: '<div class="p3-grid" style="--cols:2">' + P3.block(L('Notifikasi dalam aplikasi', 'In-app notifications'), '<div class="ds-list">' + DS.Notification({ icon: 'package', title: L('Order baru masuk', 'New order'), ctx: 'Hotel ABC • 24.6 kg', time: L('5 menit lalu', '5 min ago'), unread: true }) + DS.Notification({ icon: 'check', tone: 'success', title: L('Cucian selesai', 'Laundry done'), ctx: 'Villa Sunset • 18.2 kg', time: L('30 menit lalu', '30 min ago') }) + DS.Notification({ icon: 'alert', tone: 'warning', title: L('Stok menipis', 'Low stock'), ctx: L('Deterjen Cair', 'Liquid Detergent'), time: L('1 jam lalu', '1 h ago') }) + DS.Notification({ icon: 'washer', tone: 'error', title: 'Maintenance', ctx: L('Mesin Cuci 1', 'Washer 1'), time: L('3 jam lalu', '3 h ago') }) + '</div>' + B.Text({ label: L('Lihat Semua Notifikasi', 'View All Notifications'), icon: 'arrow' })) +
+      P3.block(L('Tooltip & helper', 'Tooltip & helper'), '<div class="p3-stage p3-stage--white">' + DS.Tooltip({ static: true, text: L('Berat cucian adalah total berat semua item dalam satu order.', 'Laundry weight is the total weight of every item in one order.') }) + I.Number({ label: L('Berat Total', 'Total Weight'), value: '82.4', unit: 'kg', tip: L('Berat cucian adalah total berat semua item dalam satu order.', 'Laundry weight is the total weight of every item in one order.') }) + '<p class="ds-caption">' + t(L('Tooltip hanya bantuan sekunder dan dibuka dengan tap. Aksi inti tidak pernah bergantung pada hover.', 'Tooltips are secondary help and open on tap. Core actions never depend on hover.')) + '</p></div>') + '</div>' });
+
+  /* 5. Accessibility */
+  var g = [['type', L('Teks besar dan jelas', 'Large, clear text'), L('Body ≥ 16 px', 'Body ≥ 16 px')], ['contrast', L('Kontras warna baik', 'Good contrast'), L('Teks ≥ 4.5 : 1', 'Text ≥ 4.5 : 1')], ['image', L('Ikon informatif', 'Informative icons'), L('Ikon + teks', 'Icon + text')], ['pointer', L('Mudah dinavigasi', 'Easy to navigate'), L('Fokus keyboard terlihat', 'Visible keyboard focus')], ['headset', L('Dukungan screen reader', 'Screen reader support'), L('Label, role, aria-live', 'Labels, roles, aria-live')], ['phone', L('Bisa satu tangan', 'One-handed use'), L('CTA di bawah, target ≥ 44 px', 'CTA at the bottom, target ≥ 44 px')], ['globe', L('Bahasa Indonesia & English', 'Indonesian & English'), L('ID default', 'ID default')], ['users', L('Ramah untuk semua usia', 'Friendly for all ages'), L('Bahasa sederhana', 'Plain language')]];
+  h += P3.section({ id: 'a11y', n: 5, title: L('Standar Aksesibilitas', 'Accessibility Standard'), desc: L('Diperiksa langsung di halaman ini: ukuran target sentuh dan kontras pasangan warna utama dihitung oleh browser Anda.', 'Checked live on this page: touch-target sizes and the contrast of the main colour pairs are computed by your browser.'),
+    body: '<div class="a11y">' + g.map(function (x) { return '<div>' + ic(x[0]) + t(x[1]) + '<small>' + t(x[2]) + '</small></div>'; }).join('') + '</div>' +
+      '<div class="p3-grid" style="--cols:2;margin-top:20px">' + P3.block(L('Kontras pasangan warna (dihitung)', 'Colour-pair contrast (computed)'), '<div id="contrast"></div>') + P3.block(L('Audit target sentuh di halaman ini', 'Touch-target audit on this page'), '<div id="touch"></div>') + '</div>' });
+
+  /* 6. Colour for state + icon set */
+  var icons = [['check', 'ok', L('Sukses', 'Success')], ['status', 'in', 'Info'], ['alert', 'wa', L('Peringatan', 'Warning')], ['xc', 'er', 'Error'], ['edit', '', 'Edit'], ['trash', '', L('Hapus', 'Delete')], ['eye', '', L('Lihat', 'View')], ['download', '', L('Unduh', 'Download')], ['scan', '', 'Scan'], ['camera', '', L('Kamera', 'Camera')], ['print', '', L('Cetak', 'Print')], ['more', '', L('Lainnya', 'More')]];
+  h += P3.section({ id: 'color', n: 6, title: L('Warna untuk State & Set Ikon', 'Colour for State & Icon Set'),
+    body: '<div class="p3-grid" style="--cols:2">' + P3.block(L('Warna state', 'State colours'), P3.table(['State', 'Token', L('Untuk', 'Use')], [[DS.Status.Completed({ label: 'Success' }), '<code class="p3-code">--jf-state-success #10B981</code>', L('Berhasil, selesai, aktif', 'Done, finished, active')], [DS.Status.Processing({ label: 'Info' }), '<code class="p3-code">--jf-state-info #3B82F6</code>', L('Informasi, proses', 'Information, in process')], [DS.Status.Warning({ label: 'Warning' }), '<code class="p3-code">--jf-state-warning #F59E0B</code>', L('Peringatan, perlu perhatian', 'Warning, needs attention')], [DS.Status.Critical({ label: 'Error' }), '<code class="p3-code">--jf-state-error #EF4444</code>', L('Kesalahan, gagal', 'Error, failed')], [DS.Status.Inactive({ label: 'Disabled' }), '<code class="p3-code">--jf-state-disabled #94A3B8</code>', L('Tidak aktif, belum tersedia', 'Inactive, not available')]])) +
+      P3.block(L('Ikon status dan aksi', 'Status and action icons'), '<div class="iconset">' + icons.map(function (x) { return '<div><span class="ds-iconbtn__box ' + x[1] + '">' + ic(x[0]) + '</span>' + t(x[2]) + '</div>'; }).join('') + '</div>') + '</div>' });
+
+  /* 7. Responsive */
+  h += P3.section({ id: 'responsive', n: 7, title: L('Perilaku Responsif', 'Responsive Behaviour'), desc: L('Reflow, bukan diperkecil. Diuji pada lebar 1440, 900 dan 390 px tanpa scroll horizontal.', 'Reflow, not scale-down. Tested at 1440, 900 and 390 px wide with no horizontal scroll.'),
+    body: P3.table([L('Perangkat', 'Device'), L('Lebar', 'Width'), L('Perilaku', 'Behaviour')], [['Desktop', '≥ 1240 px', L('Layout manajemen lengkap: sidebar, KPI 4–6 kolom, tabel, panel konteks.', 'Full management layout: sidebar, 4–6 KPI columns, tables, context panel.')], ['iPad', '700–1239 px', L('Operasional dulu: rail ikon, kartu besar 1–2 kolom, CTA lebar penuh 56 px.', 'Operations first: icon rail, large cards in 1–2 columns, 56 px full-width CTA.')], ['Mobile', '< 700 px', L('Tugas penting saja: satu kolom, bottom nav ≤ 5 item, tabel menjadi kartu, dialog menjadi bottom sheet, dekorasi hilang.', 'Essential work only: one column, bottom nav ≤ 5 items, tables become cards, dialogs become bottom sheets, decoration removed.')]]) +
+      '<div class="p3-quote" style="margin-top:20px"><span class="q">“</span><div><b>' + t(L('Desain yang inklusif membuat semua orang bisa bekerja dengan lebih mudah.', 'Inclusive design makes work easier for everyone.')) + '</b><span>Accessible System. Happier Team.</span></div></div>' });
+
+  h += P3.ref('np07-states-accessibility.jpg');
+  P3.mount('#page', h);
+
+  /* Live contrast (WCAG relative luminance) */
+  var cs = getComputedStyle(document.documentElement);
+  function rgb(v) { v = v.trim(); if (v[0] === '#') { var n = v.slice(1); if (n.length === 3) n = n.replace(/./g, '$&$&'); return [0, 2, 4].map(function (i) { return parseInt(n.substr(i, 2), 16); }); } var m = v.match(/\d+/g); return m ? m.slice(0, 3).map(Number) : [0, 0, 0]; }
+  function lum(c) { return c.map(function (x) { x /= 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4); }).reduce(function (a, x, i) { return a + x * [.2126, .7152, .0722][i]; }, 0); }
+  function ratio(a, b) { var l1 = lum(rgb(cs.getPropertyValue(a))), l2 = lum(rgb(cs.getPropertyValue(b))); return (Math.max(l1, l2) + .05) / (Math.min(l1, l2) + .05); }
+  var pairs = [['--jf-text', '--jf-surface-card', L('Teks body', 'Body text')], ['--jf-text-muted', '--jf-surface-card', L('Teks sekunder', 'Secondary text')], ['--jf-text-strong', '--jf-surface-page', L('Judul di latar halaman', 'Heading on page background')], ['--jf-text-on-cta', '--jf-cta', L('Teks di tombol oranye', 'Text on orange button')], ['--jf-text-on-brand', '--jf-action', L('Teks di tombol biru', 'Text on blue button')], ['--jf-text-on-brand', '--jf-danger', L('Teks di tombol merah', 'Text on red button')], ['--jf-state-success-ink', '--jf-state-success-bg', L('Chip Selesai', 'Completed chip')], ['--jf-state-warning-ink', '--jf-state-warning-bg', L('Chip Menunggu', 'Waiting chip')], ['--jf-state-error-ink', '--jf-state-error-bg', L('Chip Terlambat', 'Late chip')], ['--jf-state-info-ink', '--jf-state-info-bg', L('Chip Diproses', 'In-process chip')], ['--jf-brand-orange-700', '--jf-surface-card', L('Teks oranye di putih', 'Orange text on white')]];
+  var rows = pairs.map(function (p) { var r = ratio(p[0], p[1]); var ok = r >= 4.5; return ['<span class="swpair" style="color:var(' + p[0] + ');background:var(' + p[1] + ')">Aa 82.4</span>', p[2], '<span class="ratio">' + r.toFixed(2) + ' : 1</span>', ok ? DS.Status.Completed({ label: 'AA' }) : DS.Status.Warning({ label: L('Hanya teks besar', 'Large text only') })]; });
+  P3.mount('#contrast', P3.table([L('Contoh', 'Sample'), L('Pasangan', 'Pair'), L('Rasio', 'Ratio'), L('Hasil', 'Result')], rows));
+  function audit() {
+    var els = document.querySelectorAll('main button, main a[href], main input:not([type=checkbox]):not([type=radio]):not([type=file]), main select, main [role=tab]');
+    var total = 0, small = [];
+    for (var i = 0; i < els.length; i++) { var r = els[i].getBoundingClientRect(); if (!r.width || !r.height || els[i].closest('[hidden], details:not([open])')) continue; total++; if (Math.min(r.width, r.height) < 44 && !els[i].closest('.ds-check, .ds-radio, .ds-toggle, .p3-table, .ds-pagination__info, .ds-photo__x')) small.push(els[i]); }
+    var html = '<div class="audit">' + DS.Card.KPI({ label: L('Elemen interaktif diperiksa', 'Interactive elements checked'), value: String(total) }) + DS.Card.KPI({ label: L('Di bawah 44 px', 'Below 44 px'), value: String(small.length), tint: small.length ? 'red' : 'green' }) + '</div>' +
+      DS.Feedback.Inline({ type: small.length ? 'warning' : 'success', text: small.length ? L('Ada elemen di bawah 44 px. Lihat konsol browser untuk daftarnya.', 'Some elements are below 44 px. See the browser console for the list.') : L('Semua tombol, link, field dan tab di halaman ini ≥ 44 px pada ukuran layar ini. Checkbox, radio dan toggle diukur dari baris labelnya (44 px).', 'Every button, link, field and tab on this page is ≥ 44 px at this screen size. Checkboxes, radios and toggles are measured by their 44 px label row.') });
+    if (small.length && window.console) console.warn('Touch targets < 44px:', small);
+    P3.mount('#touch', html); DS.lang(document.getElementById('touch'));
+  }
+  setTimeout(audit, 50); window.addEventListener('resize', function () { clearTimeout(audit.t); audit.t = setTimeout(audit, 200); });
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

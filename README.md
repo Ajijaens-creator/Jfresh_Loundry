@@ -1,4 +1,4 @@
-# JFRESH OS — Phase 1 & Phase 2
+# JFRESH OS — Phase 1, 2 & 3
 
 The seven connected Phase 1 visuals for JFRESH OS, built as responsive HTML pages that share one design system.
 
@@ -40,6 +40,31 @@ Phase 2 turns the Phase 1 foundation into the structure of the system: what scre
 
 NB codes: NB-04 (Receiving) and NB-05 (Reconciliation) come from the brief; the other NB codes are provisional until the approved list is supplied.
 
+## Phase 3 — Design System (NP 1.0)
+
+One reusable, responsive design system for every JFRESH OS screen. Every example on these pages is a real component, not a picture.
+
+| Page | File |
+|---|---|
+| Phase 3 home (deliverables A–L, Definition of Done, Design QA checklist) | `phase3/index.html` |
+| NP-01 Brand Digital Foundation | `phase3/np01-brand.html` |
+| NP-02 Typography & Readability | `phase3/np02-typography.html` |
+| NP-03 Grid, Spacing & Layout | `phase3/np03-grid.html` |
+| NP-04 Core Component Library | `phase3/np04-components.html` |
+| NP-05 Operational UI Patterns | `phase3/np05-operational.html` |
+| NP-06 Management UI Patterns | `phase3/np06-management.html` |
+| NP-07 State, Feedback & Accessibility | `phase3/np07-states.html` |
+| Component documentation (purpose, variants, states, allowed / not recommended, responsive, accessibility, role, live example) | `phase3/docs.html` |
+| Traceability Phase 1 → 2 → 3 for all 77 screens | `phase3/traceability.html` |
+
+Code:
+
+- `assets/css/jfos-tokens.css` — every token as a `--jf-*` CSS variable (colour, type, spacing 4–48, radius 4–24, shadow, sizes, grid 12/8/4) with per-device values. `jfresh.css` imports it and maps the Phase 1/2 variables onto it, so the whole site and the app share one system.
+- `assets/css/jfos-ds.css` — component classes `.ds-*` with every state.
+- `assets/js/jfos-ds.js` — `JFDS` render functions named like the components: `JFDS.Button.Primary()`, `JFDS.Input.Number()`, `JFDS.Card.Task()`, `JFDS.Status.Waiting()`, `JFDS.Pattern.WorkQueue()`, `JFDS.State.Offline()`. Labels are `[id, en]` pairs.
+- `assets/js/jfos-ds-docs.js` — component documentation, Design QA, archetype → pattern map and Definition of Done data used by the pages.
+- `assets/brand/phase3/` — the approved reference visuals for NP-01 to NP-07.
+
 ## Three form factors
 
 Each page changes its layout, not just its size:
@@ -63,5 +88,5 @@ In the HTML, the Indonesian text is the element content and the English text is 
 
 ## Design system
 
-`assets/css/jfresh.css` holds the tokens (deep blue `#0754A6`, fresh blue `#00A8E8`, orange `#F7931E`, yellow `#FFC72C`, soft background `#F6F9FC`, and green / amber / red used only for status), type scale per form factor, and shared components (panels, tiles, flows, chains, chips, buttons, KPI tiles, accordions).
+Since Phase 3 the tokens live in `assets/css/jfos-tokens.css` (see above): deep blue `#0754A6`, fresh blue `#00A8E8`, orange `#F7931E`, yellow `#FFC72C`, soft background `#F6F9FC`, and green / amber / red used only for status. `assets/css/jfresh.css` maps its older variables onto those tokens and holds the Phase 1/2 page components (panels, tiles, flows, chains, chips, buttons, KPI tiles, accordions).
 `assets/js/icons.js` is the single icon set. `assets/js/jfresh.js` renders the top bar, pager, language switch, responsive accordions and the SVG diagrams.

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-06 Management UI Pattern Library</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .dash { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 560px; background: var(--jf-surface-page); }
+  .dash .ds-sidebar { border-radius: 0; width: auto; }
+  .dash-main { padding: var(--jf-space-4); display: grid; gap: var(--jf-space-4); align-content: start; min-width: 0; }
+  .dash-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--jf-space-4); }
+  .ostat { display: grid; gap: 0; }
+  .ostat .ds-list__item { min-height: 52px; }
+  .mob3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--jf-space-5); align-items: start; }
+  .fin-bar { display: flex; height: 20px; border-radius: var(--jf-radius-sm); overflow: hidden; }
+  .fin-bar i { display: block; height: 100%; }
+  .fin-leg { display: grid; gap: var(--jf-space-2); font-size: var(--jf-fs-label); }
+  .fin-leg div { display: flex; align-items: center; gap: var(--jf-space-2); }
+  .fin-leg i { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+  .fin-leg b { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--jf-text-strong); }
+  @media (max-width: 1239px) { .dash { grid-template-columns: 84px minmax(0, 1fr); } .dash-row { grid-template-columns: minmax(0, 1fr); } .mob3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 699px) { .dash { grid-template-columns: minmax(0, 1fr); } .dash .ds-sidebar { display: none; } .mob3 { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="6">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">06</span><span data-en="Phase 3 · Design System · NP-06">Fase 3 · Design System · NP-06</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Management UI Pattern Library</h1>
+      <p class="sub" data-en="Patterns for supervisors, managers, finance and owners: KPIs, trends that answer a business question, prioritised alerts, drill-down from summary to transaction, structured tables and audited approvals.">Pola untuk supervisor, manajer, finance dan pemilik: KPI, tren yang menjawab pertanyaan bisnis, alert berdasarkan prioritas, drill-down dari ringkasan ke transaksi, tabel terstruktur dan persetujuan yang tercatat audit.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Powerful <b>Management.</b></div>
+      <div class="values"><span data-en="Calm">Tenang</span><span data-en="Structured">Terstruktur</span><span data-en="Insight-first">Insight dulu</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, L = DS.L, t = DS.t, ic = DS.ic, Pt = DS.Pattern;
+  var h = '';
+  var menu = [['home', L('Beranda', 'Home')], ['washer', L('Operasional', 'Operations')], ['building', L('Klien & Komersial', 'Clients & Commercial')], ['package', L('Supply & Aset', 'Supply & Assets')], ['coins', L('Keuangan', 'Finance')], ['chart', L('Laporan', 'Reports')], ['cog', L('Pengaturan', 'Settings')]];
+
+  /* 1. Dashboard */
+  var ostat = '<div class="ds-card ds-stack ds-gap-2"><div class="ds-row ds-row--between"><h3 class="ds-h3">' + t(L('Status Order Hari Ini', 'Order Status Today')) + '</h3>' + DS.Button.Text({ label: L('Lihat Semua', 'View All'), size: 'sm' }) + '</div><div class="ds-list ostat">' +
+    [['Waiting', '6'], ['Processing', '8'], ['Completed', '24'], ['Late', '2']].map(function (r) { return '<a href="#" class="ds-list__item"><span class="ds-list__tx">' + DS.Status[r[0]]() + '</span><span class="ds-list__end">' + r[1] + '</span></a>'; }).join('') + '</div></div>';
+  h += P3.section({ id: 'dashboard', n: 1, title: L('Dashboard Manager', 'Manager Dashboard'), desc: L('Disusun dari pola di bawah: header, KPI, tren, status. Urutan: KPI → alert → insight → detail.', 'Composed from the patterns below: header, KPIs, trend, status. Order: KPI → alerts → insight → detail.'),
+    body: '<div class="p3-screen p3-screen--desk"><div class="dash">' + DS.Nav.Sidebar({ root: '../', items: menu, rail: matchMedia('(max-width: 1239px)').matches }) + '<div class="dash-main">' + DS.Nav.Topbar({ name: 'Made Sari', role: 'Manager' }) +
+      '<div class="ds-row ds-row--between"><div><h2 class="ds-h2">' + t(L('Selamat Datang, Made', 'Welcome, Made')) + '</h2><p class="ds-caption">' + t(L('Operasional hari ini berjalan dengan baik.', 'Today’s operations are running well.')) + '</p></div>' + DS.Input.Date({ value: '2024-09-25' }) + '</div>' +
+      '<div class="ds-kpigrid">' + DS.Card.KPI({ label: L('Total Cucian', 'Total Laundry'), value: '12.5 ton', trend: '8%' }) + DS.Card.KPI({ label: 'Order', value: '28', trend: '12%' }) + DS.Card.KPI({ label: L('Selesai', 'Completed'), value: '24', trend: '20%', tint: 'green' }) + DS.Card.KPI({ label: 'On-Time', value: '96%', trend: '2%' }) + '</div>' +
+      '<div class="dash-row">' + Pt.Insight() + ostat + '</div></div></div></div>' });
+
+  /* 2. KPI */
+  h += P3.section({ id: 'kpi', n: 2, title: L('Pola KPI Eksekutif', 'Executive KPI Pattern'), desc: L('Label · angka besar · tren · konteks opsional. Detail sekunder tidak masuk kartu.', 'Label · large value · trend · optional context. Secondary detail stays out of the card.'),
+    body: Pt.ExecutiveKPI() + P3.spec('Pattern.ExecutiveKPI → Card.KPI ×6', '.ds-kpigrid › .ds-kpi') });
+
+  /* 3. Insight & alerts */
+  var rev = [92, 98, 104, 101, 112, 118, 125.4];
+  h += P3.section({ id: 'insight', n: 3, title: L('Insight, Tren & Alert Center', 'Insight, Trend & Alert Center'), desc: L('Setiap grafik punya judul, periode, nilai utama, tren dan insight. Alert diurutkan Kritis → Peringatan → Info.', 'Every chart has a title, period, main value, trend and insight. Alerts are ordered Critical → Warning → Info.'),
+    body: '<div class="p3-grid" style="--cols:2">' + P3.block('Pattern.Insight', Pt.Insight()) + P3.block('Pattern.AlertCenter', Pt.AlertCenter()) + '</div>' +
+      P3.dodont(L('Grafik yang baik', 'Good charts'), [L('Menjawab satu pertanyaan bisnis (mis. “Apakah volume naik?”)', 'Answer one business question (e.g. “Is volume up?”)'), L('Warna seri dari token --jf-chart-*, bukan warna status', 'Series colours from --jf-chart-* tokens, not status colours'), L('aria-label berisi kesimpulannya', 'aria-label carries the takeaway')],
+        L('Hindari', 'Avoid'), [L('Grafik hanya untuk hiasan', 'Charts as decoration'), L('Lebih dari 6 seri dalam satu grafik', 'More than 6 series in one chart'), L('Grafik tanpa periode', 'Charts without a period')]) });
+
+  /* 4. Drill-down */
+  h += P3.section({ id: 'drill', n: 4, title: L('Pola Drill-down', 'Drill-down Pattern'), desc: L('Dari ringkasan ke transaksi tanpa membuka laporan terpisah. Filter dan periode ikut terbawa.', 'From summary to transaction without opening a disconnected report. Filters and period carry through.'),
+    body: Pt.DrillDown() });
+
+  /* 5. Table */
+  h += P3.section({ id: 'table', n: 5, title: L('Tabel Manajemen', 'Management Table'), desc: L('Cari, tanggal, klien, status, SLA, urutkan, halaman, ekspor. Filter lanjutan di “Filter Lainnya”.', 'Search, date, client, status, SLA, sort, pagination, export. Advanced filters behind “More Filters”.'),
+    body: Pt.ManagementTable() + '<div class="p3-grid" style="--cols:2;margin-top:20px">' +
+      P3.block(L('Klien & Kontrak', 'Clients & Contracts'), DS.Data.Table({ caption: L('Data klien', 'Client data'), cols: [{ k: 'n', l: L('Nama Klien', 'Client'), strong: true }, { k: 't', l: L('Tipe', 'Type') }, { k: 's', l: 'Status', chip: true }, { k: 'b', l: L('Saldo', 'Balance'), num: true }], rows: [{ n: 'Hotel ABC', t: 'Hotel', s: 'Active', b: 'Rp2.450.000' }, { n: 'Villa Sunset', t: 'Villa', s: 'Active', b: 'Rp1.200.000' }, { n: 'The Kayon', t: 'Hotel', s: 'Active', b: 'Rp3.750.000' }, { n: 'Private Client', t: 'B2C', s: 'Waiting', b: 'Rp0' }] })) +
+      P3.block(L('Supply & Aset', 'Supply & Assets'), DS.Data.Table({ caption: L('Stok', 'Stock'), cols: [{ k: 'n', l: L('Nama Item', 'Item'), strong: true }, { k: 'q', l: L('Stok', 'Stock'), num: true }, { k: 'u', l: L('Satuan', 'Unit') }, { k: 's', l: 'Status', chip: true }], rows: [{ n: L('Deterjen Cair', 'Liquid Detergent'), q: '50', u: L('Liter', 'Litre'), s: 'Completed' }, { n: L('Pewangi Linen', 'Linen Softener'), q: '20', u: L('Liter', 'Litre'), s: 'Warning' }, { n: L('Plastik Packing', 'Packing Plastic'), q: '1.200', u: 'Pcs', s: 'Completed' }, { n: L('Handuk Hotel', 'Hotel Towels'), q: '200', u: 'Pcs', s: 'Critical' }] })) + '</div>' });
+
+  /* 6. Approval & finance */
+  var fin = [['--jf-chart-1', L('SDM', 'Staff'), 38], ['--jf-chart-2', 'Utility', 18], ['--jf-chart-3', L('Bahan', 'Supplies'), 14], ['--jf-chart-4', 'Maintenance', 10], ['--jf-chart-6', L('Lainnya', 'Other'), 20]];
+  h += P3.section({ id: 'approval', n: 6, title: L('Approval & Ringkasan Keuangan', 'Approval & Finance Summary'), desc: L('Approval menampilkan nilai lama vs baru dengan jelas. TOLAK dan SETUJUI tercatat di audit trail.', 'Approval shows old vs new clearly. REJECT and APPROVE are written to the audit trail.'),
+    body: '<div class="p3-grid" style="--cols:2">' + P3.block('Pattern.Approval', Pt.Approval()) +
+      P3.block(L('Keuangan (ringkasan)', 'Finance (summary)'), '<div class="ds-kpigrid">' + DS.Card.KPI({ label: L('Pendapatan', 'Revenue'), value: 'Rp125.6 jt', trend: '16%' }) + DS.Card.KPI({ label: L('Biaya Operasional', 'Operating Cost'), value: 'Rp78.5 jt', trend: '8%', dir: 'up' }) + DS.Card.KPI({ label: L('Laba Kotor', 'Gross Profit'), value: 'Rp47.2 jt', trend: '32%', tint: 'green' }) + '</div>' +
+        '<div class="ds-card ds-stack ds-gap-3"><h3 class="ds-h3">' + t(L('Komposisi Biaya', 'Cost Breakdown')) + '</h3><div class="fin-bar" role="img"' + DS.battr('aria-label', L('SDM 38%, Utility 18%, Bahan 14%, Maintenance 10%, Lainnya 20%', 'Staff 38%, Utility 18%, Supplies 14%, Maintenance 10%, Other 20%')) + '>' + fin.map(function (f) { return '<i style="width:' + f[2] + '%;background:var(' + f[0] + ')"></i>'; }).join('') + '</div>' +
+        '<div class="fin-leg">' + fin.map(function (f) { return '<div><i style="background:var(' + f[0] + ')"></i>' + t(f[1]) + '<b>' + f[2] + '%</b></div>'; }).join('') + '</div></div>') + '</div>' });
+
+  /* 7. Mobile */
+  var m1 = '<div class="ds-stack ds-gap-3"><div><p class="ds-caption">' + t(L('Selamat Pagi,', 'Good Morning,')) + '</p><h2 class="ds-h3">Made Sari</h2></div><div class="ds-kpigrid">' + DS.Card.KPI({ label: L('Total Cucian', 'Total Laundry'), value: '12.5 ton' }) + DS.Card.KPI({ label: 'Order', value: '28', tint: 'orange' }) + DS.Card.KPI({ label: L('Selesai', 'Completed'), value: '24', tint: 'green' }) + DS.Card.KPI({ label: 'On-Time', value: '96%' }) + '</div></div>';
+  var m2 = '<div class="ds-stack ds-gap-3"><h2 class="ds-h3">' + t(L('Alert', 'Alerts')) + '</h2>' + Pt.AlertCenter() + '</div>';
+  var m3 = '<div class="ds-stack ds-gap-3"><h2 class="ds-h3">' + t(L('Order Hari Ini', 'Orders Today')) + '</h2>' + DS.Nav.Segment({ items: [L('Semua', 'All'), L('Menunggu', 'Waiting'), L('Diproses', 'In Process')] }) + DS.Data.List({ items: [{ title: 'Hotel ABC', sub: '82.4 kg · 8 Bag', status: 'Waiting' }, { title: 'Villa Sunset', sub: '46.2 kg · 5 Bag', status: 'Processing' }, { title: 'Hotel Indigo', sub: '91.2 kg · 10 Bag', status: 'Completed' }] }) + '</div>';
+  h += P3.section({ id: 'mobile', n: 7, title: L('Tampilan Mobile (Manager / Pemilik)', 'Mobile View (Manager / Owner)'), desc: L('Mobile: ringkasan + alert + drill-down pilihan. Dashboard desktop penuh tidak disalin ke mobile.', 'Mobile: summary + alerts + selected drill-down. The full desktop dashboard is never copied to mobile.'),
+    body: '<div class="mob3">' + P3.phone(1, L('Ringkasan', 'Summary'), m1) + P3.phone(2, L('Alert', 'Alerts'), m2) + P3.phone(3, L('Drill-down order', 'Order drill-down'), m3) + '</div>' +
+      P3.table([L('Perangkat', 'Device'), L('Isi manajemen', 'Management content')], [['Desktop', L('Dashboard penuh + analitik + tabel', 'Full dashboard + analytics + tables')], ['iPad', L('Ringkasan + aksi manajemen penting (approval, alert)', 'Overview + essential management actions (approvals, alerts)')], ['Mobile', L('Ringkasan + alert + drill-down pilihan', 'Summary + alerts + selected drill-down')]]) +
+      '<div class="p3-quote" style="margin-top:20px"><span class="q">“</span><div><b>' + t(L('Saya langsung tahu pekerjaan mana yang perlu perhatian.', 'I know right away which work needs attention.')) + '</b><span>' + t(L('— supervisor', '— supervisor')) + '</span></div></div>' });
+
+  h += P3.ref('np06-management-patterns.jpg');
+  P3.mount('#page', h);
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

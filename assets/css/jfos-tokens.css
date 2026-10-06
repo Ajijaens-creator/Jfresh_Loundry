@@ -1,0 +1,226 @@
+/* ==========================================================================
+   JFRESH OS — Design Tokens (Phase 3 · NP-01 / NP-02 / NP-03)
+   The ONE source of visual values for every JFRESH OS page and module.
+   Components and screens read these tokens; they never hard-code values.
+
+   Groups: color (brand, surface, text, border, state, interactive, chart),
+   typography, spacing, radius, shadow, size, breakpoint, motion, z-index.
+   Breakpoints: Mobile < 700px · iPad 700–1239px · Desktop ≥ 1240px
+   (CSS custom properties cannot be used inside @media, so the three
+   breakpoint values are repeated literally in media queries and listed here
+   as documentation tokens.)
+   ========================================================================== */
+
+:root {
+  /* ---------- COLOR · brand (NP-01) ---------- */
+  --jf-brand-deep: #0754A6;        /* Deep Blue: navigation, titles, structure, primary data */
+  --jf-brand-deep-700: #0B3D78;    /* deepest blue: headings, sidebar end */
+  --jf-brand-deep-600: #0A5DB8;    /* Deep Blue 2 (Visual 01): hover, gradients */
+  --jf-brand-deep-100: #D6E6F8;
+  --jf-brand-deep-50: #EAF2FC;
+  --jf-brand-fresh: #00A8E8;       /* Fresh Blue: accents, process, links, info, active nav */
+  --jf-brand-fresh-600: #0077A8;   /* fresh blue as text on white (AA) */
+  --jf-brand-fresh-400: #12B7F5;
+  --jf-brand-fresh-50: #E6F7FD;
+  --jf-brand-orange: #F7931E;      /* Orange: primary CTA, active action, attention */
+  --jf-brand-orange-600: #E07F0B;  /* hover CTA */
+  --jf-brand-orange-400: #FF9E00;  /* Orange 2 (Visual 01): gradients */
+  --jf-brand-orange-700: #B85F00;  /* orange text on white (AA) */
+  --jf-brand-orange-900: #3A1D00;  /* text on orange */
+  --jf-brand-orange-100: #FFE4C2;
+  --jf-brand-orange-50: #FFF4E6;
+  --jf-brand-yellow: #FFC72C;      /* sparing accent only */
+  --jf-brand-yellow-50: #FFF8E1;
+  --jf-brand-white: #FFFFFF;
+
+  /* ---------- COLOR · surface ---------- */
+  --jf-surface-page: #F6F9FC;      /* soft background */
+  --jf-surface-page-2: #E6EEF7;    /* Light Blue section background (Visual 01) */
+  --jf-surface-card: #FFFFFF;
+  --jf-surface-raised: #FFFFFF;
+  --jf-surface-sunken: #F1F5FA;    /* disabled fields, wells */
+  --jf-surface-nav: #0754A6;       /* desktop sidebar start */
+  --jf-surface-nav-end: #0B3D78;
+  --jf-surface-overlay: rgba(11, 30, 56, .48);
+  --jf-surface-tooltip: #1E2B3C;
+
+  /* ---------- COLOR · text ---------- */
+  --jf-text-strong: #0B3D78;       /* headings */
+  --jf-text: #12304F;              /* body */
+  --jf-text-muted: #475569;        /* Text Secondary (Visual 01) — AA on white */
+  --jf-text-faint: #7F95AE;        /* placeholder, meta (large text only) */
+  --jf-text-on-brand: #FFFFFF;
+  --jf-text-on-cta: #3A1D00;
+  --jf-text-link: #0754A6;
+  --jf-text-disabled: #94A3B8;
+
+  /* ---------- COLOR · border ---------- */
+  --jf-border: #D0DDEB;            /* Border (Visual 01) */
+  --jf-border-strong: #B9CBE0;
+  --jf-border-input: #A9BED6;
+  --jf-border-focus: #0754A6;
+
+  /* ---------- COLOR · state (semantic only, never decoration) ---------- */
+  --jf-state-success: #10B981;  --jf-state-success-ink: #047857;  --jf-state-success-bg: #E7F8F1;  --jf-state-success-line: #9FE1C8;
+  --jf-state-info: #3B82F6;     --jf-state-info-ink: #1D4ED8;     --jf-state-info-bg: #EAF2FE;     --jf-state-info-line: #B4CEF8;
+  --jf-state-warning: #F59E0B;  --jf-state-warning-ink: #B45309;  --jf-state-warning-bg: #FFF5E0;  --jf-state-warning-line: #F5C77E;
+  --jf-state-error: #EF4444;    --jf-state-error-ink: #B91C1C;    --jf-state-error-bg: #FDECEC;    --jf-state-error-line: #F4AAAA;
+  --jf-state-disabled: #94A3B8; --jf-state-disabled-ink: #64748B; --jf-state-disabled-bg: #F1F5F9; --jf-state-disabled-line: #D5DEE8;
+  /* Workflow status → state mapping (StatusChip) */
+  --jf-status-waiting: var(--jf-state-warning);
+  --jf-status-processing: var(--jf-state-info);
+  --jf-status-completed: var(--jf-state-success);
+  --jf-status-risk: var(--jf-brand-orange);
+  --jf-status-critical: var(--jf-state-error);
+
+  /* ---------- COLOR · interactive ---------- */
+  --jf-cta: var(--jf-brand-orange);
+  --jf-cta-hover: var(--jf-brand-orange-600);
+  --jf-cta-pressed: #C96F05;
+  --jf-action: var(--jf-brand-deep);           /* secondary / info buttons, links */
+  --jf-action-hover: var(--jf-brand-deep-600);
+  --jf-action-soft: var(--jf-brand-deep-50);
+  --jf-danger: #DC2626;
+  --jf-danger-hover: #B91C1C;
+  --jf-focus-ring: #F7931E;                    /* visible on blue and on white */
+  --jf-selected: var(--jf-brand-fresh);
+
+  /* ---------- COLOR · chart (series order; status colours are not series) ---------- */
+  --jf-chart-1: #0754A6;
+  --jf-chart-2: #00A8E8;
+  --jf-chart-3: #F7931E;
+  --jf-chart-4: #22A06B;
+  --jf-chart-5: #7C5CD6;
+  --jf-chart-6: #94A3B8;
+  --jf-chart-grid: #E5ECF5;
+  --jf-chart-axis: #7F95AE;
+
+  /* ---------- TYPOGRAPHY (NP-02) ---------- */
+  --jf-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --jf-font-num: "Inter", system-ui, sans-serif;
+  --jf-weight-regular: 400;
+  --jf-weight-medium: 500;
+  --jf-weight-semibold: 600;
+  --jf-weight-bold: 700;
+  --jf-lh-tight: 1.2;
+  --jf-lh-snug: 1.35;
+  --jf-lh-body: 1.55;
+  /* Scale from Visual 02 (size / line-height). Display raised to 48 on desktop
+     to meet the master prompt's 48–64 range; every other value matches Visual 02. */
+  /* Desktop (≥1240) */
+  --jf-fs-display: 48px;   --jf-lh-display: 56px;
+  --jf-fs-h1: 32px;        --jf-lh-h1: 40px;
+  --jf-fs-h2: 24px;        --jf-lh-h2: 32px;
+  --jf-fs-h3: 20px;        --jf-lh-h3: 28px;
+  --jf-fs-body: 16px;      --jf-lh-body-px: 24px;
+  --jf-fs-body-lg: 18px;
+  --jf-fs-label: 14px;     --jf-lh-label: 20px;
+  --jf-fs-caption: 12px;   --jf-lh-caption: 16px;
+  --jf-fs-small: 12px;
+  --jf-fs-number: 40px;    --jf-lh-number: 48px;
+  --jf-fs-button: 16px;
+  --jf-fs-cta: 17px;
+  --jf-fs-ops-label: 16px; /* labels on frontline screens never drop below body */
+
+  /* ---------- SPACING (4 · 8 · 12 · 16 · 24 · 32 · 40 · 48 only) ---------- */
+  --jf-space-1: 4px;
+  --jf-space-2: 8px;
+  --jf-space-3: 12px;
+  --jf-space-4: 16px;
+  --jf-space-5: 24px;
+  --jf-space-6: 32px;
+  --jf-space-7: 40px;
+  --jf-space-8: 48px;
+
+  /* ---------- RADIUS ---------- */
+  --jf-radius-sm: 4px;       /* tag, small element */
+  --jf-radius-control: 8px;  /* input, small control */
+  --jf-radius-button: 12px;  /* button, chip container */
+  --jf-radius-card: 16px;    /* card */
+  --jf-radius-lg: 20px;      /* large panel, drawer */
+  --jf-radius-modal: 24px;   /* modal, hero */
+  --jf-radius-round: 999px;  /* avatars, counters and dots only */
+
+  /* ---------- SHADOW ---------- */
+  --jf-shadow-none: none;
+  --jf-shadow-subtle: 0 1px 2px rgba(11, 61, 120, .05), 0 4px 12px rgba(11, 61, 120, .05);
+  --jf-shadow-floating: 0 4px 8px rgba(11, 61, 120, .06), 0 14px 32px rgba(11, 61, 120, .12);
+  --jf-shadow-modal: 0 24px 64px rgba(11, 30, 56, .28);
+
+  /* ---------- SIZE ---------- */
+  --jf-touch: 44px;            /* minimum touch target */
+  --jf-touch-ops: 48px;        /* frontline touch target */
+  --jf-btn-h-sm: 36px;         /* desktop dense tables only (hit area still 44 via padding) */
+  --jf-btn-h: 44px;
+  --jf-btn-h-lg: 56px;         /* frontline primary CTA */
+  --jf-input-h: 48px;
+  --jf-input-h-lg: 64px;       /* operational number input */
+  --jf-icon-sm: 16px;
+  --jf-icon: 20px;
+  --jf-icon-md: 24px;
+  --jf-icon-lg: 32px;
+  --jf-sidebar-w: 248px;
+  --jf-rail-w: 84px;
+  --jf-topbar-h: 64px;
+  --jf-bottomnav-h: 68px;
+
+  /* ---------- GRID / LAYOUT (NP-03) — desktop values ---------- */
+  --jf-grid-cols: 12;
+  --jf-grid-gutter: 24px;
+  --jf-grid-margin: 32px;
+  --jf-content-max: 1440px;
+
+  /* ---------- BREAKPOINT (documentation tokens) ---------- */
+  --jf-bp-tablet: 700px;   /* iPad starts */
+  --jf-bp-desktop: 1240px; /* desktop starts */
+
+  /* ---------- MOTION (minimal) ---------- */
+  --jf-ease: cubic-bezier(.2, .7, .2, 1);
+  --jf-dur-fast: 120ms;
+  --jf-dur: 200ms;
+
+  /* ---------- Z-INDEX ---------- */
+  --jf-z-nav: 30;
+  --jf-z-drawer: 60;
+  --jf-z-modal: 70;
+  --jf-z-toast: 80;
+  --jf-z-tooltip: 90;
+}
+
+/* iPad 700–1239: 8 columns */
+@media (max-width: 1239px) {
+  :root {
+    --jf-fs-display: 36px;   --jf-lh-display: 48px;
+    --jf-fs-h1: 28px;        --jf-lh-h1: 36px;
+    --jf-fs-h2: 22px;        --jf-lh-h2: 28px;
+    --jf-fs-h3: 18px;        --jf-lh-h3: 24px;
+    --jf-fs-number: 32px;    --jf-lh-number: 40px;
+    --jf-fs-button: 17px;
+    --jf-grid-cols: 8;
+    --jf-grid-gutter: 20px;
+    --jf-grid-margin: 24px;
+    --jf-content-max: 1024px;
+  }
+}
+
+/* Mobile < 700: 4 columns */
+@media (max-width: 699px) {
+  :root {
+    --jf-fs-display: 32px;   --jf-lh-display: 40px;
+    --jf-fs-h1: 26px;        --jf-lh-h1: 32px;
+    --jf-fs-h2: 20px;        --jf-lh-h2: 26px;
+    --jf-fs-h3: 18px;        --jf-lh-h3: 22px;
+    --jf-fs-body: 16px;      /* never below 16 on mobile */
+    --jf-fs-number: 28px;    --jf-lh-number: 36px;
+    --jf-fs-button: 17px;
+    --jf-fs-cta: 18px;       /* 17–18 */
+    --jf-grid-cols: 4;
+    --jf-grid-gutter: 16px;
+    --jf-grid-margin: 16px;
+    --jf-content-max: 480px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --jf-dur-fast: 0ms; --jf-dur: 0ms; }
+}
