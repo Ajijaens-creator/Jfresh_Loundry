@@ -65,6 +65,28 @@ Code:
 - `assets/js/jfos-ds-docs.js` — component documentation, Design QA, archetype → pattern map and Definition of Done data used by the pages.
 - `assets/brand/phase3/` — the approved reference visuals for NP-01 to NP-07.
 
+## Phase 4 — Access & App Shell (NP 1.0)
+
+The app now runs only inside a signed-in session. Start at `app/login.html` (every demo account uses the password `jfresh123`; the demo panel on the login page lists them).
+
+| Page | File |
+|---|---|
+| Login, forgot / reset password, account states, session expired | `app/login.html` |
+| App shell with session, role menus, plant selector, profile menu, notifications | `app/index.html` |
+| Phase 4 overview (NP-01 to NP-07, demo accounts, non-negotiables, Definition of Done) | `phase4/index.html` |
+| Screen specifications (AUTH, SHELL, USER, NOTIF, LAND with every spec field) | `phase4/screens.html` |
+| Test cases run in the browser + responsive checklist | `phase4/tests.html` |
+
+Code:
+
+- `assets/js/jfos-access.js` — `JFACCESS`, the one access module: login (no OTP, lockout after 5 tries), role / plant / permission resolution, `authorize()` (permission + plant / client scope), sessions (idle timeout, warning, extend, logout), password reset, notifications, audit.
+- `app/screens-access.js` — profile, change password, switch role / plant, notification center / detail / settings, help.
+- `assets/js/jfos-access-tests.js` — 51 test cases (login, access resolution, landing pages). Run `node tools/test-access.js`.
+- `assets/js/jfos-access-docs.js` — data for the Phase 4 pages.
+- `assets/brand/phase4/` — the approved reference visuals.
+
+There is no server yet: the access rules run in the browser and prove behaviour, not security. A backend must repeat `authorize()` on every API call, store hashed passwords and keep sessions and the audit on the server.
+
 ## Three form factors
 
 Each page changes its layout, not just its size:

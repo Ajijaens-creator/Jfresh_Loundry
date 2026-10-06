@@ -1,0 +1,49 @@
+/* JFRESH OS — Phase 4 documentation pages (layout only). Builds on phase3.css and Phase 3 tokens. */
+.p4-np { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--jf-space-3); }
+.p4-np a { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px var(--jf-space-3); padding: var(--jf-space-3) var(--jf-space-4); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); text-decoration: none; color: inherit; min-height: var(--jf-touch-ops); align-items: center; }
+.p4-np a:hover { border-color: var(--jf-border-strong); }
+.p4-np .l { grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--jf-radius-button); background: var(--jf-brand-deep-50); color: var(--jf-brand-deep); }
+.p4-np b { color: var(--jf-text-strong); font-weight: var(--jf-weight-semibold); }
+.p4-np small { color: var(--jf-text-muted); font-size: var(--jf-fs-caption); font-weight: var(--jf-weight-semibold); letter-spacing: .06em; }
+.p4-two { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--jf-space-5); align-items: start; }
+.p4-links { display: flex; flex-wrap: wrap; gap: var(--jf-space-2); }
+.p4-ref { border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); overflow: hidden; background: var(--jf-surface-card); display: block; }
+.p4-ref img { display: block; width: 100%; height: auto; }
+.p4-ref figcaption { padding: var(--jf-space-2) var(--jf-space-3); font-size: var(--jf-fs-caption); color: var(--jf-text-muted); border-top: 1px solid var(--jf-border); }
+.p4-flow { display: flex; flex-wrap: wrap; gap: var(--jf-space-2); align-items: center; font-size: var(--jf-fs-label); }
+.p4-flow span { padding: var(--jf-space-2) var(--jf-space-3); border-radius: var(--jf-radius-button); background: var(--jf-brand-deep-50); color: var(--jf-brand-deep); font-weight: var(--jf-weight-semibold); }
+.p4-flow .i { width: 16px; height: 16px; color: var(--jf-text-muted); }
+.p4-note { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--jf-space-3); padding: var(--jf-space-4); border-radius: var(--jf-radius-card); background: var(--jf-state-warning-bg); border: 1px solid var(--jf-state-warning-line); }
+.p4-note .i { color: var(--jf-state-warning-ink); width: 24px; height: 24px; }
+.p4-note p { font-size: var(--jf-fs-label); }
+.p4-dod { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--jf-space-6); }
+.p4-dod li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--jf-space-3); align-items: center; border-bottom: 1px solid var(--jf-border); min-height: var(--jf-touch-ops); }
+.p4-dod li > .i { width: 22px; height: 22px; color: var(--jf-state-success-ink); }
+.p4-dod li.backend > .i { color: var(--jf-state-warning-ink); }
+.p4-dod li span { color: var(--jf-text-strong); font-weight: var(--jf-weight-medium); }
+.p4-dod li a { display: inline-flex; align-items: center; gap: var(--jf-space-1); min-height: var(--jf-touch); font-size: var(--jf-fs-label); font-weight: var(--jf-weight-semibold); text-decoration: none; white-space: nowrap; }
+.p4-spec { display: grid; gap: var(--jf-space-3); padding: var(--jf-space-4); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); scroll-margin-top: var(--jf-space-4); }
+.p4-spec:target { border-color: var(--jf-brand-deep); box-shadow: 0 0 0 3px var(--jf-focus-ring); }
+.p4-spec__h { display: flex; flex-wrap: wrap; gap: var(--jf-space-2) var(--jf-space-3); align-items: center; }
+.p4-spec__h h3 { font-size: var(--jf-fs-h3); color: var(--jf-text-strong); margin: 0; }
+.p4-spec dl { display: grid; grid-template-columns: 11em minmax(0, 1fr); gap: 0; margin: 0; font-size: var(--jf-fs-label); }
+.p4-spec dt, .p4-spec dd { padding: var(--jf-space-2) 0; border-top: 1px solid var(--jf-border); margin: 0; }
+.p4-spec dt { color: var(--jf-text-muted); font-weight: var(--jf-weight-semibold); padding-right: var(--jf-space-3); }
+.p4-spec dd { color: var(--jf-text); min-width: 0; overflow-wrap: anywhere; }
+.p4-specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--jf-space-4); }
+.p4-toc { display: flex; flex-wrap: wrap; gap: var(--jf-space-2); }
+.p4-toc a { display: inline-flex; align-items: center; min-height: var(--jf-touch); padding: 0 var(--jf-space-3); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-button); background: var(--jf-surface-card); font-size: var(--jf-fs-label); font-weight: var(--jf-weight-semibold); text-decoration: none; }
+.p4-res { display: grid; gap: var(--jf-space-1); }
+.p4-res li { display: grid; grid-template-columns: auto 6.5em minmax(0, 1fr); gap: var(--jf-space-3); align-items: start; padding: var(--jf-space-2) var(--jf-space-3); border-bottom: 1px solid var(--jf-border); font-size: var(--jf-fs-label); }
+.p4-res li .i { width: 20px; height: 20px; margin-top: 1px; }
+.p4-res li.ok .i { color: var(--jf-state-success-ink); }
+.p4-res li.bad .i { color: var(--jf-state-error-ink); }
+.p4-res code { font-weight: var(--jf-weight-semibold); color: var(--jf-brand-deep); }
+.p4-res small { display: block; color: var(--jf-state-error-ink); }
+.p4-sum { display: flex; flex-wrap: wrap; gap: var(--jf-space-3); align-items: center; }
+.p4-sum b.big { font-size: var(--jf-fs-h1); color: var(--jf-text-strong); }
+@media (max-width: 1239px) { .p4-two, .p4-specs { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 699px) { .p4-dod { grid-template-columns: minmax(0, 1fr); } .p4-spec dl { grid-template-columns: minmax(0, 1fr); } .p4-spec dt { border-top: 1px solid var(--jf-border); padding-bottom: 0; } .p4-spec dd { border-top: 0; padding-top: 2px; } .p4-res li { grid-template-columns: auto minmax(0, 1fr); } .p4-res li > span:last-child { grid-column: 2; } .p4-dod li a span { display: none; } }
+.p4-two > div { display: grid; grid-template-columns: minmax(0, 1fr); }
+.p4-links .ds-btn { white-space: normal; max-width: 100%; text-align: left; height: auto; min-height: var(--jf-touch); }
+@media (max-width: 699px) { .p4-links .ds-btn { width: 100%; justify-content: center; text-align: center; } }

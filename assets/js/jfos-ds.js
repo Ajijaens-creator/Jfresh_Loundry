@@ -68,12 +68,18 @@
   }
   function inputCtl(o, type, extra) {
     o._id = o._id || id('f'); o._hid = id('h');
-    var a = { id: o._id, type: type, value: o.value, inputmode: o.inputmode, disabled: o.state === 'disabled', required: o.req, 'aria-invalid': o.state === 'error' ? 'true' : undefined, 'aria-describedby': o.help ? o._hid : undefined, step: o.step, min: o.min, max: o.max, name: o.name };
+    var a = { id: o._id, type: type, value: o.value, inputmode: o.inputmode, disabled: o.state === 'disabled', required: o.req, 'aria-invalid': o.state === 'error' ? 'true' : undefined, 'aria-describedby': o.help ? o._hid : undefined, step: o.step, min: o.min, max: o.max, name: o.name, autocomplete: o.autocomplete, maxlength: o.maxlength, autocapitalize: o.autocapitalize, spellcheck: o.spellcheck };
     return '<div class="ds-control' + (o.lg ? ' ds-control--lg' : '') + '">' + (o.icon ? '<span class="ds-control__icon">' + ic(o.icon) + '</span>' : '') +
       '<input' + attrs(a) + battr('placeholder', o.placeholder) + '>' + (extra || '') + stateIcon(o) + (o.unit ? '<span class="ds-control__unit">' + t(o.unit) + '</span>' : '') + '</div>';
   }
   DS.Input = {
     Text: function (o) { o = o || {}; return field(o, inputCtl(o, 'text')); },
+    // Password with show / hide (Phase 4). The toggle keeps the value and the caret; it only swaps type.
+    Password: function (o) {
+      o = o || {}; o.icon = o.icon === undefined ? 'lock' : o.icon;
+      var rv = '<button type="button" class="ds-control__reveal" data-reveal aria-pressed="false"' + battr('aria-label', L('Tampilkan password', 'Show password')) + '>' + ic('eye') + '</button>';
+      return field(o, inputCtl(o, 'password', rv));
+    },
     Email: function (o) { o = o || {}; o.inputmode = 'email'; return field(o, inputCtl(o, 'email')); },
     Phone: function (o) { o = o || {}; o.inputmode = 'tel'; return field(o, inputCtl(o, 'tel')); },
     Number: function (o) { o = o || {}; o.inputmode = 'decimal'; return field(o, inputCtl(o, 'text')); },
@@ -483,6 +489,15 @@
     setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, o.ms || 4200);
   };
   // Apply the current language to freshly inserted nodes and bilingual attributes
+  DS.reveal = function (btn) {
+    var inp = btn.parentNode.querySelector('input'); if (!inp) return;
+    var show = inp.type === 'password', lang = root.JF && root.JF.lang ? root.JF.lang() : 'id';
+    inp.type = show ? 'text' : 'password';
+    btn.setAttribute('aria-pressed', show);
+    var lab = show ? L('Sembunyikan password', 'Hide password') : L('Tampilkan password', 'Show password');
+    btn.setAttribute('aria-label', lang === 'en' ? lab[1] : lab[0]); btn.setAttribute('data-aria-label-en', lab[1]); btn['__aria-label'] = lab[0];
+    btn.innerHTML = ic(show ? 'eyeoff' : 'eye');
+  };
   DS.lang = function (scope) {
     var lang = root.JF && root.JF.lang ? root.JF.lang() : 'id';
     scope = scope || document;
@@ -509,6 +524,7 @@
       var tgt = e.target.closest ? e.target : e.target.parentNode;
       var x;
       if ((x = tgt.closest('[data-dismiss]'))) { var tt = x.closest('.ds-toast'); if (tt) tt.parentNode.removeChild(tt); return; }
+      if ((x = tgt.closest('[data-reveal]'))) { DS.reveal(x); return; }
       if ((x = tgt.closest('[data-counter] button'))) { var inp = x.parentNode.querySelector('input'); inp.value = Math.max(0, (parseInt(inp.value, 10) || 0) + parseInt(x.getAttribute('data-step'), 10)); return; }
       if ((x = tgt.closest('[data-tabs] [role="tab"]'))) { var tabs = x.parentNode.querySelectorAll('[role="tab"]'); for (var i = 0; i < tabs.length; i++) { tabs[i].setAttribute('aria-selected', tabs[i] === x); tabs[i].tabIndex = tabs[i] === x ? 0 : -1; } return; }
       if ((x = tgt.closest('[data-segment] button'))) { var bs = x.parentNode.querySelectorAll('button'); for (var j = 0; j < bs.length; j++) bs[j].setAttribute('aria-pressed', bs[j] === x); return; }

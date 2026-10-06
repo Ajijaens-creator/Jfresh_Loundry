@@ -68,7 +68,7 @@
       var dueWeek = open.filter(function (i) { return i.due >= A.now() && i.due < A.now() + 7 * DAY; });
       var b = arBuckets();
       var byCl = {}; rb.forEach(function (o) { byCl[o.cl] = (byCl[o.cl] || 0) + orderValue(o); });
-      return A.pageHead(L('Finance', 'Finance'), esc(fmt.date(A.now())), A.pbtn('fin.bill', 'primary', L('Buat Tagihan', 'Create Bills'), 'file', { go: 'FIN-BIL-001' }) + A.pbtn('fin.payment', 'ghost', L('Catat Pembayaran', 'Record Payment'), 'card', { go: 'FIN-PAY-001' })) +
+      return A.pageHead(L('Finance Hari Ini', 'Finance Today'), esc(fmt.date(A.now())) + ' · ' + esc(A.R().site), A.pbtn('fin.bill', 'primary', L('Buat Tagihan', 'Create Bills'), 'file', { go: 'FIN-BIL-001' }) + A.pbtn('fin.payment', 'ghost', L('Catat Pembayaran', 'Record Payment'), 'card', { go: 'FIN-PAY-001' })) +
         A.attn([
           { v: rb.length, k: L('Siap Ditagih', 'Ready to Bill'), icon: 'file', tone: rb.length ? 'warn' : 'ok', d: fmt.rpShort(sum(rb, orderValue)), go: 'FIN-BIL-001' },
           { v: open.length, k: L('Invoice Terbuka', 'Open Invoices'), icon: 'invoice', tone: 'info', d: fmt.rpShort(sum(open, function (i) { return inv(i).bal; })), go: 'FIN-INV-001' },
@@ -86,7 +86,7 @@
       var soon = d().contracts.filter(function (c) { return c.end - A.now() <= 60 * DAY; }).sort(function (a, b) { return a.end - b.end; });
       var comp = d().issues.filter(function (i) { return i.src === 'client' && i.status !== 'closed'; });
       var pend = d().docs.filter(function (x) { return x.status === 'pending'; });
-      return A.pageHead(L('Akun Saya', 'My Accounts'), esc(A.R().person), A.pbtn('com.renewal', 'primary', L('Lihat Renewal', 'View Renewals'), 'refresh', { go: 'COM-RNW-001' }) + A.pbtn('com.client.edit', 'ghost', L('Tambah Klien', 'Add Client'), 'plus', { go: 'COM-CLI-002' })) +
+      return A.pageHead(L('Klien & Kontrak', 'Clients & Contracts'), esc(A.R().person) + ' · ' + esc(fmt.date(A.now())), A.pbtn('com.renewal', 'primary', L('Lihat Renewal', 'View Renewals'), 'refresh', { go: 'COM-RNW-001' }) + A.pbtn('com.client.edit', 'ghost', L('Tambah Klien', 'Add Client'), 'plus', { go: 'COM-CLI-002' })) +
         A.attn([
           { v: DB.CLIENTS.length, k: L('Klien Aktif', 'Active Clients'), icon: 'users', tone: 'info', go: 'COM-CLI-001' },
           { v: soon.length, k: L('Kontrak Habis ≤ 60 Hari', 'Contracts Ending ≤ 60 Days'), icon: 'contract', tone: soon.length ? 'warn' : 'ok', go: 'COM-RNW-001' },
@@ -111,7 +111,7 @@
   V['HOM-EXE-001'] = {
     render: function () {
       var b = arBuckets(), ar = b[0] + b[1] + b[2] + b[3];
-      return A.pageHead(L('Executive', 'Executive'), t(L('Bulan berjalan', 'Month to date')) + ' · ' + esc(fmt.date(A.now())), A.pbtn('apr.view', 'primary', L('Buka Persetujuan', 'Open Approvals'), 'filecheck', { go: 'APR-INB-001' }) + A.pbtn('rpt.exec', 'ghost', L('Lihat Laporan', 'View Reports'), 'chart', { go: 'RPT-LIB-001' })) +
+      return A.pageHead(L('Executive Overview', 'Executive Overview'), esc(A.R().site) + ' · ' + t(L('Bulan berjalan', 'Month to date')) + ' · ' + esc(fmt.date(A.now())), A.pbtn('apr.view', 'primary', L('Buka Persetujuan', 'Open Approvals'), 'filecheck', { go: 'APR-INB-001' }) + A.pbtn('rpt.exec', 'ghost', L('Lihat Laporan', 'View Reports'), 'chart', { go: 'RPT-LIB-001' })) +
         A.attn([
           { v: 'Rp 1,61', u: T(L('M', 'B')), k: L('Revenue', 'Revenue'), icon: 'coins', tone: 'info', d: '+3,9%', dt: 'up', go: 'RPT-COM-001' },
           { v: fmt.num(36.4, 1), u: T(L('ton', 'tons')), k: L('Volume', 'Volume'), icon: 'weight', tone: 'info', d: '+2,1%', dt: 'up', go: 'RPT-OPS-001' },
@@ -120,7 +120,7 @@
           { v: fmt.rpShort(ar), k: L('Piutang', 'Outstanding AR'), icon: 'invoice', tone: b[3] ? 'warn' : 'info', d: b[3] ? T(L('> 60 hari: ', '> 60 days: ')) + fmt.rpShort(b[3]) : '', dt: 'dn', go: 'RPT-FIN-001' },
           { v: '18,6%', k: L('Profitabilitas', 'Profitability'), icon: 'percent', tone: 'info', d: '+0,8 pt', dt: 'up', go: 'RPT-FIN-001' }
         ]) +
-        '<div class="grid2">' + A.section(L('Alert', 'Alerts'), A.alertList(A.alerts()), { icon: 'bell' }) +
+        '<div class="grid2">' + A.section(L('Alert Penting', 'Important Alerts'), A.alertList(A.alerts()), { icon: 'bell' }) +
         A.section(L('Tren Revenue (Rp miliar)', 'Revenue Trend (Rp billion)'), '<div class="lazy" data-lazy="rev"></div>', { icon: 'trend', link: ['RPT-COM-001', L('Detail', 'Detail')] }) + '</div>' +
         A.section(L('Performa Klien', 'Client Performance'), A.list(clientPerf().slice(0, 5), [
           { h: L('Klien', 'Client'), v: function (r) { return '<b>' + esc(r.c.n) + '</b>'; } },
@@ -144,7 +144,7 @@
       var os = cltOrders(), act = os.filter(function (o) { return o.stage !== 'done'; }).sort(function (a, b) { return a.dueAt - b.dueAt; });
       var nextD = act.filter(function (o) { return o.stage === 'deliver'; })[0] || act[0];
       var my = A.R().clientId, invs = d().invoices.filter(function (i) { return i.cl === my && inv(i).bal > 0; });
-      return '<div class="hello"><h1>' + esc(DB.client(my).n) + '</h1><p>' + t(L('Status layanan laundry Anda hari ini', 'Your laundry service today')) + '</p></div>' +
+      return '<div class="hello"><h1>' + t(L('Layanan Saya', 'My Service')) + '</h1><p>' + esc(DB.client(my).n) + ' · ' + t(L('status layanan laundry Anda hari ini', 'your laundry service today')) + '</p></div>' +
         A.attn([
           { v: act.length, k: L('Pesanan Berjalan', 'Orders in Progress'), icon: 'washer', tone: 'info', go: 'CLT-ORD-001' },
           { v: nextD ? fmt.time(nextD.deliverAt) : '—', k: L('Pengiriman Berikutnya', 'Next Delivery'), icon: 'truck', tone: 'info', go: 'CLT-DLV-001' },
@@ -536,9 +536,23 @@
         { h: L('Waktu', 'Time'), v: function (a) { return esc(fmt.when(a.at)); } }, { h: L('User', 'User'), v: function (a) { return '<b>' + esc(a.by) + '</b><small class="sub">' + t(C.ROLES[a.role] ? C.ROLES[a.role].n : ['', '']) + '</small>'; } },
         { h: L('Event', 'Event'), v: function (a) { return t(C.AUDIT[a.ev]) + '<small class="sub"><code>' + esc(a.ev) + '</code></small>'; } }, { h: L('Record', 'Record'), v: function (a) { return esc(a.rec); } },
         { h: L('Lama → Baru', 'Old → New'), v: function (a) { return a.from || a.to ? '<span class="old">' + esc(a.from || '—') + '</span> → <b>' + esc(a.to || '—') + '</b>' : '—'; } }
-      ], function (a) { return { t: t(C.AUDIT[a.ev]) + ' · ' + esc(a.rec), s: esc(a.by + ' · ' + fmt.when(a.at)) + (a.from || a.to ? '<br>' + esc(a.from || '—') + ' → ' + esc(a.to || '—') : '') }; }, null, { dense: true }));
+      ], function (a) { return { t: t(C.AUDIT[a.ev]) + ' · ' + esc(a.rec), s: esc(a.by + ' · ' + fmt.when(a.at)) + (a.from || a.to ? '<br>' + esc(a.from || '—') + ' → ' + esc(a.to || '—') : '') }; }, null, { dense: true }) + secAudit());
     }
   };
+  /* Phase 4 §58: access & security events (login, logout, role / permission / plant changes, denied access). */
+  function secAudit() {
+    var X = window.JFACCESS; if (!X) return '';
+    var rows = X.auditLog().slice(0, 40);
+    function who(a) { var u = a.uid && X.user(a.uid); return u ? u.u : (a.actor || '—'); }
+    return A.section(L('Audit Akses & Keamanan', 'Access & Security Audit'), A.list(rows, [
+      { h: L('Waktu', 'Time'), v: function (a) { return esc(fmt.when(a.at)); } },
+      { h: L('User', 'User'), v: function (a) { return '<b>' + esc(who(a)) + '</b><small class="sub">' + esc([a.uid, a.emp].filter(Boolean).join(' · ') || '—') + '</small>'; } },
+      { h: L('Event', 'Event'), v: function (a) { return t(X.EVENTS[a.ev] || [a.ev, a.ev]) + '<small class="sub"><code>' + esc(a.ev) + '</code></small>'; } },
+      { h: L('Oleh', 'Actor'), v: function (a) { return esc(a.actor || '—'); } },
+      { h: L('Lama → Baru', 'Old → New'), v: function (a) { return a.from || a.to ? '<span class="old">' + esc(a.from || '—') + '</span> → <b>' + esc(a.to || '—') + '</b>' : esc(a.target || '—'); } },
+      { h: L('Perangkat / Alasan', 'Device / Reason'), v: function (a) { return esc(a.device || '—') + (a.reason ? '<small class="sub">' + esc(a.reason) + '</small>' : ''); } }
+    ], function (a) { return { t: t(X.EVENTS[a.ev] || [a.ev, a.ev]) + ' · ' + esc(who(a)), s: esc(fmt.when(a.at) + ' · ' + (a.actor || '') + (a.reason ? ' · ' + a.reason : '')) }; }, null, { dense: true, empty: L('Belum ada event akses.', 'No access events yet.') }), { icon: 'shield', count: rows.length });
+  }
   V['SYS-MD-001'] = {
     render: function () {
       var cats = [[L('Jenis cucian', 'Laundry types'), Object.keys(DB.TYPES).length, 'shirt'], [L('Layanan & program cuci', 'Services & wash programs'), 4, 'washer'], [L('Mesin', 'Machines'), 7, 'factory'], [L('Kendaraan', 'Vehicles'), d().vehicles.length, 'truck'], [L('Supplier', 'Suppliers'), 5, 'building'], [L('Alasan masalah', 'Issue reasons'), C.ISSUE_REASONS.length, 'alert'], [L('Item stok', 'Stock items'), d().stock.length, 'package'], [L('Klien & property', 'Clients & properties'), DB.CLIENTS.length + DB.PROPS.length, 'hotel']];
