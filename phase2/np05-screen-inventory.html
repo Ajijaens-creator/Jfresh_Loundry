@@ -6,7 +6,7 @@
 <title>JFRESH OS — NP-05 Screen Inventory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="../assets/css/jfresh.css">
 <link rel="stylesheet" href="phase2.css">
 <style>
@@ -26,7 +26,7 @@
   .rsp .i { width: 18px; height: 18px; color: var(--blue); margin-top: 1px; }
   .ar .use { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
   .ar .use .sid { font-size: 11.5px; padding: 1px 6px; }
-  .ar .use button { border: 0; background: none; color: var(--blue); font-weight: 800; font-size: 13.5px; cursor: pointer; padding: 4px 6px; min-height: 32px; text-decoration: underline; }
+  .ar .use button { border: 0; background: none; color: var(--blue); font-weight: 700; font-size: 13.5px; cursor: pointer; padding: 4px 6px; min-height: 32px; text-decoration: underline; }
 
   /* Mini wireframes */
   .wf { display: grid; gap: 5px; padding: 9px; height: 136px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; align-content: start; }
@@ -125,7 +125,7 @@
     T05: '<div class="r"><span class="w" style="flex:3;height:14px"></span><i class="l" style="height:14px"></i><i class="l" style="height:14px"></i><i class="b" style="height:14px"></i></div><i class="l" style="height:10px"></i>' +
       [0, 1, 2, 3, 4].map(function () { return '<div class="r"><i style="flex:.6"></i><i style="flex:2"></i><i></i><i class="f" style="flex:.6"></i></div>'; }).join(''),
     T06: '<i class="b" style="width:45%;height:9px"></i>' + [0, 1, 2].map(function () { return '<div class="r"><span><i style="width:50%;height:5px;margin-bottom:3px"></i><span class="w" style="display:block;height:14px"></span></span><span><i style="width:40%;height:5px;margin-bottom:3px"></i><span class="w" style="display:block;height:14px"></span></span></div>'; }).join('') + '<div class="r"><span></span><i class="b" style="flex:none;width:60px;height:16px;border-radius:5px"></i></div>',
-    T07: '<div class="r"><i class="b" style="flex:none;width:44px;height:11px;border-radius:6px"></i><i style="flex:none;width:44px;height:11px;border-radius:6px"></i><span></span></div><div class="w k" style="height:auto;padding:6px;gap:5px"><i style="width:60%"></i><div class="r"><i class="l" style="height:12px"></i><span style="flex:none;color:var(--fresh);font-size:10px;font-weight:800">→</span><i class="f" style="height:12px"></i></div><i style="width:80%"></i><div class="r"><i class="o" style="height:14px;border-radius:5px"></i><span class="w" style="height:14px"></span></div></div>',
+    T07: '<div class="r"><i class="b" style="flex:none;width:44px;height:11px;border-radius:6px"></i><i style="flex:none;width:44px;height:11px;border-radius:6px"></i><span></span></div><div class="w k" style="height:auto;padding:6px;gap:5px"><i style="width:60%"></i><div class="r"><i class="l" style="height:12px"></i><span style="flex:none;color:var(--fresh);font-size:10px;font-weight: 700">→</span><i class="f" style="height:12px"></i></div><i style="width:80%"></i><div class="r"><i class="o" style="height:14px;border-radius:5px"></i><span class="w" style="height:14px"></span></div></div>',
     T08: '<div class="r">' + [0, 1, 2, 3].map(function (n) { return '<span class="w k"><i class="' + (n === 3 ? 'o' : 'b') + '" style="width:60%;height:8px"></i><i class="g" style="width:30%"></i></span>'; }).join('') + '</div><div class="w bars" style="padding:4px 6px">' + [40, 55, 35, 70, 60, 85, 75, 95].map(function (h) { return '<i style="height:' + h + '%"></i>'; }).join('') + '</div><div class="r"><i></i><i></i><i class="l"></i></div><div class="r"><i></i><i></i><i class="l"></i></div>',
     T09: '<div class="r" style="align-items:stretch;height:116px"><span class="w" style="flex:.55;padding:5px;display:grid;gap:5px;align-content:start"><i class="b"></i><i></i><i></i><i></i><i></i></span><span style="flex:1.45;display:grid;gap:5px;align-content:start">' +
       [1, 0, 1, 1].map(function (on) { return '<div class="r w" style="padding:4px 6px;height:20px"><i style="flex:2"></i><span style="flex:none;width:20px;height:11px;border-radius:6px;background:' + (on ? 'var(--ok)' : 'var(--line-2)') + '"></span></div>'; }).join('') + '<i style="width:60%;height:5px"></i></span></div>'

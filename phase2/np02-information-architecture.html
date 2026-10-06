@@ -6,7 +6,7 @@
 <title>JFRESH OS — NP-02 Information Architecture</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="../assets/css/jfresh.css">
 <link rel="stylesheet" href="phase2.css">
 <style>
@@ -14,7 +14,7 @@
   .pyr { display: grid; grid-template-columns: minmax(0, 1fr) 290px 92px; gap: 10px 22px; align-items: stretch; }
   .lv-bar { --w: 100%; --s: 0%; grid-column: 1; justify-self: center; width: var(--w); min-height: 128px; clip-path: polygon(var(--s) 0, calc(100% - var(--s)) 0, 100% 100%, 0 100%);
     padding: 16px calc(var(--s) + 18px) 18px; display: grid; align-content: center; justify-items: center; gap: 8px; text-align: center; color: var(--white); }
-  .lv-bar .lvk { font-size: 12.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; opacity: .9; }
+  .lv-bar .lvk { font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .9; }
   .lv-bar h3 { color: inherit; font-size: 21px; }
   .lv-bar .q { font-size: 14.5px; opacity: .92; }
   .lv-bar .ex { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
@@ -28,7 +28,7 @@
   .lv-note b { color: var(--blue-ink); }
   .lv-note .note { font-size: 14px; }
   .lv-note .cnt { display: flex; flex-wrap: wrap; gap: 6px; }
-  .freq { grid-column: 3; grid-row: 1 / span 4; display: grid; grid-template-rows: auto 1fr auto; justify-items: center; gap: 8px; text-align: center; font-size: 13px; font-weight: 800; color: var(--blue-ink); }
+  .freq { grid-column: 3; grid-row: 1 / span 4; display: grid; grid-template-rows: auto 1fr auto; justify-items: center; gap: 8px; text-align: center; font-size: 13px; font-weight: 700; color: var(--blue-ink); }
   .freq .ar { width: 14px; border-radius: 999px; background: linear-gradient(180deg, var(--orange), var(--blue)); position: relative; }
   .freq .ar::after { content: ""; position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%); border: 12px solid transparent; border-top: 14px solid var(--blue); border-bottom: 0; }
   .freq .tp { color: var(--orange-ink); }
@@ -39,12 +39,12 @@
   .lvc .panel-h { margin-bottom: 10px; }
   .lvc .sids { display: flex; flex-wrap: wrap; gap: 5px; }
   .lvc .arcs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
-  .lvbadge { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; font-weight: 800; color: var(--white); flex: none; }
+  .lvbadge { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; font-weight: 700; color: var(--white); flex: none; }
 
   .reach { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .reach .side { border-radius: var(--r); border: 1px solid var(--line); padding: 16px; display: grid; gap: 10px; align-content: start; }
   .reach .side.o { background: linear-gradient(180deg, var(--orange-50), var(--white) 80%); border-color: var(--orange-100); }
-  .reach .taps { font-size: 28px; font-weight: 800; color: var(--blue-ink); font-variant-numeric: tabular-nums; }
+  .reach .taps { font-size: 28px; font-weight: 700; color: var(--blue-ink); font-variant-numeric: tabular-nums; }
   .reach .taps small { font-size: 14px; color: var(--muted); font-weight: 700; margin-left: 6px; }
 
   .rl-tbl td.c { width: 92px; }
@@ -53,7 +53,7 @@
 
   .alerts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   .al { border-radius: var(--r); padding: 16px; border: 1px solid; display: grid; gap: 8px; align-content: start; }
-  .al .hd { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
+  .al .hd { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
   .al .ex { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--white); font-weight: 700; }
   .al.info { background: var(--info-50); border-color: var(--blue-100); color: var(--info); }
   .al.warn { background: var(--warn-50); border-color: var(--warn-line); color: var(--warn); }
@@ -63,7 +63,7 @@
   @media (max-width: 1239px) {
     .pyr { grid-template-columns: minmax(0, 1fr) 230px; }
     .freq { display: none; }
-    .freq-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 800; color: var(--blue-ink); }
+    .freq-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 700; color: var(--blue-ink); }
     .freq-h .tp { color: var(--orange-ink); }
     .freq-h .ln { flex: 1; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--orange), var(--blue)); }
     .lv-bar h3 { font-size: 19px; }

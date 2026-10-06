@@ -6,13 +6,13 @@
 <title>JFRESH OS — NP-06 Functional Screen Framework</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="../assets/css/jfresh.css">
 <link rel="stylesheet" href="phase2.css">
 <style>
   section[id], div[id] { scroll-margin-top: 12px; }
   .sh { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-  .sh h2 { font-size: var(--fs-h2); font-weight: 800; }
+  .sh h2 { font-size: var(--fs-h2); font-weight: 700; }
   .sh .desc { font-size: var(--fs-small); color: var(--muted); }
 
   /* Standard structure + annotated example */
@@ -22,7 +22,7 @@
   .std li:nth-child(odd) { background: var(--bg); }
   .std li b { color: var(--blue-ink); font-size: 15px; }
   .std li span.d { grid-column: 2; font-size: 13.5px; color: var(--muted); line-height: 1.4; }
-  .mk { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--orange); color: #3A1D00; font-weight: 800; font-size: 12.5px; box-shadow: 0 0 0 3px var(--white); font-variant-numeric: tabular-nums; flex: none; }
+  .mk { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--orange); color: #3A1D00; font-weight: 700; font-size: 12.5px; box-shadow: 0 0 0 3px var(--white); font-variant-numeric: tabular-nums; flex: none; }
   .an { position: relative; }
   .an > .mk { position: absolute; top: -11px; left: -11px; z-index: 2; }
   .an.rt > .mk { left: auto; right: -11px; }
@@ -38,7 +38,7 @@
   .m-hd .bk { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--blue-50); color: var(--blue); flex: none; }
   .m-hd h3 { font-size: 21px; }
   .m-hd p { font-size: 14px; color: var(--muted); }
-  .m-hd .mini-lang { margin-left: auto; display: inline-flex; border: 1.5px solid var(--orange); border-radius: 999px; padding: 2px; font-size: 12px; font-weight: 800; }
+  .m-hd .mini-lang { margin-left: auto; display: inline-flex; border: 1.5px solid var(--orange); border-radius: 999px; padding: 2px; font-size: 12px; font-weight: 700; }
   .m-hd .mini-lang span { padding: 3px 9px; border-radius: 999px; color: var(--blue); }
   .m-hd .mini-lang span:first-child { background: var(--blue); color: var(--white); }
   .m-body { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 16px; padding: 18px; }
@@ -71,7 +71,7 @@
   .ip .row2 { display: flex; justify-content: space-between; gap: 8px; }
   .ip .row2 span:first-child { color: var(--muted); }
   .ip .row2 b { color: var(--blue-ink); font-variant-numeric: tabular-nums; }
-  .ip h4 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .ip h4 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
   .ip.perm { background: var(--bg-2); }
   .ip.perm, .ip.aud { display: flex; gap: 8px; align-items: flex-start; }
   .ip.perm .i, .ip.aud .i { color: var(--blue); width: 18px; height: 18px; flex: none; margin-top: 1px; }
@@ -147,12 +147,12 @@
 
   /* Spec viewer */
   .specs { display: grid; gap: 10px; }
-  .dhead { display: flex; align-items: center; gap: 10px; margin: 12px 0 2px; font-weight: 800; color: var(--blue-ink); font-size: 17px; }
+  .dhead { display: flex; align-items: center; gap: 10px; margin: 12px 0 2px; font-weight: 700; color: var(--blue-ink); font-size: 17px; }
   details.spec { border: 1px solid var(--line); border-radius: var(--r); background: var(--white); min-width: 0; scroll-margin-top: 12px; }
   details.spec.is-target { box-shadow: 0 0 0 3px var(--orange); }
   details.spec > summary { list-style: none; display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 6px 12px; align-items: center; padding: 10px 14px; min-height: 60px; cursor: pointer; }
   details.spec > summary::-webkit-details-marker { display: none; }
-  details.spec > summary .nm { font-weight: 800; color: var(--blue-ink); font-size: 16.5px; }
+  details.spec > summary .nm { font-weight: 700; color: var(--blue-ink); font-size: 16.5px; }
   details.spec > summary .nm small { display: block; font-weight: 500; color: var(--muted); font-size: 13.5px; }
   details.spec > summary .meta { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
   details.spec > summary .chev2 { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--blue-50); color: var(--blue); transition: transform .2s; }
@@ -163,7 +163,7 @@
   .ff24 > div { display: grid; grid-template-columns: 34px 170px minmax(0, 1fr); gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); align-items: start; min-width: 0; }
   .ff24 dt { font-weight: 700; color: var(--blue-ink); font-size: 14.5px; }
   .ff24 dd { margin: 0; font-size: 14.5px; min-width: 0; overflow-wrap: anywhere; }
-  .ff24 .fn { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--bg-2); color: var(--muted); font-weight: 800; font-size: 12px; }
+  .ff24 .fn { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--bg-2); color: var(--muted); font-weight: 700; font-size: 12px; }
   .ff24 ul { display: grid; gap: 3px; }
   .ff24 ul li { padding-left: 14px; position: relative; }
   .ff24 ul li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 5px; height: 5px; border-radius: 50%; background: var(--fresh); }

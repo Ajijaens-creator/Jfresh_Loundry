@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-01 Brand Digital Foundation</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .logo-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--jf-space-5); align-items: stretch; }
+  .logo-box { display: grid; place-items: center; gap: var(--jf-space-3); padding: var(--jf-space-5); border-radius: var(--jf-radius-card); border: 1px solid var(--jf-border); background: var(--jf-surface-card); text-align: center; }
+  .logo-box img { width: 100%; max-width: 240px; height: auto; }
+  .clear { position: relative; padding: 28px; border: 1.5px dashed var(--jf-brand-fresh); border-radius: var(--jf-radius-control); background: repeating-linear-gradient(45deg, var(--jf-brand-fresh-50) 0 6px, transparent 6px 12px); }
+  .clear img { background: var(--jf-brand-white); max-width: 180px; }
+  .clear span { position: absolute; font-size: 11px; font-weight: 700; color: var(--jf-brand-fresh-600); }
+  .clear .t { top: 6px; left: 50%; transform: translateX(-50%); } .clear .l { left: 6px; top: 50%; transform: translateY(-50%); }
+  .uses { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--jf-space-3); }
+  .use { position: relative; display: grid; gap: var(--jf-space-2); text-align: center; font-size: var(--jf-fs-caption); color: var(--jf-text-muted); }
+  .use .pad { display: grid; place-items: center; height: 110px; border-radius: var(--jf-radius-button); border: 1px solid var(--jf-border); background: var(--jf-surface-card); overflow: hidden; padding: var(--jf-space-3); }
+  .use .pad img { max-height: 76px; width: auto; }
+  .use.dark .pad { background: var(--jf-brand-deep); }
+  .use.dark .pad img { background: var(--jf-brand-white); border-radius: var(--jf-radius-control); padding: 6px 10px; }
+  .use.bad1 .pad img { filter: grayscale(1) contrast(1.2); }
+  .use.bad2 .pad img { transform: scaleX(1.45); }
+  .use.bad3 .pad b { font-size: 26px; font-style: italic; color: var(--jf-brand-deep); font-weight: 700; letter-spacing: -.02em; }
+  .use .mark { position: absolute; top: -10px; left: -6px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--jf-brand-white); }
+  .use .mark .i { width: 16px; height: 16px; stroke-width: 3; }
+  .use.ok .mark { background: var(--jf-state-success); } .use:not(.ok) .mark { background: var(--jf-state-error); }
+  .deco { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--jf-space-4); }
+  .deco > div { display: grid; gap: var(--jf-space-2); }
+  .deco .art { height: 110px; border-radius: var(--jf-radius-button); border: 1px solid var(--jf-border); overflow: hidden; position: relative; background: var(--jf-surface-card); display: grid; place-items: center; color: var(--jf-brand-deep); }
+  .deco .wave { background: radial-gradient(140% 60px at 30% 110%, var(--jf-brand-fresh-400) 55%, transparent 56%), radial-gradient(120% 70px at 80% 120%, var(--jf-brand-deep-100) 60%, transparent 61%), linear-gradient(180deg, var(--jf-brand-white), var(--jf-brand-fresh-50)); }
+  .deco .bub i { position: absolute; border-radius: 50%; background: radial-gradient(circle at 32% 30%, #fff 0 18%, rgba(18, 183, 245, .3) 45%, rgba(7, 84, 166, .14) 100%); box-shadow: inset 0 0 0 1px rgba(18, 183, 245, .3); }
+  .deco b { color: var(--jf-text-strong); font-size: var(--jf-fs-label); }
+  .deco span { font-size: var(--jf-fs-caption); color: var(--jf-text-muted); }
+  .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--jf-space-3); }
+  .icons > div { display: grid; justify-items: center; gap: var(--jf-space-2); font-size: var(--jf-fs-caption); color: var(--jf-text-muted); text-align: center; }
+  .icons .ds-iconbtn__box { width: 56px; height: 56px; color: var(--jf-brand-deep); }
+  .icons > div:nth-child(3n+2) .ds-iconbtn__box { color: var(--jf-brand-orange-700); }
+  .styles { display: flex; flex-wrap: wrap; gap: var(--jf-space-2); }
+  .styles span { padding: var(--jf-space-2) var(--jf-space-4); border-radius: var(--jf-radius-control); background: var(--jf-brand-deep-50); color: var(--jf-brand-deep); font-weight: var(--jf-weight-semibold); font-size: var(--jf-fs-label); }
+  .rules10 { counter-reset: r; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--jf-space-2) var(--jf-space-5); }
+  .rules10 li { counter-increment: r; display: flex; gap: var(--jf-space-3); align-items: center; padding: var(--jf-space-2) 0; border-bottom: 1px solid var(--jf-border); font-size: var(--jf-fs-body); }
+  .rules10 li::before { content: counter(r, decimal-leading-zero); flex: none; display: grid; place-items: center; width: 36px; height: 28px; border-radius: var(--jf-radius-control); background: var(--jf-brand-deep); color: var(--jf-brand-white); font-weight: 700; font-size: 13px; }
+  @media (max-width: 1239px) { .logo-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .logo-hero > :last-child { grid-column: 1 / -1; } .deco { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 699px) { .logo-hero, .rules10 { grid-template-columns: minmax(0, 1fr); } .uses { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="1">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">01</span><span data-en="Phase 3 · Design System · NP-01">Fase 3 · Design System · NP-01</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Brand Digital Foundation</h1>
+      <p class="sub" data-en="The visual identity of JFRESH OS turned into tokens: the official logo, brand and status colours, decorative brand elements and the icon style that every module uses.">Identitas visual JFRESH OS yang diubah menjadi token: logo resmi, warna brand dan status, elemen dekoratif brand, dan gaya ikon yang dipakai semua modul.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Simple Frontline. <b>Powerful Management.</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Fresh">Segar</span><span data-en="Professional">Profesional</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, L = DS.L, t = DS.t, ic = DS.ic;
+  var logo = '../assets/brand/jfresh-logo.png';
+  var h = '';
+
+  /* 1. Logo */
+  h += P3.section({ id: 'logo', n: 1, title: L('Logo & Identitas Brand', 'Logo & Brand Identity'), desc: L('Logo resmi J’Fresh Laundry adalah sumber kebenaran. Pakai file asli, jangan digambar ulang.', 'The official J’Fresh Laundry logo is the source of truth. Use the original file; never redraw it.'),
+    body: '<div class="logo-hero">' +
+      '<div class="logo-box"><img src="' + logo + '" alt="J’Fresh Laundry" width="605" height="373"><div><b class="p3-name">' + t(L('Logo Resmi', 'Official Logo')) + '</b><p class="ds-caption">assets/brand/jfresh-logo.png</p></div></div>' +
+      '<div class="logo-box"><div class="clear"><span class="t">J</span><span class="l">J</span><img src="' + logo + '" alt="" width="605" height="373"></div><div><b class="p3-name">' + t(L('Ruang Kosong (Clear Space)', 'Clear Space')) + '</b><p class="ds-caption">' + t(L('Minimal setinggi huruf “J” di setiap sisi.', 'At least the height of the “J” on every side.')) + '</p></div></div>' +
+      '<div class="ds-stack"><div class="uses">' +
+        '<div class="use ok"><span class="mark">' + ic('check') + '</span><div class="pad"><img src="' + logo + '" alt=""></div>' + t(L('Di latar putih (utama)', 'On white (primary)')) + '</div>' +
+        '<div class="use ok dark"><span class="mark">' + ic('check') + '</span><div class="pad"><img src="' + logo + '" alt=""></div>' + t(L('Di latar gelap, di atas pelat putih', 'On dark, on a white plate')) + '</div>' +
+        '<div class="use bad1"><span class="mark">' + ic('x') + '</span><div class="pad"><img src="' + logo + '" alt=""></div>' + t(L('Jangan diubah warna', 'Do not recolour')) + '</div>' +
+        '<div class="use bad2"><span class="mark">' + ic('x') + '</span><div class="pad"><img src="' + logo + '" alt=""></div>' + t(L('Jangan diubah proporsi', 'Do not stretch')) + '</div>' +
+        '<div class="use bad3"><span class="mark">' + ic('x') + '</span><div class="pad"><b>J’Fresh</b></div>' + t(L('Jangan digambar ulang / diketik', 'Do not redraw or retype')) + '</div>' +
+      '</div>' + DS.Feedback.Inline({ type: 'info', text: L('Komponen Nav.Sidebar dan header memakai file logo yang sama, selalu di atas pelat putih dengan rasio asli.', 'Nav.Sidebar and headers use the same logo file, always on a white plate at its original ratio.') }) + '</div></div>' });
+
+  /* 2–4. Colour */
+  function sw(name, token, hex, use) { return '<div class="p3-sw"><i style="background:var(' + token + ')"></i><b>' + t(name) + '</b><code class="p3-code">' + token + '</code><span>' + hex + ' · ' + t(use) + '</span></div>'; }
+  h += P3.section({ id: 'colors', n: 2, title: L('Warna Utama & Pendukung', 'Brand & Supporting Colours'), desc: L('Biru tua untuk struktur, biru segar untuk aksen, oranye untuk aksi, kuning sangat hemat.', 'Deep blue for structure, fresh blue for accents, orange for action, yellow very sparingly.'),
+    body: '<div class="p3-swatches">' +
+      sw(L('Deep Blue', 'Deep Blue'), '--jf-brand-deep', '#0754A6', L('navigasi, judul, struktur, data utama', 'navigation, titles, structure, primary data')) +
+      sw(L('Deep Blue 2', 'Deep Blue 2'), '--jf-brand-deep-600', '#0A5DB8', L('hover, gradasi', 'hover, gradients')) +
+      sw(L('Fresh Blue', 'Fresh Blue'), '--jf-brand-fresh', '#00A8E8', L('aksen, proses, link, menu aktif', 'accent, process, links, active menu')) +
+      sw(L('Orange', 'Orange'), '--jf-brand-orange', '#F7931E', L('CTA utama, aksi aktif, perhatian', 'primary CTA, active action, attention')) +
+      sw(L('Yellow', 'Yellow'), '--jf-brand-yellow', '#FFC72C', L('aksen terbatas', 'limited accent')) +
+      sw(L('White', 'White'), '--jf-brand-white', '#FFFFFF', L('latar utama', 'primary background')) +
+      sw(L('Soft Background', 'Soft Background'), '--jf-surface-page', '#F6F9FC', L('latar aplikasi', 'app background')) +
+      sw(L('Light Blue', 'Light Blue'), '--jf-surface-page-2', '#E6EEF7', L('latar section', 'section background')) +
+      sw(L('Border', 'Border'), '--jf-border', '#D0DDEB', L('garis, pemisah', 'lines, dividers')) +
+      sw(L('Text Secondary', 'Text Secondary'), '--jf-text-muted', '#475569', L('teks sekunder', 'secondary text')) +
+      sw(L('Text', 'Text'), '--jf-text', '#12304F', L('teks utama', 'body text')) +
+      sw(L('Orange Ink', 'Orange Ink'), '--jf-brand-orange-700', '#B85F00', L('teks oranye di atas putih (AA)', 'orange text on white (AA)')) +
+    '</div>' });
+  h += P3.section({ id: 'status', n: 3, title: L('Warna Status', 'Status Colours'), desc: L('Warna status selalu punya arti. Tidak pernah dipakai sebagai dekorasi, dan selalu bersama ikon + teks.', 'Status colours always carry meaning. Never decoration, always with an icon + text.'),
+    body: '<div class="p3-swatches">' +
+      sw(L('Sukses', 'Success'), '--jf-state-success', '#10B981', L('selesai, disetujui, on-time', 'done, approved, on-time')) +
+      sw(L('Peringatan', 'Warning'), '--jf-state-warning', '#F59E0B', L('perhatian, risiko, mendekati SLA', 'attention, risk, near SLA')) +
+      sw(L('Kritis', 'Critical'), '--jf-state-error', '#EF4444', L('terlambat, gagal, terblokir', 'late, failed, blocked')) +
+      sw(L('Informasi', 'Info'), '--jf-state-info', '#3B82F6', L('proses, informasi normal', 'in process, normal info')) +
+      sw(L('Nonaktif', 'Disabled'), '--jf-state-disabled', '#94A3B8', L('tidak aktif, belum tersedia', 'inactive, not available')) +
+    '</div><div class="ds-row" style="margin-top:16px">' + DS.Status.Completed() + DS.Status.Waiting() + DS.Status.Late() + DS.Status.Processing() + DS.Status.Inactive() + '</div>' +
+    '<p class="note" style="margin-top:12px">' + t(L('Setiap warna status punya tiga turunan token: -ink (teks AA di atas putih), -bg (latar lembut), -line (garis). Contoh: --jf-state-error-ink #B91C1C.', 'Each status colour has three derived tokens: -ink (AA text on white), -bg (soft background), -line (border). Example: --jf-state-error-ink #B91C1C.')) + '</p>' });
+
+  /* 5. Brand elements */
+  var bub = [[12, 20, 34], [40, 52, 22], [64, 18, 46], [82, 58, 26]].map(function (b) { return '<i style="left:' + b[0] + '%;top:' + b[1] + '%;width:' + b[2] + 'px;height:' + b[2] + 'px"></i>'; }).join('');
+  h += P3.section({ id: 'elements', n: 4, title: L('Elemen Visual Brand', 'Brand Visual Elements'), desc: L('Gelombang, gelembung, linen dan percikan air hanya dekorasi. Dekorasi brand ≠ informasi.', 'Waves, bubbles, linen and water splashes are decoration only. Brand decoration ≠ information.'),
+    body: '<div class="deco">' +
+      '<div><div class="art wave"></div><b>' + t(L('Gelombang', 'Wave')) + '</b><span>' + t(L('Dekorasi ringan di latar hero', 'Light decoration in hero backgrounds')) + '</span></div>' +
+      '<div><div class="art bub">' + bub + '</div><b>' + t(L('Gelembung', 'Bubble')) + '</b><span>' + t(L('Identitas kesegaran J’Fresh', 'J’Fresh freshness identity')) + '</span></div>' +
+      '<div><div class="art">' + ic('shirt', 'i-lg') + '</div><b>' + t(L('Linen', 'Linen')) + '</b><span>' + t(L('Kebersihan dan kualitas layanan', 'Cleanliness and service quality')) + '</span></div>' +
+      '<div><div class="art wave" style="opacity:.6"></div><b>' + t(L('Percikan Air', 'Water Splash')) + '</b><span>' + t(L('Dekoratif, jangan menutupi konten', 'Decorative, never over content')) + '</span></div></div>' +
+      '<div class="p3-grid" style="--cols:3;margin-top:16px">' +
+        P3.block(L('Desktop', 'Desktop'), '<p class="note">' + t(L('Dekorasi halus boleh di hero dan area kosong.', 'Subtle decoration allowed in hero and empty space.')) + '</p>') +
+        P3.block(L('iPad', 'iPad'), '<p class="note">' + t(L('Minimal; dikurangi otomatis (.ds-deco opacity .3).', 'Minimal; reduced automatically (.ds-deco opacity .3).')) + '</p>') +
+        P3.block(L('Mobile', 'Mobile'), '<p class="note">' + t(L('Hampir tidak ada; disembunyikan saat ruang terbatas.', 'Almost none; hidden when space is limited.')) + '</p>') + '</div>' +
+      P3.dodont(L('Boleh', 'Do'), [L('Dekorasi di luar area konten dan data', 'Decoration outside content and data areas'), L('Gambar ringan (CSS), bukan foto latar besar', 'Lightweight CSS shapes, not large background photos')],
+        L('Jangan', 'Don’t'), [L('Gelembung di atas CTA, status, grafik atau alert', 'Bubbles over a CTA, status, chart or alert'), L('Animasi gelembung yang terus bergerak', 'Constantly moving bubble animation')]) });
+
+  /* 6. Icon style */
+  var icons = [['home', L('Beranda', 'Home')], ['truck', 'Pickup'], ['washer', L('Cuci', 'Wash')], ['shirt', 'Linen'], ['package', 'Packing'], ['file', L('Dokumen', 'Document')], ['users', L('Pengguna', 'Users')], ['building', L('Klien', 'Client')], ['shield', 'QC'], ['chart', L('Laporan', 'Report')], ['cog', L('Pengaturan', 'Settings')], ['scan', 'Scan'], ['camera', L('Foto', 'Photo')], ['eye', L('Lihat', 'View')], ['edit', 'Edit'], ['trash', L('Hapus', 'Delete')], ['download', L('Unduh', 'Download')], ['print', L('Cetak', 'Print')]];
+  h += P3.section({ id: 'icons', n: 5, title: L('Gaya Ikon', 'Icon Style'), desc: L('Satu keluarga ikon: grid 24 px, garis 2 px, sudut bulat. Aksi operasional selalu ikon + label.', 'One icon family: 24 px grid, 2 px stroke, round joins. Operational actions are always icon + label.'),
+    body: '<div class="icons">' + icons.map(function (x) { return '<div><span class="ds-iconbtn__box">' + ic(x[0]) + '</span>' + t(x[1]) + '</div>'; }).join('') + '</div>' + P3.spec('assets/js/icons.js', '<svg class="i"><use href="#i-scan"/></svg>') });
+
+  /* 7. Visual style & principles */
+  var style = [L('Bersih', 'Clean'), L('Segar', 'Fresh'), L('Profesional', 'Professional'), L('Modern', 'Modern'), L('Ramah Hospitality', 'Hospitality-friendly'), L('Mudah Dipahami', 'Easy to understand'), L('Terpercaya', 'Trusted'), L('Operasional Praktis', 'Operationally practical'), L('Konsisten', 'Consistent'), L('Tenang', 'Calm')];
+  var rules = [L('Gunakan logo original', 'Use the original logo'), L('Konsisten dengan color palette', 'Stay consistent with the colour palette'), L('Elemen brand sebagai dekorasi, bukan informasi utama', 'Brand elements are decoration, not primary information'), L('Jaga kebersihan tampilan (white space)', 'Keep the layout clean (white space)'), L('Utamakan keterbacaan', 'Readability first'), L('Gunakan ikon yang konsisten', 'Use consistent icons'), L('Terapkan gaya yang sama di semua layar', 'Apply the same style on every screen'), L('Sesuaikan dengan konteks user (operasional vs manajemen)', 'Fit the user context (operations vs management)'), L('Mobile bukan sekadar versi kecil desktop', 'Mobile is not just a small desktop'), L('Selalu gunakan Bahasa Indonesia yang sederhana', 'Always use simple Indonesian')];
+  h += P3.section({ id: 'style', n: 6, title: L('Gaya Visual & Prinsip Penerapan', 'Visual Style & Application Principles'),
+    body: '<div class="styles">' + style.map(function (s) { return '<span>' + t(s) + '</span>'; }).join('') + '</div><ol class="rules10" style="margin-top:20px">' + rules.map(function (r) { return '<li>' + t(r) + '</li>'; }).join('') + '</ol>' });
+
+  /* 8. Token reference */
+  var groups = [
+    ['brand', ['--jf-brand-deep', '--jf-brand-deep-700', '--jf-brand-deep-600', '--jf-brand-deep-100', '--jf-brand-deep-50', '--jf-brand-fresh', '--jf-brand-fresh-600', '--jf-brand-fresh-50', '--jf-brand-orange', '--jf-brand-orange-600', '--jf-brand-orange-700', '--jf-brand-orange-50', '--jf-brand-yellow', '--jf-brand-white']],
+    ['surface', ['--jf-surface-page', '--jf-surface-page-2', '--jf-surface-card', '--jf-surface-sunken', '--jf-surface-nav', '--jf-surface-nav-end', '--jf-surface-tooltip']],
+    ['text', ['--jf-text-strong', '--jf-text', '--jf-text-muted', '--jf-text-faint', '--jf-text-on-cta', '--jf-text-disabled']],
+    ['border', ['--jf-border', '--jf-border-strong', '--jf-border-input', '--jf-border-focus']],
+    ['state', ['--jf-state-success', '--jf-state-success-ink', '--jf-state-warning', '--jf-state-warning-ink', '--jf-state-error', '--jf-state-error-ink', '--jf-state-info', '--jf-state-info-ink', '--jf-state-disabled']],
+    ['interactive', ['--jf-cta', '--jf-cta-hover', '--jf-cta-pressed', '--jf-action', '--jf-action-hover', '--jf-danger', '--jf-focus-ring']],
+    ['chart', ['--jf-chart-1', '--jf-chart-2', '--jf-chart-3', '--jf-chart-4', '--jf-chart-5', '--jf-chart-6', '--jf-chart-grid']]
+  ];
+  var cs = getComputedStyle(document.documentElement);
+  var rows = [];
+  groups.forEach(function (g) { g[1].forEach(function (k) { var v = cs.getPropertyValue(k).trim(); rows.push(['<code class="p3-code">' + g[0] + '</code>', '<code class="p3-code">' + k + '</code>', '<span class="ds-row ds-gap-2"><i style="display:inline-block;width:22px;height:22px;border-radius:6px;border:1px solid var(--jf-border);background:var(' + k + ')"></i>' + DS.esc(v) + '</span>']); }); });
+  h += P3.section({ id: 'tokens', n: 7, title: L('Token Warna', 'Colour Tokens'), desc: L('Semua warna dibaca dari assets/css/jfos-tokens.css. Halaman dan komponen tidak boleh menulis kode warna sendiri.', 'Every colour is read from assets/css/jfos-tokens.css. Pages and components never write their own colour codes.'),
+    body: P3.table([L('Grup', 'Group'), 'Token', L('Nilai', 'Value')], rows) });
+
+  h += P3.ref('np01-brand-digital-foundation.jpg');
+  P3.mount('#page', h);
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

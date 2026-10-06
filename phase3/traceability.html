@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — Traceability Fase 1 → 3</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .chain { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--jf-space-4); position: relative; }
+  .chain > div { display: grid; gap: var(--jf-space-2); align-content: start; padding: var(--jf-space-4); border-radius: var(--jf-radius-card); border: 1px solid var(--jf-border); background: var(--jf-surface-card); position: relative; min-width: 0; }
+  .chain > div:not(:last-child)::after { content: ""; position: absolute; right: calc(-1 * var(--jf-space-4)); top: 50%; width: var(--jf-space-4); height: 2px; background: var(--jf-border-strong); }
+  .chain .ph { font-size: var(--jf-fs-caption); font-weight: var(--jf-weight-semibold); letter-spacing: .08em; text-transform: uppercase; color: var(--jf-brand-orange-700); }
+  .chain b { color: var(--jf-text-strong); font-size: var(--jf-fs-h3); font-weight: var(--jf-weight-semibold); }
+  .chain .tags { display: flex; flex-wrap: wrap; gap: var(--jf-space-1); }
+  .chain > div:last-child { background: var(--jf-brand-deep-50); border-color: var(--jf-brand-deep-100); }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--jf-space-1); }
+  .tags .ds-tag.p { background: var(--jf-brand-orange-50); color: var(--jf-brand-orange-700); }
+  .tools { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--jf-space-3); align-items: end; }
+  .count { font-size: var(--jf-fs-label); color: var(--jf-text-muted); }
+  .tr td:first-child b { display: block; color: var(--jf-text-strong); }
+  .tr td small { color: var(--jf-text-muted); font-size: var(--jf-fs-caption); }
+  .tr td { vertical-align: top; }
+  .tr tr[hidden] { display: none !important; }
+  @media (max-width: 1239px) { .chain { grid-template-columns: repeat(2, minmax(0, 1fr)); } .chain > div:nth-child(2)::after { display: none; } }
+  @media (max-width: 699px) {
+    .chain, .tools { grid-template-columns: minmax(0, 1fr); }
+    .chain > div::after { display: none; }
+    .tr.ds-table--stack td { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--jf-space-1); padding: var(--jf-space-1) 0; }
+  }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="0">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span data-en="Phase 3 · Design System · Traceability">Fase 3 · Design System · Traceability</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1 data-en="Traceability Phase 1 → 2 → 3">Traceability Fase 1 → 2 → 3</h1>
+      <p class="sub" data-en="Every Phase 2 screen traced back to its Phase 1 business foundation and forward to the Phase 3 patterns and components that build it.">Setiap layar Fase 2 ditelusuri ke fondasi bisnis Fase 1-nya, lalu ke pola dan komponen Fase 3 yang membangunnya.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">One Connected <b>JFRESH OS.</b></div>
+      <div class="values"><span data-en="Business">Bisnis</span><span data-en="Structure">Struktur</span><span data-en="Design">Desain</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, C = window.JFOS, L = DS.L, t = DS.t, ic = DS.ic, esc = DS.esc, I = DS.Input;
+  function dl(p) { return ' data-label="' + esc(p[0]) + '"' + (p[1] !== p[0] ? ' data-label-en="' + esc(p[1]) + '"' : ''); }
+  function tags(list, cls) { return '<div class="tags">' + list.map(function (x) { return '<span class="ds-tag' + (cls ? ' ' + cls : '') + '">' + esc(x) + '</span>'; }).join('') + '</div>'; }
+  function bfTags(list) { return '<div class="tags">' + list.map(function (b) { return '<span class="ds-tag" title="' + esc((C.BF[b] || [''])[0]) + '">' + esc(b) + '</span>'; }).join('') + '</div>'; }
+  var rows = DS.traceRows(C);
+  var ex = rows.filter(function (r) { return r.id === DS.TRACE_EXAMPLE.id; })[0] || { bf: [], nb: [], arch: 'T04', archName: ['', ''] };
+  var E = DS.TRACE_EXAMPLE;
+
+  var h = '';
+  /* 1. Worked example */
+  h += P3.section({ id: 'example', icon: 'link', title: L('Contoh: ' + E.id + ' Terima Cucian', 'Example: ' + E.id + ' Receive Laundry'), desc: L('Satu layar operasional dari fondasi bisnis sampai komponen yang dipakai.', 'One operational screen from business foundation to the components it uses.'),
+    body: '<div class="chain">' +
+      '<div><span class="ph">' + t(L('Fase 1 · Fondasi Bisnis', 'Phase 1 · Business Foundation')) + '</span><b>' + ex.bf.map(function (b) { return esc(b); }).join(' · ') + '</b>' + '<small>' + ex.bf.map(function (b) { return t(C.BF[b] || [b, b]); }).join(' · ') + '</small>' + tags(ex.nb) + '</div>' +
+      '<div><span class="ph">' + t(L('Fase 2 · Layar', 'Phase 2 · Screen')) + '</span><b>' + esc(E.id) + '</b><small>' + t(E.n) + ' · ' + esc(ex.arch) + ' ' + t(ex.archName || ['', '']) + '</small>' + tags(E.p2) + '</div>' +
+      '<div><span class="ph">' + t(L('Fase 3 · Pola', 'Phase 3 · Patterns')) + '</span><b>NP-05</b>' + tags(['Pattern.WorkQueue', 'Pattern.TaskDetail', 'Pattern.QuickAction'], 'p') + '</div>' +
+      '<div><span class="ph">' + t(L('Fase 3 · Komponen', 'Phase 3 · Components')) + '</span><b>NP-04</b>' + tags(E.p3) + '</div></div>' +
+      '<div class="p3-grid" style="--cols:2">' + P3.block(L('Hasilnya di layar', 'What it looks like'), DS.Card.Task({ title: 'Hotel ABC', id: '#LND-001', qty: [['82.4', 'kg'], ['8', 'Bag']], time: '10:24', status: 'Waiting', cta: L('Terima', 'Receive') })) +
+      P3.block(L('Buka', 'Open'), '<div class="ds-btnbar">' + DS.Button.Secondary({ label: L('Pola di NP-05', 'Patterns in NP-05'), icon: 'clipboard', href: 'np05-operational.html' }) + DS.Button.Ghost({ label: L('Layar di aplikasi', 'Screen in the app'), icon: 'monitor', href: '../app/index.html#/operator/OPS-RCV-001' }) + DS.Button.Ghost({ label: L('Traceability Fase 2', 'Phase 2 traceability'), icon: 'link', href: '../phase2/traceability.html' }) + '</div>') + '</div>' });
+
+  /* 2. Archetype map */
+  h += P3.section({ id: 'archetypes', icon: 'layers', title: L('Archetype Fase 2 → pola & komponen Fase 3', 'Phase 2 archetypes → Phase 3 patterns & components'), desc: L('Sembilan archetype layar Fase 2 masing-masing punya pola dan set komponen tetap. Layar baru mengikuti archetype-nya.', 'Each of the nine Phase 2 screen archetypes has a fixed pattern and component set. A new screen follows its archetype.'),
+    body: '<div class="ds-tablewrap"><table class="ds-table ds-table--stack tr"><caption class="ds-sr">' + t(L('Peta archetype', 'Archetype map')) + '</caption><thead><tr><th scope="col">Archetype</th><th scope="col">' + t(L('Layar', 'Screens')) + '</th><th scope="col">' + t(L('Pola', 'Patterns')) + '</th><th scope="col">' + t(L('Komponen', 'Components')) + '</th></tr></thead><tbody>' +
+      Object.keys(DS.ARCH_MAP).map(function (k) { var a = C.ARCH[k] || { n: [k, k] }, m = DS.ARCH_MAP[k], n = rows.filter(function (r) { return r.arch === k; }).length;
+        return '<tr><td data-label="Archetype"><b>' + esc(k) + ' · ' + t(a.n) + '</b></td><td ' + dl(L('Layar', 'Screens')) + ' class="ds-num-cell">' + n + '</td><td ' + dl(L('Pola', 'Patterns')) + '>' + tags(m.p, 'p') + '</td><td ' + dl(L('Komponen', 'Components')) + '>' + tags(m.c) + '</td></tr>'; }).join('') + '</tbody></table></div>' });
+
+  /* 3. Every screen */
+  h += P3.section({ id: 'screens', icon: 'list', title: L('Semua layar Fase 2', 'Every Phase 2 screen'), desc: L('BF = fondasi bisnis Fase 1 · NB = proses bisnis · archetype dan pola dari Fase 2/3.', 'BF = Phase 1 business foundation · NB = business process · archetype and pattern from Phase 2/3.'),
+    body: '<div class="tools"><div class="ds-field"><span class="ds-label">' + t(L('Tampilkan', 'Show')) + '</span>' + DS.Nav.Segment({ items: [L('Semua', 'All'), 'Frontline', L('Manajemen & lainnya', 'Management & other')] }) + '</div><div>' + I.Search({ placeholder: L('Cari ID, nama layar, BF, komponen...', 'Search ID, screen name, BF, component...') }) + '</div></div><p class="count" id="count" aria-live="polite"></p>' +
+      '<div class="ds-tablewrap"><table class="ds-table ds-table--stack tr" id="all"><caption class="ds-sr">' + t(L('Traceability semua layar', 'Traceability of every screen')) + '</caption><thead><tr><th scope="col">' + t(L('Layar', 'Screen')) + '</th><th scope="col">' + t(L('Fase 1', 'Phase 1')) + '</th><th scope="col">Archetype</th><th scope="col">' + t(L('Pola Fase 3', 'Phase 3 patterns')) + '</th><th scope="col">' + t(L('Komponen Fase 3', 'Phase 3 components')) + '</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        var q = (r.id + ' ' + r.n.join(' ') + ' ' + r.bf.join(' ') + ' ' + r.nb.join(' ') + ' ' + r.arch + ' ' + r.p.join(' ') + ' ' + r.c.join(' ')).toLowerCase();
+        return '<tr data-front="' + (r.front ? 1 : 0) + '" data-q="' + esc(q) + '"><td ' + dl(L('Layar', 'Screen')) + '><b>' + esc(r.id) + '</b><small>' + t(r.n) + '</small></td><td ' + dl(L('Fase 1', 'Phase 1')) + '>' + bfTags(r.bf) + tags(r.nb) + '</td><td data-label="Archetype">' + esc(r.arch) + '<br><small>' + t(r.archName || ['', '']) + '</small></td><td ' + dl(L('Pola', 'Patterns')) + '>' + tags(r.p, 'p') + '</td><td ' + dl(L('Komponen', 'Components')) + '>' + tags(r.c) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' });
+
+  P3.mount('#page', h);
+
+  var mode = 0, query = '';
+  var trs = [].slice.call(document.querySelectorAll('#all tbody tr'));
+  function apply() {
+    var n = 0;
+    trs.forEach(function (tr) { var f = tr.getAttribute('data-front') === '1'; var ok = (mode === 0 || (mode === 1 && f) || (mode === 2 && !f)) && (!query || tr.getAttribute('data-q').indexOf(query) > -1); tr.hidden = !ok; if (ok) n++; });
+    var c = document.getElementById('count'); c.innerHTML = t(L(n + ' dari ' + trs.length + ' layar', n + ' of ' + trs.length + ' screens')); DS.lang(c);
+  }
+  var seg = document.querySelector('#screens .ds-segment');
+  seg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; [].forEach.call(seg.children, function (x, i) { x.setAttribute('aria-pressed', x === b); if (x === b) mode = i; }); apply(); });
+  document.querySelector('#screens input').addEventListener('input', function () { query = this.value.trim().toLowerCase(); apply(); });
+  apply();
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

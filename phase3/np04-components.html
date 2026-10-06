@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-04 Core Component Library</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .jump { display: flex; flex-wrap: wrap; gap: var(--jf-space-2); }
+  .jump a { display: inline-flex; align-items: center; gap: var(--jf-space-2); min-height: var(--jf-touch); padding: 0 var(--jf-space-4); border-radius: var(--jf-radius-button); border: 1px solid var(--jf-border); background: var(--jf-surface-card); color: var(--jf-brand-deep); font-weight: 600; text-decoration: none; font-size: var(--jf-fs-label); }
+  .jump a:hover { background: var(--jf-brand-deep-50); }
+  .states { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--jf-space-3) var(--jf-space-4); align-items: center; }
+  .states > span { font-size: var(--jf-fs-label); color: var(--jf-text-muted); font-weight: 500; }
+  .navdemo { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: var(--jf-space-5); align-items: start; }
+  .navdemo .ds-sidebar { min-height: 420px; }
+  .phonebar { max-width: 380px; border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); overflow: hidden; }
+  .phonebar .ds-bottomnav { padding-top: var(--jf-space-5); }
+  @media (max-width: 1239px) { .navdemo { grid-template-columns: auto minmax(0, 1fr); } .navdemo .ds-sidebar:not(.ds-sidebar--rail) { display: none; } }
+  @media (max-width: 699px) { .navdemo { grid-template-columns: minmax(0, 1fr); } .navdemo .ds-sidebar { display: none; } .states { grid-template-columns: minmax(0, 1fr); gap: var(--jf-space-1) 0; } .states > span { margin-top: var(--jf-space-2); } }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="4">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">04</span><span data-en="Phase 3 · Design System · NP-04">Fase 3 · Design System · NP-04</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Core Component Library</h1>
+      <p class="sub" data-en="Every reusable component with its states. Each example on this page is the real component: the same render function and CSS class the app and every future module use.">Semua komponen yang dipakai ulang beserta state-nya. Setiap contoh di halaman ini adalah komponen asli: fungsi render dan kelas CSS yang sama dengan yang dipakai aplikasi dan semua modul berikutnya.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Simple Frontline. <b>Powerful Management.</b></div>
+      <div class="values"><span data-en="Reusable">Dipakai ulang</span><span data-en="Consistent">Konsisten</span><span data-en="Accessible">Aksesibel</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, L = DS.L, t = DS.t, ic = DS.ic, B = DS.Button, I = DS.Input, S = DS.Status;
+  var h = '';
+  var secs = [['buttons', 'zap', L('Tombol', 'Buttons')], ['forms', 'edit', L('Form', 'Forms')], ['status', 'status', L('Status', 'Status')], ['cards', 'grid', L('Kartu', 'Cards')], ['nav', 'menu', L('Navigasi', 'Navigation')], ['data', 'list', L('Data', 'Data')], ['feedback', 'message', L('Feedback', 'Feedback')], ['media', 'camera', L('Media', 'Media')], ['stepper', 'route', 'Stepper'], ['helpers', 'help', L('Empty, Tooltip, Spacing', 'Empty, Tooltip, Spacing')]];
+  h += '<nav class="jump" aria-label="Komponen">' + secs.map(function (s) { return '<a href="#' + s[0] + '">' + ic(s[1]) + t(s[2]) + '</a>'; }).join('') + '<a href="docs.html">' + ic('file') + t(L('Dokumentasi lengkap', 'Full documentation')) + '</a></nav>';
+
+  /* 1. Buttons */
+  h += P3.section({ id: 'buttons', n: 1, title: L('Tombol', 'Buttons'), desc: L('Hanya satu tombol oranye yang dominan per layar. Aksi berbahaya merah dan terpisah.', 'Only one dominant orange button per screen. Destructive actions are red and separated.'),
+    body: '<div class="p3-grid" style="--cols:2">' +
+      P3.block(L('Jenis', 'Types'), '<div class="p3-stage p3-stage--white"><div class="ds-btnbar">' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package' }) + B.Secondary({ label: L('Ada Masalah', 'Report Issue'), icon: 'alert' }) + B.Danger({ label: L('Batalkan', 'Cancel'), icon: 'trash' }) + B.Ghost({ label: L('Kembali', 'Back'), icon: 'arrowl' }) + '</div>' +
+        '<div class="ds-btnbar">' + B.Action({ label: L('Terima', 'Receive') }) + B.Success({ label: L('LULUS', 'PASS'), icon: 'checkc' }) + B.DangerSoft({ label: L('ADA MASALAH', 'HAS ISSUE'), icon: 'alert' }) + B.Text({ label: L('Lihat Semua', 'View All'), icon: 'arrow' }) + '</div>' +
+        P3.spec('Button.Primary · Secondary · Danger · Ghost · Action · Success · DangerSoft · Text', '.ds-btn--*') + '</div>') +
+      P3.block(L('Tombol ikon (selalu berlabel)', 'Icon buttons (always labelled)'), '<div class="p3-stage p3-stage--white"><div class="ds-btnbar">' + B.Icon({ icon: 'scan', label: 'Scan' }) + B.Icon({ icon: 'camera', label: L('Kamera', 'Camera') }) + B.Icon({ icon: 'print', label: L('Cetak', 'Print') }) + B.Icon({ icon: 'more', label: L('Lainnya', 'More') }) + '</div>' + P3.spec('Button.Icon', '.ds-iconbtn') + '</div>') +
+      P3.block(L('State tombol', 'Button states'), '<div class="p3-stage p3-stage--white"><div class="states">' +
+        '<span>Default</span><div>' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package' }) + '</div>' +
+        '<span>Hover</span><div>' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', state: 'hover' }) + '</div>' +
+        '<span>Focus</span><div>' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', state: 'focus' }) + '</div>' +
+        '<span>Pressed</span><div>' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', state: 'pressed' }) + '</div>' +
+        '<span>Loading</span><div>' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', loading: true }) + '</div>' +
+        '<span>Disabled</span><div>' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', disabled: true }) + '</div></div>' +
+        '<button type="button" class="ds-btn ds-btn--secondary" data-loading-demo>' + ic('play') + '<span>' + t(L('Coba state loading', 'Try the loading state')) + '</span></button></div>') +
+      P3.block(L('CTA frontline', 'Frontline CTA'), '<div class="p3-stage p3-stage--white ds-ops"><div class="ds-actions">' + B.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', size: 'lg', block: true }) + B.Secondary({ label: L('Ada Masalah', 'Report Issue'), icon: 'alert', block: true }) + '<div class="ds-actions__danger">' + B.Ghost({ label: L('Batalkan Order', 'Cancel Order'), icon: 'x', block: true }) + '</div></div>' +
+        P3.rules('do', [L('Tinggi 56 px, lebar penuh di iPad & mobile', '56 px tall, full width on iPad & mobile'), L('Aksi batal dipisah garis dan butuh konfirmasi', 'Cancel is separated and needs confirmation'), L('Target sentuh minimal 44 × 44 px', 'Touch target at least 44 × 44 px')]) + '</div>') + '</div>' });
+
+  /* 2. Forms */
+  h += P3.section({ id: 'forms', n: 2, title: L('Kontrol Form', 'Form Controls'), desc: L('Label selalu terlihat. Validasi muncul tepat di bawah field, dalam bahasa manusia.', 'Labels are always visible. Validation appears right under the field, in human language.'),
+    body: '<div class="p3-grid" style="--cols:3">' +
+      I.Text({ label: L('Text Input', 'Text Input'), placeholder: L('Masukkan teks…', 'Enter text…'), icon: 'user' }) +
+      I.Number({ label: L('Berat Cucian', 'Laundry Weight'), value: '82.4', unit: 'kg', req: true, help: L('Masukkan angka antara 0.1 – 500 kg', 'Enter a number between 0.1 – 500 kg') }) +
+      I.Select({ label: L('Pilih', 'Select'), options: [L('Pilih opsi', 'Choose an option'), 'Hotel ABC', 'Villa Sunset'] }) +
+      I.Date({ label: L('Tanggal', 'Date'), value: '2024-09-25' }) + I.Time({ label: L('Jam', 'Time'), value: '14:30' }) + I.Search({ label: L('Cari', 'Search'), placeholder: L('Cari…', 'Search…') }) +
+      I.Textarea({ label: L('Catatan', 'Note'), placeholder: L('Tulis catatan di sini…', 'Write a note here…') }) +
+      '<div class="ds-stack ds-gap-1"><span class="ds-label">' + t(L('Pilihan', 'Choices')) + '</span>' + I.Checkbox({ label: L('Pilih item', 'Select item'), checked: true }) + I.Checkbox({ label: L('Tidak dipilih', 'Not selected') }) + I.Radio({ label: L('Pilihan 1', 'Option 1'), name: 'r1', checked: true }) + I.Radio({ label: L('Pilihan 2', 'Option 2'), name: 'r1' }) + '</div>' +
+      '<div class="ds-stack ds-gap-1"><span class="ds-label">Toggle</span>' + I.Toggle({ label: L('Aktif', 'Active'), checked: true }) + I.Toggle({ label: L('Nonaktif', 'Inactive') }) + I.Counter({ label: L('Jumlah Bag', 'Bag Count'), value: 8 }) + '</div></div>' +
+      '<h3 class="ds-h3" style="margin:24px 0 12px">' + t(L('State input', 'Input states')) + '</h3><div class="p3-grid" style="--cols:3">' +
+      I.Text({ label: 'Default', placeholder: L('Masukkan teks…', 'Enter text…') }) +
+      I.Text({ label: 'Focus', value: 'Hotel ABC', state: 'focus' }) +
+      I.Email({ label: 'Filled · Success', value: 'hotelabc@email.com', state: 'success', help: L('Format email sudah benar', 'Email format is correct') }) +
+      I.Text({ label: 'Error', value: '', state: 'error', req: true, help: L('Nama hotel harus diisi.', 'Hotel name is required.'), placeholder: L('Nama hotel', 'Hotel name') }) +
+      I.Phone({ label: L('Nomor Telepon', 'Phone Number'), value: '08123', state: 'error', help: L('Nomor telepon minimal 10 digit.', 'Phone number needs at least 10 digits.') }) +
+      I.Text({ label: 'Disabled', value: 'Hotel ABC', state: 'disabled' }) + '</div>' +
+      P3.spec('Input.Text · Number · Select · Date · Time · Search · Textarea · Checkbox · Radio · Toggle · Counter', '.ds-field .ds-control') });
+
+  /* 3. Status */
+  h += P3.section({ id: 'status', n: 3, title: L('Status Chip', 'Status Chips'), desc: L('Ikon + teks + warna. Tidak pernah warna saja.', 'Icon + text + colour. Never colour alone.'),
+    body: '<div class="p3-grid" style="--cols:2">' + P3.block(L('Status workflow', 'Workflow status'), '<div class="ds-row">' + S.Waiting() + S.Processing() + S.Completed() + S.Risk() + S.Late() + S.Issue() + '</div>' + P3.spec('Status.Waiting · Processing · Completed · Risk · Late · Issue', '.ds-chip--*')) +
+      P3.block(L('Variasi', 'Variations'), '<div class="states"><span>Default</span><div>' + S.Waiting() + '</div><span>' + t(L('Dengan waktu', 'With time')) + '</span><div>' + S.Risk({ label: 'SLA', meta: L('45 menit', '45 min') }) + '</div><span>' + t(L('Dengan jumlah', 'With count')) + '</span><div>' + S.Completed({ count: 12 }) + '</div><span>' + t(L('Besar (frontline)', 'Large (frontline)')) + '</span><div>' + S.Processing({ lg: true }) + '</div><span>' + t(L('Lainnya', 'Other')) + '</span><div class="ds-row">' + S.Active() + S.Inactive() + DS.Tag('Bed Linen') + '</div></div>') + '</div>' });
+
+  /* 4. Cards */
+  h += P3.section({ id: 'cards', n: 4, title: L('Kartu', 'Cards'), desc: L('Satu Card.Task untuk semua stasiun: isi, status, ikon dan aksinya yang berbeda.', 'One Card.Task for every station: only content, status, icon and action change.'),
+    body: '<div class="p3-grid" style="--cols:3">' +
+      P3.block('Card.Task', DS.Card.Task({ title: 'Hotel ABC', id: '#LND-20240925-001', qty: [['82.4', 'kg'], ['8', L('Bag', 'Bags')]], status: 'Waiting', cta: L('Lihat Detail', 'View Detail'), ctaBlock: true })) +
+      P3.block('Card.Client', DS.Card.Client({ name: 'Hotel Indigo', id: '#CLN-0012', meta: L('3 Properti · +62 812 3456 7890', '3 Properties · +62 812 3456 7890'), status: 'Active', cta: L('Lihat', 'View'), more: true })) +
+      P3.block('Card.KPI', DS.Card.KPI({ label: L('Total Cucian', 'Total Laundry'), value: '12.5 ton', trend: '8%', ctx: L('vs minggu lalu', 'vs last week') })) +
+      P3.block('Card.Alert', DS.Card.Alert({ level: 'critical', tag: 'SLA Risk', title: L('5 order berisiko terlambat', '5 orders at risk of being late'), act: L('Lihat Detail', 'View Detail') })) +
+      P3.block('Card.Action', DS.Card.Action({ icon: 'truck', title: 'Pickup', sub: L('12 tugas hari ini', '12 tasks today') }) + DS.Card.Action({ icon: 'package', title: L('Terima Cucian', 'Receive Laundry'), sub: L('8 menunggu', '8 waiting'), cta: true })) +
+      P3.block('Card.Summary', DS.Card.Summary({ label: L('Order Hari Ini', 'Orders Today'), value: '28', trend: '12%' })) + '</div>' +
+      DS.Feedback.Inline({ type: 'info', title: L('Reuse:', 'Reuse:'), text: L('Penerimaan, QC, packing dan pengiriman memakai DS.Card.Task yang sama. Tidak ada ReceivingCard / QCCard / PackingCard.', 'Receiving, QC, packing and delivery all use the same DS.Card.Task. There is no ReceivingCard / QCCard / PackingCard.') }) });
+
+  /* 5. Navigation */
+  var menu = [['home', L('Beranda', 'Home')], ['washer', L('Operasional', 'Operations')], ['building', L('Klien & Komersial', 'Clients & Commercial')], ['package', L('Supply & Aset', 'Supply & Assets')], ['coins', L('Keuangan', 'Finance')], ['chart', L('Laporan', 'Reports')], ['cog', L('Pengaturan', 'Settings')]];
+  h += P3.section({ id: 'nav', n: 5, title: L('Navigasi', 'Navigation'), desc: L('Menu hanya dirender bila peran punya izinnya (dari jfos-config.js). Tidak ada menu abu-abu untuk frontline.', 'Menus render only when the role has the permission (from jfos-config.js). No greyed-out menus for frontline.'),
+    body: '<div class="navdemo">' + DS.Nav.Sidebar({ root: '../', items: menu }) + DS.Nav.Sidebar({ root: '../', items: menu, rail: true }) +
+      '<div class="ds-stack ds-gap-5">' + P3.block('Nav.Topbar', DS.Nav.Topbar({ name: 'Aji Jaens', role: 'CEO' })) +
+      P3.block('Nav.BottomNav', '<div class="phonebar">' + DS.Nav.BottomNav() + '</div>') +
+      P3.block('Nav.Tabs', DS.Nav.Tabs({ items: [L('Semua', 'All'), L('Menunggu', 'Waiting'), L('Diproses', 'In Process'), L('Selesai', 'Done'), L('Bermasalah', 'Issues')] })) +
+      P3.block('Nav.Segment', DS.Nav.Segment({ items: [L('Harian', 'Daily'), L('Mingguan', 'Weekly'), L('Bulanan', 'Monthly')] })) +
+      P3.block('Nav.Breadcrumb', DS.Nav.Breadcrumb({ items: [L('Operasional', 'Operations'), L('Penerimaan', 'Receiving'), L('Detail', 'Detail')] })) + '</div></div>' +
+      '<p class="note" style="margin-top:12px">' + t(L('Desktop: sidebar penuh · iPad: rail ikon · Mobile: bottom nav maks. 5 item. Rail berlabel lewat aria-label.', 'Desktop: full sidebar · iPad: icon rail · Mobile: bottom nav, max 5 items. Rail items carry aria-labels.')) + '</p>' });
+
+  /* 6. Data */
+  h += P3.section({ id: 'data', n: 6, title: L('Tampilan Data', 'Data Display'), desc: L('Tabel untuk manajemen, finance, admin. Di bawah 700 px tabel berubah menjadi daftar kartu.', 'Tables for management, finance, admin. Below 700 px a table turns into a card list.'),
+    body: DS.Pattern.ManagementTable() + '<div class="p3-grid" style="--cols:2;margin-top:20px">' + P3.block('Data.List', DS.Data.List({ items: [{ icon: 'hotel', title: 'Hotel ABC', sub: '82.4 kg · 8 Bag', status: 'Waiting' }, { icon: 'palm', title: 'Villa Sunset', sub: '46.2 kg · 5 Bag', status: 'Processing' }, { icon: 'hotel', title: 'Hotel Indigo', sub: '91.2 kg · 10 Bag', status: 'Completed' }] })) +
+      P3.block(L('Aturan', 'Rules'), P3.rules('do', [L('Filter utama terlihat, sisanya di “Filter Lainnya”', 'Primary filters visible, the rest behind “More Filters”'), L('Angka rata kanan dengan angka tabular', 'Numbers right-aligned with tabular figures'), L('Kolom bisa diurutkan dengan tombol di header', 'Sortable columns use a header button')]) + P3.rules('dont', [L('Tabel padat di layar frontline', 'Dense tables on frontline screens'), L('20 filter sekaligus', '20 filters at once')])) + '</div>' });
+
+  /* 7. Feedback */
+  h += P3.section({ id: 'feedback', n: 7, title: L('Feedback & Modal', 'Feedback & Modal'), desc: L('Toast setelah aksi, pesan inline yang tetap, dialog untuk aksi penting, drawer untuk filter lanjutan.', 'Toast after an action, inline messages that stay, a dialog for important actions, a drawer for advanced filters.'),
+    body: '<div class="p3-grid" style="--cols:2">' +
+      P3.block('Feedback.Toast', '<div class="ds-stack ds-gap-2">' + DS.Feedback.Toast({ type: 'success', text: L('Data berhasil disimpan.', 'Data saved.') }) + DS.Feedback.Toast({ type: 'info', text: L('Informasi telah diperbarui.', 'Information updated.') }) + DS.Feedback.Toast({ type: 'warning', text: L('SLA hampir habis.', 'SLA almost due.') }) + DS.Feedback.Toast({ type: 'error', text: L('Terjadi kesalahan. Coba lagi.', 'Something went wrong. Try again.') }) +
+        '<div class="ds-btnbar">' + ['success', 'info', 'warning', 'error'].map(function (k) { return '<button type="button" class="ds-btn ds-btn--ghost ds-btn--sm" data-toast="' + k + '">' + ic('play') + '<span>' + k + '</span></button>'; }).join('') + '</div></div>') +
+      P3.block('Feedback.Dialog', DS.Feedback.Dialog({ inline: true, danger: true, title: L('Batalkan proses ini?', 'Cancel this process?'), text: L('Data yang sudah diisi tidak akan tersimpan.', 'Anything you entered will not be saved.'), ok: L('Ya, Batalkan', 'Yes, Cancel') }) +
+        '<div class="ds-btnbar">' + '<button type="button" class="ds-btn ds-btn--danger-soft" data-open-modal="cancel">' + ic('play') + '<span>' + t(L('Buka dialog', 'Open dialog')) + '</span></button>' + '<button type="button" class="ds-btn ds-btn--ghost" data-open-drawer="filter">' + ic('filter') + '<span>' + t(L('Buka drawer filter', 'Open filter drawer')) + '</span></button></div>') +
+      P3.block('Feedback.Inline', '<div class="ds-stack ds-gap-2">' + DS.Feedback.Inline({ type: 'success', text: L('Cucian berhasil diterima.', 'Laundry received.') }) + DS.Feedback.Inline({ type: 'info', text: L('Order sedang diproses.', 'Order is being processed.') }) + DS.Feedback.Inline({ type: 'warning', text: L('Stok deterjen hampir habis.', 'Detergent stock is running low.') }) + DS.Feedback.Inline({ type: 'error', text: L('Berat wajib diisi.', 'Weight is required.') }) + '</div>') +
+      P3.block('Notification', '<div class="ds-list">' + DS.Notification({ icon: 'package', title: L('Order baru masuk', 'New order'), ctx: 'Hotel ABC • 24.6 kg', time: L('5 menit lalu', '5 min ago'), unread: true }) + DS.Notification({ icon: 'check', tone: 'success', title: L('Cucian selesai', 'Laundry done'), ctx: 'Villa Sunset • 18.2 kg', time: L('30 menit lalu', '30 min ago') }) + DS.Notification({ icon: 'alert', tone: 'warning', title: L('Stok menipis', 'Low stock'), ctx: L('Deterjen Cair', 'Liquid Detergent'), time: L('1 jam lalu', '1 h ago') }) + DS.Notification({ icon: 'washer', tone: 'error', title: 'Maintenance', ctx: L('Mesin Cuci 1', 'Washer 1'), time: L('3 jam lalu', '3 h ago') }) + '</div>') + '</div>' +
+      '<div class="ds-backdrop" data-modal="cancel" hidden>' + DS.Feedback.Dialog({ danger: true, title: L('Batalkan proses ini?', 'Cancel this process?'), text: L('Data yang sudah diisi tidak akan tersimpan.', 'Anything you entered will not be saved.'), ok: L('Ya, Batalkan', 'Yes, Cancel') }) + '</div>' +
+      DS.Feedback.Drawer({ key: 'filter', title: L('Filter Lainnya', 'More Filters'), body: I.Select({ label: 'Outlet', options: [L('Semua Outlet', 'All Outlets'), 'Pusat', 'Outlet 1'] }) + I.Date({ label: L('Dari tanggal', 'From date'), value: '2024-09-01' }) + I.Date({ label: L('Sampai tanggal', 'To date'), value: '2024-09-25' }) + I.Toggle({ label: L('Hanya SLA berisiko', 'At-risk SLA only') }) }) });
+
+  /* 8. Media */
+  h += P3.section({ id: 'media', n: 8, title: L('Media & Upload File', 'Media & File Upload'), desc: L('Bukti penerimaan, kerusakan, POD, dokumen klien, lampiran invoice.', 'Receiving proof, damage proof, POD, client documents, invoice attachments.'),
+    body: '<div class="p3-grid" style="--cols:3">' + P3.block('Media.Upload', DS.Media.Upload()) + P3.block('Media.Photos', DS.Media.Photos({ items: [1, 2] }) + '<p class="ds-caption">' + t(L('2 foto dipilih', '2 photos selected')) + '</p>') + P3.block('Media.Doc', DS.Media.Doc({ name: 'Surat Jalan Hotel ABC.pdf', size: '2.4 MB' })) + '</div>' });
+
+  /* 9. Stepper */
+  h += P3.section({ id: 'stepper', n: 9, title: L('Stepper & Progress', 'Stepper & Progress'), desc: L('Langkah berjalan selalu paling menonjol. Di mobile stepper otomatis vertikal.', 'The current step always stands out. On mobile the stepper turns vertical automatically.'),
+    body: '<div class="ds-stack ds-gap-6">' + P3.block(L('Proses (selesai · berjalan · berikutnya)', 'Process (done · current · upcoming)'), DS.Stepper.Process({ current: 2, meta: { 0: '25 Sep 10:42', 1: '25 Sep 11:20', 2: L('Sedang proses', 'In progress') } })) +
+      P3.block(L('Dengan masalah', 'With a problem'), DS.Stepper.Process({ current: 5, problem: 5, meta: { 5: L('Ada masalah', 'Issue found') } })) +
+      '<div class="p3-grid" style="--cols:2">' + P3.block(L('Vertikal (operasional)', 'Vertical (operational)'), DS.Stepper.Process({ steps: DS.STAGES.slice(0, 4), current: 1, vertical: true, chips: true })) + P3.block('Stepper.Progress', DS.Stepper.Progress({ value: 70 }) + DS.Stepper.Progress({ label: L('Validasi data', 'Validating data'), value: 35 })) + '</div></div>' });
+
+  /* 10. Helpers */
+  h += P3.section({ id: 'helpers', n: 10, title: L('Empty State, Tooltip, Divider & Spacing', 'Empty State, Tooltip, Divider & Spacing'),
+    body: '<div class="p3-grid" style="--cols:3">' + P3.block('State.Empty', DS.State.Empty({ actions: B.Ghost({ label: L('Muat Ulang', 'Refresh'), icon: 'refresh', block: true }) })) +
+      P3.block('Tooltip', '<div class="p3-stage p3-stage--white">' + DS.Tooltip({ static: true, text: L('Isi berat cucian sesuai timbangan.', 'Enter the weight shown on the scale.') }) + I.Number({ label: L('Berat Total', 'Total Weight'), value: '82.4', unit: 'kg', tip: L('Berat cucian adalah total berat semua item dalam satu order.', 'Laundry weight is the total weight of every item in one order.') }) + '<p class="ds-caption">' + t(L('Tap ikon ? untuk membuka. Tidak pernah bergantung pada hover.', 'Tap the ? icon to open. Never depends on hover.')) + '</p></div>') +
+      P3.block(L('Divider & spacing', 'Divider & spacing'), '<div class="p3-stage p3-stage--white"><span class="ds-label">' + t(L('Divider', 'Divider')) + '</span><hr class="ds-divider"><div class="ds-row ds-gap-3" style="align-items:flex-end">' + [8, 16, 24, 32].map(function (v) { return '<span style="display:grid;justify-items:center;gap:4px;font-size:12px;color:var(--jf-text-muted)"><i style="width:' + v + 'px;height:' + v + 'px;background:var(--jf-brand-deep-100);border-radius:4px;display:block"></i>' + v + ' px</span>'; }).join('') + '</div></div>') + '</div>' });
+
+  h += P3.ref('np04-core-components.jpg');
+  P3.mount('#page', h);
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

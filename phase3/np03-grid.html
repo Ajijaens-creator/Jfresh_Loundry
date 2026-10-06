@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-03 Grid, Spacing &amp; Layout</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .gridsys { display: grid; grid-template-columns: 1.6fr 1fr .62fr; gap: var(--jf-space-5); }
+  .gcol { display: grid; gap: var(--jf-space-3); align-content: start; }
+  .gviz { display: grid; gap: 4px; padding: 10px; border: 1.5px solid var(--jf-brand-deep-100); border-radius: var(--jf-radius-control); background: var(--jf-surface-card); height: 150px; }
+  .gviz i { display: grid; place-items: center; border-radius: 3px; background: var(--jf-brand-deep-50); color: var(--jf-brand-deep); font-size: 11px; font-weight: 600; font-style: normal; }
+  .live { display: grid; grid-template-columns: repeat(var(--jf-grid-cols), minmax(0, 1fr)); gap: var(--jf-grid-gutter); }
+  .live i { height: 64px; border-radius: var(--jf-radius-sm); background: rgba(0, 168, 232, .14); border: 1px dashed var(--jf-brand-fresh); display: grid; place-items: center; font-size: 12px; font-style: normal; font-weight: 600; color: var(--jf-brand-fresh-600); }
+  @media (max-width: 1239px) { .live i:nth-child(n+9) { display: none; } }
+  @media (max-width: 699px) { .live i:nth-child(n+5) { display: none; } }
+  .spans .ds-card { min-height: 84px; display: grid; align-content: center; gap: 4px; text-align: center; }
+  .space { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--jf-space-5); }
+  .space > div { display: grid; justify-items: center; gap: var(--jf-space-2); font-size: var(--jf-fs-caption); color: var(--jf-text-muted); text-align: center; }
+  .space i { display: block; background: var(--jf-brand-fresh-400); opacity: .75; border-radius: 3px; }
+  .space b { color: var(--jf-text-strong); font-size: var(--jf-fs-label); }
+  .radius { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--jf-space-4); }
+  .radius > div { display: grid; gap: var(--jf-space-2); font-size: var(--jf-fs-caption); color: var(--jf-text-muted); }
+  .radius i { display: block; height: 64px; background: var(--jf-brand-deep-50); border: 2px solid var(--jf-brand-deep-100); }
+  .radius b { color: var(--jf-text-strong); font-size: var(--jf-fs-label); }
+  .anat { display: grid; grid-template-columns: 1.5fr 1fr .62fr; gap: var(--jf-space-5); align-items: start; }
+  .zone { border: 1.5px dashed var(--jf-brand-deep-100); border-radius: var(--jf-radius-control); padding: 8px; font-size: 12px; font-weight: 600; color: var(--jf-brand-deep); background: var(--jf-brand-deep-50); display: grid; gap: 4px; }
+  .zone small { font-weight: 400; color: var(--jf-text-muted); }
+  .desk { display: grid; grid-template-columns: 140px minmax(0, 1fr) 150px; grid-template-rows: auto 1fr; gap: 8px; min-height: 260px; }
+  .desk .sb { grid-row: span 2; background: var(--jf-brand-deep); color: #DCE8F7; border-color: transparent; }
+  .desk .sb small { color: #A9C2E0; }
+  .desk .tb { grid-column: 2 / span 2; }
+  .tab { display: grid; grid-template-columns: 56px minmax(0, 1fr); grid-template-rows: auto auto 1fr; gap: 8px; min-height: 260px; }
+  .tab .sb { grid-row: span 3; background: var(--jf-brand-deep); color: #DCE8F7; border-color: transparent; }
+  .mob { display: grid; gap: 6px; }
+  .mob .cta { background: var(--jf-brand-orange-50); border-color: var(--jf-brand-orange); color: var(--jf-brand-orange-700); }
+  .order { display: grid; gap: var(--jf-space-2); counter-reset: o; }
+  .order li { counter-increment: o; display: flex; gap: var(--jf-space-3); align-items: center; padding: var(--jf-space-2) var(--jf-space-3); border-radius: var(--jf-radius-control); background: var(--jf-surface-page); border: 1px solid var(--jf-border); font-weight: 500; }
+  .order li::before { content: counter(o); flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: var(--jf-radius-control); background: var(--jf-brand-deep); color: var(--jf-brand-white); font-size: 13px; font-weight: 700; }
+  .order li small { margin-left: auto; color: var(--jf-text-muted); font-size: var(--jf-fs-caption); font-weight: 400; }
+  @media (max-width: 1239px) { .gridsys, .anat { grid-template-columns: 1fr 1fr; } .gridsys > :first-child, .anat > :first-child { grid-column: 1 / -1; } }
+  @media (max-width: 699px) { .gridsys, .anat { grid-template-columns: minmax(0, 1fr); } .desk { grid-template-columns: 90px minmax(0, 1fr); } .desk .ctx { display: none; } .desk .tb { grid-column: 2; } }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="3">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">03</span><span data-en="Phase 3 · Design System · NP-03">Fase 3 · Design System · NP-03</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Grid, Spacing &amp; Layout System</h1>
+      <p class="sub" data-en="The structure under every screen: a 12, 8 or 4 column grid, a fixed spacing and radius scale, and a layout anatomy that reflows per device instead of shrinking.">Struktur di bawah setiap layar: grid 12, 8 atau 4 kolom, skala spacing dan radius yang tetap, dan anatomi layout yang berubah susunan per perangkat, bukan diperkecil.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Simple Frontline. <b>Powerful Management.</b></div>
+      <div class="values"><span data-en="Consistent">Konsisten</span><span data-en="Simple">Sederhana</span><span data-en="Responsive">Responsif</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, L = DS.L, t = DS.t, ic = DS.ic;
+  var h = '';
+
+  /* 1. Principles */
+  var pr = [['grid', L('Konsisten', 'Consistent'), L('Satu sistem di semua perangkat', 'One system on every device')], ['pointer', L('Sederhana', 'Simple'), L('Mudah dipahami & digunakan', 'Easy to understand & use')], ['target', L('Fokus pada tugas', 'Task-focused'), L('Satu layar, satu tujuan utama', 'One screen, one main goal')], ['phone', L('Responsif', 'Responsive'), L('Optimal di desktop, iPad dan mobile', 'Optimal on desktop, iPad and mobile')], ['type', L('Mudah dibaca', 'Readable'), L('Ruang yang cukup & teks besar', 'Enough space & large text')], ['shield', L('Profesional', 'Professional'), L('Modern, bersih, sesuai brand', 'Modern, clean, on brand')]];
+  h += P3.section({ id: 'principles', n: 1, title: L('Prinsip Desain', 'Design Principles'),
+    body: '<div class="p3-principles">' + pr.map(function (p) { return '<div class="p3-principle"><span class="ds-actioncard__ic">' + ic(p[0]) + '</span><b>' + t(p[1]) + '</b><span>' + t(p[2]) + '</span></div>'; }).join('') + '</div>' });
+
+  /* 2. Grid */
+  function viz(n) { var s = ''; for (var i = 1; i <= n; i++) s += '<i>' + i + '</i>'; return '<div class="gviz" style="grid-template-columns:repeat(' + n + ',1fr)">' + s + '</div>'; }
+  function gspec(rows) { return P3.table([L('Ukuran', 'Measure'), L('Nilai', 'Value')], rows); }
+  var live = ''; for (var i = 1; i <= 12; i++) live += '<i>' + i + '</i>';
+  h += P3.section({ id: 'grid', n: 2, title: L('Sistem Grid', 'Grid System'), desc: L('Kolom, gutter dan margin berganti otomatis lewat token --jf-grid-*. Di layar kecil konten menumpuk, tidak dipaksa ke lebar grid.', 'Columns, gutter and margin switch automatically through the --jf-grid-* tokens. On small screens content stacks instead of being forced into grid widths.'),
+    body: '<div class="gridsys">' +
+      '<div class="gcol"><b class="p3-name">' + t(L('Desktop · 12 kolom', 'Desktop · 12 columns')) + '</b><span class="ds-caption">' + t(L('Untuk manajemen dan operasional detail', 'For management and detailed operations')) + '</span>' + viz(12) + gspec([[L('Lebar konten maks.', 'Max content width'), '1440 px'], [L('Kolom', 'Column'), L('Fleksibel', 'Flexible')], ['Gutter', '24 px'], ['Margin', L('32 px (kiri/kanan)', '32 px (left/right)')]]) + '</div>' +
+      '<div class="gcol"><b class="p3-name">' + t(L('iPad · 8 kolom', 'iPad · 8 columns')) + '</b><span class="ds-caption">' + t(L('Untuk operasional di lapangan', 'For operations on the floor')) + '</span>' + viz(8) + gspec([[L('Lebar konten maks.', 'Max content width'), '1024 px'], ['Gutter', '20 px'], ['Margin', '24 px']]) + '</div>' +
+      '<div class="gcol"><b class="p3-name">' + t(L('Mobile · 4 kolom', 'Mobile · 4 columns')) + '</b><span class="ds-caption">' + t(L('Akses cepat & tugas harian', 'Quick access & daily tasks')) + '</span>' + viz(4) + gspec([[L('Maks.', 'Max'), '480 px'], ['Gutter', '16 px'], ['Margin', '16 px']]) + '</div></div>' +
+      '<div class="p3-stage" style="margin-top:20px"><div class="ds-row ds-row--between"><b class="p3-name">' + t(L('Grid layar Anda sekarang', 'Your screen’s grid right now')) + '</b><span class="ds-tag" id="gridNow"></span></div><div class="live">' + live + '</div></div>' +
+      '<div class="p3-stage p3-stage--white" style="margin-top:16px"><b class="p3-name">' + t(L('Contoh span responsif', 'Responsive span example')) + '</b><code class="p3-code">.ds-grid › .ds-d-3 .ds-t-4 .ds-m-2</code><div class="ds-grid spans">' +
+        [1, 2, 3, 4].map(function (k) { return '<div class="ds-card ds-d-3 ds-t-4 ds-m-2"><b class="ds-num" style="font-size:var(--jf-fs-h2)">' + ['12', '8', '24', '96%'][k - 1] + '</b><span class="ds-caption">' + t([L('Menunggu', 'Waiting'), L('Diproses', 'In Process'), L('Selesai', 'Done'), 'SLA'][k - 1]) + '</span></div>'; }).join('') +
+        '<div class="ds-card ds-d-8 ds-t-8 ds-m-4"><b>' + t(L('Konten utama · 8 / 8 / 4', 'Main content · 8 / 8 / 4')) + '</b></div><div class="ds-card ds-d-4 ds-t-8 ds-m-4"><b>' + t(L('Panel konteks · 4 / 8 / 4', 'Context panel · 4 / 8 / 4')) + '</b></div></div></div>' });
+
+  /* 3. Spacing */
+  var sp = [[1, 4, L('jarak ikon–teks', 'icon–text gap')], [2, 8, L('kontrol kecil', 'small controls')], [3, 12, L('isi kartu ringkas', 'compact card padding')], [4, 16, L('jarak form default', 'default form spacing')], [5, 24, L('jarak section', 'section spacing')], [6, 32, L('kartu besar', 'large card spacing')], [7, 40, L('pemisah halaman', 'page separation')], [8, 48, L('pemisah halaman besar', 'large page separation')]];
+  h += P3.section({ id: 'spacing', n: 3, title: L('Skala Spacing', 'Spacing Scale'), desc: L('Hanya delapan nilai ini. Tidak ada jarak acak.', 'Only these eight values. No random spacing.'),
+    body: '<div class="space">' + sp.map(function (s) { return '<div><i style="width:' + s[1] + 'px;height:' + s[1] + 'px"></i><b>' + s[1] + '</b><code class="p3-code">--jf-space-' + s[0] + '</code><span>' + t(s[2]) + '</span></div>'; }).join('') + '</div>' });
+
+  /* 4. Radius */
+  var rd = [['--jf-radius-sm', 4, L('Kecil', 'Small'), L('Input tag, tag', 'Tag')], ['--jf-radius-control', 8, L('Kontrol', 'Control'), L('Input, kontrol kecil, chip', 'Input, small control, chip')], ['--jf-radius-button', 12, L('Tombol', 'Button'), L('Tombol, toast', 'Button, toast')], ['--jf-radius-card', 16, L('Kartu', 'Card'), L('Kartu', 'Card')], ['--jf-radius-lg', 20, L('Besar', 'Large'), L('Panel, drawer', 'Panel, drawer')], ['--jf-radius-modal', 24, L('Modal', 'Modal'), L('Modal, hero', 'Modal, hero')]];
+  h += P3.section({ id: 'radius', n: 4, title: L('Sistem Radius', 'Radius System'), desc: L('Radius yang tenang dan profesional. Bentuk pil hanya untuk avatar, penghitung dan titik.', 'Calm, professional radius. Pill shapes only for avatars, counters and dots.'),
+    body: '<div class="radius">' + rd.map(function (r) { return '<div><i style="border-radius:var(' + r[0] + ')"></i><b>' + r[1] + ' px · ' + t(r[2]) + '</b><code class="p3-code">' + r[0] + '</code><span>' + t(r[3]) + '</span></div>'; }).join('') + '</div>' +
+      '<div class="p3-grid" style="--cols:2;margin-top:20px">' + P3.block(L('Bayangan', 'Shadow'), P3.table(['Token', L('Untuk', 'Use')], [['<code class="p3-code">--jf-shadow-none</code>', L('Tabel, daftar', 'Tables, lists')], ['<code class="p3-code">--jf-shadow-subtle</code>', L('Kartu', 'Cards')], ['<code class="p3-code">--jf-shadow-floating</code>', L('Toast, menu, tooltip', 'Toast, menus, tooltip')], ['<code class="p3-code">--jf-shadow-modal</code>', L('Modal, drawer', 'Modal, drawer')]])) +
+      P3.block(L('Ukuran', 'Size'), P3.table(['Token', L('Nilai', 'Value')], [['<code class="p3-code">--jf-touch</code>', '44 px'], ['<code class="p3-code">--jf-touch-ops</code>', '48 px'], ['<code class="p3-code">--jf-btn-h / -lg</code>', '44 / 56 px'], ['<code class="p3-code">--jf-input-h / -lg</code>', '48 / 64 px'], ['<code class="p3-code">--jf-icon / -md / -lg</code>', '20 / 24 / 32 px'], ['<code class="p3-code">--jf-sidebar-w / --jf-rail-w</code>', '248 / 84 px'], ['<code class="p3-code">--jf-bottomnav-h</code>', '68 px']])) + '</div>' });
+
+  /* 5. Layout anatomy */
+  function z(a, b, cls) { return '<div class="zone ' + (cls || '') + '">' + t(a) + (b ? '<small>' + t(b) + '</small>' : '') + '</div>'; }
+  h += P3.section({ id: 'anatomy', n: 5, title: L('Anatomi Layout', 'Layout Anatomy'), desc: L('Desktop menambah kolom, iPad memperbesar target sentuh, mobile menyusun ulang menjadi satu kolom.', 'Desktop adds columns, iPad enlarges touch targets, mobile re-stacks into one column.'),
+    body: '<div class="anat">' +
+      '<div class="p3-dev"><b>' + t(L('Desktop · manajemen', 'Desktop · management')) + '</b><div class="p3-screen p3-screen--desk"><div class="p3-screen__in"><div class="desk">' + z(L('Sidebar', 'Sidebar'), L('navigasi sesuai izin', 'navigation by permission'), 'sb') + z(L('Top header', 'Top header'), L('konteks, cari, notifikasi, bahasa, profil', 'context, search, notifications, language, profile'), 'tb') + z(L('Konten utama', 'Main content'), L('pekerjaan atau analisa utama', 'main work or analysis')) + z(L('Panel konteks (opsional)', 'Context panel (optional)'), L('filter, ringkasan, detail', 'filter, summary, detail'), 'ctx') + '</div></div></div></div>' +
+      '<div class="p3-dev"><b>' + t(L('iPad · operasional', 'iPad · operations')) + '</b><div class="p3-screen p3-screen--tablet"><div class="p3-screen__in"><div class="tab">' + z('≡', '', 'sb') + z(L('Header ringkas', 'Compact header')) + z(L('Kartu besar 1–2 kolom', 'Large cards, 1–2 columns')) + z(L('Area kerja utama + CTA besar', 'Main work area + large CTA')) + '</div></div></div></div>' +
+      '<div class="p3-dev"><b>' + t(L('Mobile · frontline', 'Mobile · frontline')) + '</b><div class="p3-screen p3-screen--phone"><div class="p3-screen__in"><div class="mob">' + z(L('Header ringkas', 'Compact header')) + z(L('Status utama', 'Main status')) + z(L('Informasi utama', 'Primary information')) + z(L('CTA utama', 'Primary CTA'), '', 'cta') + z(L('Aksi sekunder', 'Secondary action')) + z(L('Data pendukung', 'Supporting data')) + z(L('Bottom nav (4–5)', 'Bottom nav (4–5)')) + '</div></div></div></div></div>' +
+      '<div class="p3-grid" style="--cols:3;margin-top:20px">' +
+        P3.block(L('Desktop', 'Desktop'), P3.rules('do', [L('Sidebar + top header + konten + panel konteks', 'Sidebar + top header + content + context panel'), L('Frontline desktop boleh lebih sederhana', 'Frontline desktop may be simpler')])) +
+        P3.block(L('iPad', 'iPad'), P3.rules('do', [L('Navigasi bisa dilipat (rail)', 'Collapsible navigation (rail)'), L('Kartu besar, 1–2 kolom, tabel padat minimal', 'Large cards, 1–2 columns, few dense tables')])) +
+        P3.block(L('Mobile', 'Mobile'), P3.rules('dont', [L('Tabel padat, filter kecil, panel samping', 'Dense tables, tiny filters, side panels'), L('Sidebar desktop dipaksa masuk; scroll horizontal untuk tugas inti', 'Desktop sidebar squeezed in; horizontal scroll for core tasks')])) + '</div>' });
+
+  /* 6. Content hierarchy */
+  h += P3.section({ id: 'hierarchy', n: 6, title: L('Hierarki Konten', 'Content Hierarchy'), desc: L('Urutan elemen dalam satu layar.', 'The order of elements on one screen.'),
+    body: '<div class="p3-grid" style="--cols:2">' +
+      P3.block(L('Layar operasional', 'Operational screen'), '<ol class="order">' + [L('Page Header', 'Page Header'), L('Status / Informasi penting', 'Status / Important information'), L('Konten tugas utama', 'Main task content'), L('Aksi utama (CTA)', 'Primary action (CTA)'), L('Aksi sekunder', 'Secondary action'), L('Informasi pendukung', 'Supporting information')].map(function (x) { return '<li>' + t(x) + '</li>'; }).join('') + '</ol>') +
+      P3.block(L('Layar manajemen', 'Management screen'), '<ol class="order">' + [L('Page Header', 'Page Header'), L('Ringkasan KPI', 'KPI overview'), L('Alert penting', 'Important alerts'), L('Tren / Insight', 'Trend / Insight'), L('Detail utama', 'Main detail'), L('Drill-down / Tabel', 'Drill-down / Table'), L('Laporan sekunder', 'Secondary reports')].map(function (x) { return '<li>' + t(x) + '</li>'; }).join('') + '</ol>') + '</div>' +
+      '<div class="p3-quote" style="margin-top:20px"><span class="q">“</span><div><b>' + t(L('Ruang yang baik membuat pekerjaan lebih mudah.', 'Good space makes work easier.')) + '</b><span>Clean Layout, Smooth Operation.</span></div></div>' });
+
+  h += P3.ref('np03-grid-spacing-layout.jpg');
+  P3.mount('#page', h);
+  function now() { var c = getComputedStyle(document.documentElement).getPropertyValue('--jf-grid-cols').trim(); var el = document.getElementById('gridNow'); if (el) el.textContent = c + ' ' + (JFDS.t ? (window.JF && JF.lang() === 'en' ? 'columns' : 'kolom') : ''); }
+  now(); window.addEventListener('resize', now); setTimeout(function () { if (window.JF) JF.onLang(now); }, 0);
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

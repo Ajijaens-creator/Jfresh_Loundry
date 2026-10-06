@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-05 Operational UI Pattern Library</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .flow6 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--jf-space-5); align-items: start; }
+  .pat-note { display: grid; gap: var(--jf-space-2); margin-top: var(--jf-space-3); }
+  .pat-note .p3-code { justify-self: start; }
+  .laws { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--jf-space-3); }
+  .laws .p3-principle .ds-actioncard__ic { background: var(--jf-brand-orange-50); color: var(--jf-brand-orange-700); }
+  .wq-tablet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--jf-space-3); }
+  .wq-tablet .ds-taskcard { grid-template-columns: minmax(0, 1fr) auto; }
+  .wq-tablet .ds-taskcard__media { display: none; }
+  .wq-tablet .ds-taskcard__cta { grid-column: 1 / -1; justify-self: stretch; }
+  .wq-tablet .ds-taskcard__cta .ds-btn { width: 100%; }
+  .p3-screen .ds-h2 { font-size: var(--jf-fs-h3); }
+  @media (max-width: 1239px) { .flow6, .laws { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 699px) { .flow6, .laws, .wq-tablet { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="5">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">05</span><span data-en="Phase 3 · Design System · NP-05">Fase 3 · Design System · NP-05</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Operational UI Pattern Library</h1>
+      <p class="sub" data-en="Screen patterns for laundry floor staff with low digital literacy: one screen, one main job, large text, large buttons and a clear next step. Each pattern is composed only from NP-04 components.">Pola layar untuk staf operasional laundry dengan literasi digital rendah: satu layar satu tugas utama, teks besar, tombol besar, dan langkah berikutnya yang jelas. Setiap pola hanya disusun dari komponen NP-04.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Simple <b>Frontline.</b></div>
+      <div class="values"><span data-en="Simple">Sederhana</span><span data-en="Clear">Jelas</span><span data-en="Easy">Mudah</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, L = DS.L, t = DS.t, ic = DS.ic, Pt = DS.Pattern;
+  var h = '';
+
+  function note(name, uses, rule) { return '<div class="pat-note"><code class="p3-code">' + name + '</code><span class="ds-caption">' + t(L('Komponen: ', 'Components: ')) + uses + '</span>' + (rule ? P3.rules('do', [rule]) : '') + '</div>'; }
+  h += P3.section({ id: 'patterns', n: 1, title: L('Enam Pola Operasional', 'Six Operational Patterns'), desc: L('Urutan kerja penerimaan sampai QC. Setiap layar di bawah adalah pola asli dengan ukuran sebenarnya untuk mobile.', 'The work sequence from receiving to QC. Each screen below is the real pattern at true mobile size.'),
+    body: '<div class="flow6">' +
+      '<div>' + P3.phone(1, L('Work Queue · cucian yang menunggu', 'Work Queue · laundry waiting'), Pt.WorkQueue({ n: 3 })) + note('Pattern.WorkQueue', 'Input.Search · Nav.Segment · Card.Task · Status.Waiting · Button.Action', L('Hanya filter penting (Semua / Pickup / On Site). Diurutkan dari SLA terdekat.', 'Only essential filters (All / Pickup / On Site). Sorted by nearest SLA.')) + '</div>' +
+      '<div>' + P3.phone(2, L('Task Detail · detail sebelum diproses', 'Task Detail · detail before processing'), Pt.TaskDetail()) + note('Pattern.TaskDetail', 'Status.* · Nav.Tabs · DL · Button.Primary', L('Aksi utama di bawah. Tab hanya bila benar-benar perlu.', 'Main action at the bottom. Tabs only when really needed.')) + '</div>' +
+      '<div>' + P3.phone(3, L('Quick Action · terima cucian', 'Quick Action · receive laundry'), Pt.QuickAction()) + note('Pattern.QuickAction', 'Stepper.Process · Card.Task · Input.Number · Input.Counter · Media.Photos · Input.Textarea · Button.Primary', L('Hanya berat dan bag yang wajib. Foto dan catatan opsional.', 'Only weight and bags are required. Photo and note are optional.')) + '</div>' +
+      '<div>' + P3.phone(4, L('Process Stepper · tahapan proses', 'Process Stepper · process stages'), Pt.ProcessStepper()) + note('Pattern.ProcessStepper', 'Stepper.Process (vertical) · Status.* · Button.Primary', L('Tahap berjalan menampilkan operator dan jam mulai.', 'The current step shows the operator and start time.')) + '</div>' +
+      '<div>' + P3.phone(5, L('QC Decision · cek kualitas', 'QC Decision · quality check'), Pt.QCDecision()) + note('Pattern.QCDecision', 'Data.List · Input.Checkbox · Button.Success · Button.DangerSoft', L('LULUS lanjut ke packing. ADA MASALAH membuka Issue Flow; form masalah tidak tampil sebelum itu.', 'PASS continues to packing. HAS ISSUE opens the Issue Flow; the issue form is hidden until then.')) + '</div>' +
+      '<div>' + P3.phone(6, L('Issue Flow · ada masalah', 'Issue Flow · report issue'), Pt.IssueFlow()) + note('Pattern.IssueFlow', 'Input.Options · Media.Photos (required) · Input.Textarea · Button.Danger', L('Alasan terstruktur; sistem meneruskan ke supervisor yang tepat.', 'Structured reasons; the system routes it to the right supervisor.')) + '</div>' +
+    '</div>' });
+
+  /* Responsive */
+  var rows = DS.DEMO.loads.map(function (l, i) { return { o: 'LND-00' + (i + 1), c: l.c, w: l.kg + ' kg', b: String(l.bag), tm: l.time, s: 'Waiting' }; });
+  var table = DS.Data.Table({ stack: false, caption: L('Cucian menunggu', 'Laundry waiting'), cols: [{ k: 'o', l: 'Order ID', strong: true }, { k: 'c', l: L('Klien', 'Client') }, { k: 'w', l: L('Berat', 'Weight'), num: true }, { k: 'b', l: 'Bag', num: true }, { k: 'tm', l: L('Waktu', 'Time') }, { k: 's', l: 'Status', chip: true }], rows: rows });
+  var tablet = '<div class="wq-tablet">' + DS.DEMO.loads.map(function (l) { return DS.Card.Task({ title: l.c, id: l.id, qty: [[l.kg, 'kg'], [String(l.bag), 'Bag']], time: l.time, status: 'Waiting', cta: L('Terima', 'Receive') }); }).join('') + '</div>';
+  var phone = '<div class="ds-stack ds-gap-3 ds-ops">' + DS.DEMO.loads.slice(0, 2).map(function (l) { return DS.Card.Task({ title: l.c, id: l.id, qty: [[l.kg, 'kg'], [String(l.bag), 'Bag']], status: 'Waiting', cta: L('Terima', 'Receive') }); }).join('') + '</div>';
+  h += P3.section({ id: 'responsive', n: 2, title: L('Tampilan di Berbagai Perangkat', 'Across Devices'), desc: L('Pola yang sama, susunan berbeda. Tidak diperkecil secara proporsional.', 'Same pattern, different arrangement. Never scaled down proportionally.'),
+    body: '<div class="p3-devices">' +
+      '<div class="p3-dev"><b>Desktop</b><small>' + t(L('Tabel ringkas + panel detail', 'Compact table + detail panel')) + '</small><div class="p3-screen p3-screen--desk"><div class="p3-screen__in"><h2 class="ds-h2">' + t(L('Cucian Menunggu', 'Laundry Waiting')) + '</h2>' + table + '</div></div></div>' +
+      '<div class="p3-dev"><b>iPad</b><small>' + t(L('Kartu besar 2 kolom', 'Large cards, 2 columns')) + '</small><div class="p3-screen p3-screen--tablet"><div class="p3-screen__in"><h2 class="ds-h2">' + t(L('Cucian Menunggu', 'Laundry Waiting')) + '</h2>' + tablet + '</div></div></div>' +
+      '<div class="p3-dev"><b>Mobile</b><small>' + t(L('Satu kolom + bottom nav', 'One column + bottom nav')) + '</small><div class="p3-screen p3-screen--phone"><div class="p3-screen__in">' + phone + '</div>' + DS.Nav.BottomNav({ current: 1 }) + '</div></div></div>' });
+
+  /* Laws */
+  var laws = [['target', L('Satu layar, satu tugas utama', 'One screen, one main job'), L('Fokus pada aksi yang jelas', 'Focus on one clear action')], ['type', L('Teks dan tombol besar', 'Large text and buttons'), L('Mudah dibaca, mudah ditekan', 'Easy to read, easy to tap')], ['filter', L('Minim pilihan di awal', 'Few choices up front'), L('Detail muncul jika diperlukan', 'Detail appears when needed')], ['status', L('Warna dan ikon yang konsisten', 'Consistent colour and icons'), L('Status selalu ikon + teks', 'Status is always icon + text')], ['route', L('Alur sederhana dan linear', 'Simple, linear flow'), L('Ikuti urutan proses laundry', 'Follows the laundry process order')], ['phone', L('Responsif di semua perangkat', 'Responsive on every device'), L('Desktop, iPad dan mobile', 'Desktop, iPad and mobile')]];
+  h += P3.section({ id: 'laws', n: 3, title: L('Prinsip Desain Operasional', 'Operational Design Laws'),
+    body: '<div class="laws">' + laws.map(function (p) { return '<div class="p3-principle"><span class="ds-actioncard__ic">' + ic(p[0]) + '</span><b>' + t(p[1]) + '</b><span>' + t(p[2]) + '</span></div>'; }).join('') + '</div>' +
+      '<div style="margin-top:20px">' + P3.dodont(L('Selalu', 'Always'), [L('CTA utama di bawah tugas, besar, mudah dijangkau, lebar penuh di iPad/mobile', 'Main CTA below the task, large, easy to reach, full width on iPad/mobile'), L('Angka penting besar: 82.4 kg · 8 Bag', 'Key numbers large: 82.4 kg · 8 Bags'), L('Ikon + label untuk Scan, Foto, Terima, Kirim', 'Icon + label for Scan, Photo, Receive, Deliver'), L('Konfirmasi jelas setelah aksi selesai, lalu langkah berikutnya', 'Clear confirmation after an action, then the next step')],
+        L('Hindari', 'Avoid'), [L('Tabel padat dan menu bertingkat', 'Dense tables and nested menus'), L('Istilah teknis dan kode transaksi yang harus diingat', 'Technical terms and transaction codes to remember'), L('Lebih dari satu CTA dominan', 'More than one dominant CTA'), L('Kepadatan data manajemen di layar frontline', 'Management data density on frontline screens')]) + '</div>' +
+      '<div class="p3-quote" style="margin-top:20px"><span class="q">“</span><div><b>' + t(L('Saya langsung tahu harus melakukan apa.', 'I know right away what to do.')) + '</b><span>' + t(L('— staf frontline', '— frontline staff')) + '</span></div></div>' });
+
+  h += P3.ref('np05-operational-patterns.jpg');
+  P3.mount('#page', h);
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

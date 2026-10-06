@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-02 Typography &amp; Readability</title>
+<meta name="theme-color" content="#0754A6">
+<link rel="icon" href="../assets/brand/jfresh-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="../assets/css/jfos-ds.css">
+<link rel="stylesheet" href="phase3.css">
+<style>
+  .font-hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--jf-space-5); align-items: center; }
+  .font-hero .aa { font-size: 112px; line-height: 1; font-weight: 700; color: var(--jf-brand-deep); letter-spacing: -.04em; }
+  .glyphs { font-size: var(--jf-fs-h3); color: var(--jf-text); line-height: 1.6; letter-spacing: .02em; }
+  .digits { font-size: var(--jf-fs-h2); font-weight: 600; color: var(--jf-text-strong); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+  .weights { display: flex; flex-wrap: wrap; gap: var(--jf-space-5); font-size: var(--jf-fs-h3); color: var(--jf-text-strong); }
+  .use-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--jf-space-3); }
+  .use-grid .ds-card { display: grid; gap: var(--jf-space-2); align-content: start; }
+  .use-grid .utag { font-size: var(--jf-fs-caption); font-weight: 600; color: var(--jf-brand-deep); }
+  .hier { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: var(--jf-space-5); align-items: start; }
+  .hier ol { display: grid; gap: var(--jf-space-3); counter-reset: h; }
+  .hier ol li { counter-increment: h; display: flex; gap: var(--jf-space-3); align-items: center; font-weight: 600; color: var(--jf-text-strong); }
+  .hier ol li::before { content: counter(h); flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--jf-brand-deep); color: var(--jf-brand-white); font-size: 14px; }
+  .hier ol li small { display: block; font-weight: 400; color: var(--jf-text-muted); font-size: var(--jf-fs-caption); }
+  .cmp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--jf-space-4); }
+  .cmp > div { border-radius: var(--jf-radius-card); padding: var(--jf-space-4); border: 1px solid var(--jf-border); display: grid; gap: var(--jf-space-3); align-content: start; background: var(--jf-surface-card); }
+  .cmp h4 { display: flex; gap: var(--jf-space-2); align-items: center; margin: 0; font-size: var(--jf-fs-body); }
+  .cmp .good h4 { color: var(--jf-state-success-ink); } .cmp .bad h4 { color: var(--jf-state-error-ink); }
+  .cmp .good { border-color: var(--jf-state-success-line); } .cmp .bad { border-color: var(--jf-state-error-line); }
+  .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--jf-space-2); }
+  .trio > div { padding: var(--jf-space-3); border-radius: var(--jf-radius-control); background: var(--jf-surface-page); border: 1px solid var(--jf-border); display: grid; gap: 2px; }
+  /* Deliberately undersized: the "not recommended" example only */
+  .bad .trio > div { padding: 6px; } .bad .trio span { font-size: 10px; } .bad .trio b { font-size: 13px; }
+  .bad .ds-btn { min-height: 34px; font-size: 13px; }
+  .msg { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--jf-space-2) var(--jf-space-3); align-items: start; padding: var(--jf-space-3) var(--jf-space-4); border-radius: var(--jf-radius-control); border: 1px solid var(--jf-border); background: var(--jf-surface-card); }
+  .msg .i { width: 22px; height: 22px; }
+  .msg.b .i { color: var(--jf-state-error-ink); } .msg.g .i { color: var(--jf-state-success-ink); }
+  .numdemo { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--jf-space-3); }
+  @media (max-width: 1239px) { .use-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hier { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 699px) { .hier .trio { grid-template-columns: 1fr 1fr !important; } .hier .trio > div:last-child { grid-column: 1 / -1; } .use-grid, .cmp { grid-template-columns: minmax(0, 1fr); } .font-hero { grid-template-columns: minmax(0, 1fr); } .font-hero .aa { font-size: 80px; } }
+</style>
+</head>
+<body class="p3" data-root="../" data-phase="3" data-visual="2">
+<script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">02</span><span data-en="Phase 3 · Design System · NP-02">Fase 3 · Design System · NP-02</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Typography &amp; Readability System</h1>
+      <p class="sub" data-en="One typeface, one size scale per device, four weights and plain Indonesian copy, so a frontline operator can read a screen at arm’s length and a manager can scan a report quickly.">Satu jenis huruf, satu skala ukuran per perangkat, empat bobot dan bahasa Indonesia yang sederhana, supaya operator bisa membaca layar dari jarak lengan dan manajer bisa memindai laporan dengan cepat.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Simple Frontline. <b>Powerful Management.</b></div>
+      <div class="values"><span data-en="Readable">Mudah dibaca</span><span data-en="Clear">Jelas</span><span data-en="Consistent">Konsisten</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap ds" id="page"></main>
+
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfos-ds.js"></script>
+<script src="../assets/js/jfos-ds-docs.js"></script>
+<script src="phase3.js"></script>
+<script>
+(function () {
+  var DS = JFDS, L = DS.L, t = DS.t, ic = DS.ic;
+  var h = '';
+
+  /* 1. Font */
+  h += P3.section({ id: 'font', n: 1, title: L('Font Utama', 'Primary Typeface'), desc: L('Inter, dengan cadangan system sans-serif.', 'Inter, with the system sans-serif stack as fallback.'),
+    body: '<div class="p3-grid" style="--cols:2"><div class="ds-stack"><div class="font-hero"><span class="aa">Aa</span><div><div class="ds-h2">Inter</div><p class="ds-muted">' + t(L('Modern, bersih, mudah dibaca untuk semua perangkat.', 'Modern, clean, readable on every device.')) + '</p></div></div>' +
+      '<p class="glyphs">Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz</p><p class="digits">0123456789</p>' +
+      '<div class="weights"><span style="font-weight:400">Regular 400</span><span style="font-weight:500">Medium 500</span><span style="font-weight:600">SemiBold 600</span><span style="font-weight:700">Bold 700</span></div>' + P3.spec('--jf-font', '"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif') + '</div>' +
+      '<div class="ds-stack">' + P3.block(L('Alasan memilih Inter', 'Why Inter'), P3.rules('do', [L('Mudah dibaca di layar', 'Easy to read on screens'), L('Tampilan modern dan profesional', 'Modern, professional look'), L('Angka jelas untuk operasional (tabular)', 'Clear numbers for operations (tabular)'), L('Tersedia dalam banyak bobot', 'Available in many weights'), L('Cocok untuk ID & EN', 'Works for ID & EN')])) +
+      P3.block(L('Bobot yang dipakai', 'Weights in use'), P3.table([L('Bobot', 'Weight'), L('Untuk', 'Use')], [['400 Regular', L('Teks body umum', 'General body copy')], ['500 Medium', L('Label field, konten sekunder penting', 'Field labels, important secondary content')], ['600 SemiBold', L('Judul section dan judul kartu', 'Section and card titles')], ['700 Bold', L('Judul halaman, angka utama, KPI', 'Page titles, primary numbers, KPIs')]]) + '<p class="note">' + t(L('Hindari bold berlebihan. Tidak ada bobot 800/900.', 'Avoid overusing bold. No 800/900 weights.')) + '</p>') + '</div></div>' });
+
+  /* 2. Scale */
+  var scale = [
+    ['Display / Hero', '48/56', '36/48', '32/40', 'ds-display', L('Laporan Operasional', 'Operations Report'), '--jf-fs-display'],
+    ['H1 · Page Title', '32/40', '28/36', '26/32', 'ds-h1', L('Terima Cucian', 'Receive Laundry'), '--jf-fs-h1'],
+    ['H2 · Section Title', '24/32', '22/28', '20/26', 'ds-h2', L('Informasi Cucian', 'Laundry Information'), '--jf-fs-h2'],
+    ['H3 · Card Title', '20/28', '18/24', '18/22', 'ds-h3', 'Hotel ABC', '--jf-fs-h3'],
+    ['Body (Regular)', '16/24', '16/24', '16/24', 'ds-body', L('Linen kamar dan bath towel', 'Room linen and bath towels'), '--jf-fs-body'],
+    ['Label (Medium)', '14/20', '14/20', '14/20 · ops 16', 'ds-label', L('Berat Total', 'Total Weight'), '--jf-fs-label'],
+    ['Caption (Regular)', '12/16', '12/16', '12/16', 'ds-caption', L('Catatan tambahan', 'Additional note'), '--jf-fs-caption'],
+    ['Large Number', '40/48', '32/40', '28/36', 'ds-num', '82.4 kg', '--jf-fs-number'],
+    ['Button / CTA', '16 · 17', '17', '17 · 18', 'ds-btn-sample', L('Terima Cucian', 'Receive Laundry'), '--jf-fs-button / --jf-fs-cta']
+  ];
+  var rows = scale.map(function (s) {
+    var ex = s[4] === 'ds-btn-sample' ? DS.Button.Primary({ label: s[5] }) : '<span class="' + s[4] + '" style="white-space:nowrap">' + t(s[5]) + '</span>';
+    return ['<b class="p3-name">' + s[0] + '</b><br><code class="p3-code">' + s[6] + '</code>', s[1], s[2], s[3], ex];
+  });
+  h += P3.section({ id: 'scale', n: 2, title: L('Skala Tipografi', 'Type Scale'), desc: L('Ukuran / tinggi baris dalam px per perangkat (dari Visual 02). Kolom contoh memakai token aktif: ubah lebar layar dan ukurannya ikut berubah.', 'Size / line height in px per device (from Visual 02). The example column uses the live tokens: resize the window and it changes.'),
+    body: P3.table([L('Gaya', 'Style'), 'Desktop ≥1240', 'iPad 700–1239', 'Mobile <700', L('Contoh (ukuran aktif)', 'Example (live size)')], rows) +
+      DS.Feedback.Inline({ type: 'info', title: L('Aturan:', 'Rule:'), text: L('Body tidak pernah di bawah 16 px. Di layar frontline, label naik ke 16 px dan caption ke 14 px (kelas .ds-ops). Display desktop dinaikkan ke 48 px agar sesuai rentang 48–64 px di master prompt.', 'Body never drops below 16 px. On frontline screens labels go up to 16 px and captions to 14 px (.ds-ops class). Desktop display is raised to 48 px to fit the 48–64 px range in the master prompt.') }) });
+
+  /* 3. In use */
+  h += P3.section({ id: 'usage', n: 3, title: L('Contoh Penggunaan pada UI', 'Typography in the UI'),
+    body: '<div class="use-grid">' +
+      '<div class="ds-card"><span class="utag">Page Title (H1)</span><span class="ds-h1">' + t(L('Terima Cucian', 'Receive Laundry')) + '</span><span class="ds-caption">Hotel ABC • Order #RCV2024-00123</span></div>' +
+      '<div class="ds-card"><span class="utag">Large Number</span><span class="ds-num">82.4 kg</span><span class="ds-caption">' + t(L('Berat Total', 'Total Weight')) + '</span></div>' +
+      '<div class="ds-card"><span class="utag">Label &amp; Value</span><span class="ds-label">' + t(L('Jumlah Bag', 'Bag Count')) + '</span><span class="ds-num">8</span></div>' +
+      '<div class="ds-card"><span class="utag">Section Title (H2)</span><span class="ds-h2">' + t(L('Informasi Cucian', 'Laundry Information')) + '</span></div>' +
+      '<div class="ds-card"><span class="utag">Card Title (H3)</span><span class="ds-h3">Hotel ABC</span><span class="ds-body ds-muted">' + t(L('Linen kamar dan bath towel', 'Room linen and bath towels')) + '</span></div>' +
+      '<div class="ds-card"><span class="utag">Body Text</span><p class="ds-body">' + t(L('Mohon pisahkan linen putih dengan berwarna.', 'Please separate white and coloured linen.')) + '</p></div>' +
+      '<div class="ds-card"><span class="utag">Caption</span><span class="ds-caption">' + t(L('Dibuat: 25 Sep 2024, 08:15', 'Created: 25 Sep 2024, 08:15')) + '</span></div>' +
+      '<div class="ds-card"><span class="utag">Label (Medium)</span><span class="ds-label">' + t(L('Jenis Cucian', 'Laundry Type')) + '</span><span class="ds-tag">Bed Linen</span></div>' +
+      '<div class="ds-card"><span class="utag">Status Text</span>' + DS.Status.Waiting({ lg: true, label: L('Menunggu Diterima', 'Waiting to Receive') }) + '</div></div>' });
+
+  /* 4. Copywriting */
+  h += P3.section({ id: 'copy', n: 4, title: L('Panduan Penulisan (Copywriting)', 'Copywriting Guide'), desc: L('Bahasa Indonesia sederhana adalah default; English tersedia lewat tombol ID | EN.', 'Simple Indonesian is the default; English is available through the ID | EN switch.'),
+    body: P3.dodont(L('Gunakan bahasa sederhana', 'Use simple words'), [L('Terima Cucian', 'Receive Laundry'), L('Mulai Proses', 'Start Process'), L('Selesai', 'Done'), L('Ada Masalah', 'Report Issue'), L('Siap Dikirim', 'Ready to Ship'), L('Lihat Detail', 'View Detail'), L('Berat wajib diisi.', 'Weight is required.'), L('SLA hampir habis.', 'SLA almost due.'), L('Cucian berhasil diterima.', 'Laundry received.')],
+        L('Hindari istilah teknis', 'Avoid technical terms'), [L('Process Initiation', 'Process Initiation'), L('Transaction Submission', 'Transaction Submission'), L('Exception Handling', 'Exception Handling'), L('Data Retrieval', 'Data Retrieval'), L('System Generated Report', 'System Generated Report'), L('Initialize Workflow', 'Initialize Workflow'), L('Error 422: validation failed', 'Error 422: validation failed')]) +
+      '<div class="p3-grid" style="--cols:2;margin-top:16px">' +
+        '<div class="msg b">' + ic('xc') + '<span>' + t(L('“Anda dapat melanjutkan proses penerimaan laundry dengan memilih tombol berikut.”', '“You may proceed with the laundry receiving process by selecting the following button.”')) + '</span></div>' +
+        '<div class="msg g">' + ic('checkc') + '<span>' + DS.Button.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package' }) + '</span></div></div>' +
+      '<div class="p3-grid" style="--cols:3;margin-top:16px">' +
+        P3.block(L('Bahasa', 'Language'), '<p class="note">' + t(L('Default ID. Pilihan disimpan per browser.', 'Default ID. The choice is stored per browser.')) + '</p>') +
+        P3.block(L('Yang berubah', 'What changes'), '<p class="note">' + t(L('Hanya teks antarmuka: label, tombol, pesan, placeholder.', 'Interface copy only: labels, buttons, messages, placeholders.')) + '</p>') +
+        P3.block(L('Yang tidak berubah', 'What never changes'), '<p class="note">' + t(L('Data, izin, status transaksi dan posisi workflow.', 'Data, permissions, transaction status and workflow position.')) + '</p>') + '</div>' });
+
+  /* 5. Hierarchy */
+  h += P3.section({ id: 'hierarchy', n: 5, title: L('Hierarki Informasi dalam Kartu Operasional', 'Information Hierarchy in an Operational Card'),
+    body: '<div class="hier"><ol>' +
+      [[L('Identitas utama', 'Main identity'), L('klien & order', 'client & order')], [L('Informasi penting', 'Key numbers'), L('berat & bag', 'weight & bags')], [L('Status & SLA', 'Status & SLA')], [L('Catatan (jika ada)', 'Note (if any)')], [L('Aksi utama (CTA)', 'Main action (CTA)')], [L('Aksi sekunder', 'Secondary action')]].map(function (x) { return '<li><span>' + t(x[0]) + (x[1] ? '<small>' + t(x[1]) + '</small>' : '') + '</span></li>'; }).join('') + '</ol>' +
+      '<div class="ds-card ds-card--lg ds-stack ds-ops"><div class="ds-row ds-row--between"><div><h3 class="ds-h3">Hotel ABC</h3><span class="ds-caption ds-tabular">#RCV2024-00123</span></div><div class="ds-row">' + DS.Status.Waiting() + '<b class="ds-tabular">10:42</b></div></div>' +
+      '<div class="trio" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><span class="ds-num" style="font-size:var(--jf-fs-h1)">82.4 kg</span><span class="ds-caption">' + t(L('Berat Total', 'Total Weight')) + '</span></div><div><span class="ds-num" style="font-size:var(--jf-fs-h1)">8</span><span class="ds-caption">' + t(L('Jumlah Bag', 'Bag Count')) + '</span></div><div>' + DS.Status.Risk({ label: L('SLA 5 jam 18 menit', 'SLA 5 h 18 min') }) + '</div></div>' +
+      DS.Feedback.Inline({ type: 'info', text: L('Linen kamar, handuk, bath mat. Mohon pisahkan linen putih.', 'Room linen, towels, bath mats. Please separate white linen.') }) +
+      DS.Button.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', size: 'lg', block: true }) + DS.Button.Secondary({ label: L('Ada Masalah', 'Report Issue'), icon: 'alert', block: true }) + '</div></div>' });
+
+  /* 6. Readable sizes */
+  function trio() { return '<div class="trio"><div><span class="ds-caption">' + t(L('Berat Total', 'Total Weight')) + '</span><b class="ds-num" style="font-size:var(--jf-fs-h2)">82.4 kg</b></div><div><span class="ds-caption">' + t(L('Jumlah Bag', 'Bags')) + '</span><b class="ds-num" style="font-size:var(--jf-fs-h2)">8</b></div><div><span class="ds-caption">' + t(L('Jenis Cucian', 'Type')) + '</span><b class="ds-h3">Bed Linen</b></div></div>'; }
+  h += P3.section({ id: 'readable', n: 6, title: L('Perbandingan Ukuran yang Mudah Dibaca', 'Readable vs Hard-to-read Sizes'),
+    body: '<div class="cmp"><div class="good ds-ops"><h4>' + ic('checkc') + t(L('Ukuran yang direkomendasikan', 'Recommended sizes')) + '</h4>' + trio() + DS.Button.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', size: 'lg', block: true }) +
+      P3.rules('do', [L('Angka utama besar dan jelas', 'Main numbers large and clear'), L('Cukup ruang antar elemen', 'Enough space between elements'), L('Mudah dibaca staf di area produksi', 'Readable for staff on the production floor'), L('Nyaman disentuh dengan jari', 'Comfortable to tap with a finger')]) + '</div>' +
+      '<div class="bad"><h4>' + ic('xc') + t(L('Ukuran yang tidak direkomendasikan', 'Not recommended')) + '</h4>' + trio() + DS.Button.Primary({ label: L('Terima Cucian', 'Receive Laundry'), icon: 'package', block: true }) +
+      P3.rules('dont', [L('Teks terlalu kecil', 'Text too small'), L('Ruang terlalu padat', 'Too cramped'), L('Sulit dibaca staf', 'Hard for staff to read'), L('Tidak nyaman untuk disentuh', 'Uncomfortable to tap')]) + '</div></div>' });
+
+  /* 7. Numbers */
+  h += P3.section({ id: 'numbers', n: 7, title: L('Angka & Satuan', 'Numbers & Units'), desc: L('Angka operasional penting tampil dominan: angka besar + label kecil. Jangan sembunyikan di paragraf.', 'Important operational numbers are dominant: large number + small label. Never buried in a paragraph.'),
+    body: '<div class="numdemo">' + [['82.4', 'kg', L('Berat Total', 'Total Weight')], ['8', 'Bag', L('Jumlah Bag', 'Bag Count')], ['96', '%', L('SLA On-Time', 'SLA On-Time')], ['Rp125.4', 'jt', 'Revenue'], ['12.5', 'ton', L('Total Cucian', 'Total Laundry')]].map(function (n) {
+      return '<div class="ds-card ds-numblock"><span class="ds-num">' + n[0] + '<small>' + n[1] + '</small></span><span class="ds-caption">' + t(n[2]) + '</span></div>'; }).join('') + '</div>' +
+      P3.table([L('Aturan', 'Rule'), L('Contoh', 'Example')], [[L('Angka tabular (lebar sama) di tabel dan KPI', 'Tabular figures in tables and KPIs'), '<span class="ds-tabular">1.200 · 800 · 50</span>'], [L('Rupiah: Rp tanpa spasi, jt untuk juta di ringkasan', 'Rupiah: Rp without space, jt for million in summaries'), 'Rp125.4 jt · Rp8.500/kg'], [L('Satuan lebih kecil dari angka', 'Unit smaller than the number'), '<span class="ds-num" style="font-size:var(--jf-fs-h2)">82.4<small>kg</small></span>'], [L('Tanggal ringkas', 'Short dates'), '25 Sep 2024, 08:15']]) });
+
+  h += P3.ref('np02-typography.jpg');
+  P3.mount('#page', h);
+})();
+</script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
+</body>
+</html>

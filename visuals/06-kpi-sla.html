@@ -6,13 +6,13 @@
 <title>JFRESH OS — Performance &amp; SLA Architecture</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="../assets/css/jfresh.css">
 <style>
   .layers4 { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr); align-items: stretch; }
   .lyr { border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--white); padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
   .lyr-h { display: flex; gap: 10px; align-items: center; }
-  .lyr-h .n { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--blue); color: var(--white); font-weight: 800; }
+  .lyr-h .n { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--blue); color: var(--white); font-weight: 700; }
   .lyr-h h3 { font-size: 16.5px; }
   .lyr-h h3 small { display: block; font-size: 13px; font-weight: 500; color: var(--muted); }
   .lyr.l4 { border-color: var(--orange-100); background: linear-gradient(180deg, var(--orange-50), var(--white) 50%); }
@@ -62,13 +62,13 @@
   .dash-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
   .kpis.k6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .alerts2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-  .alerts2 .alert-card .num-big { font-size: 34px; font-weight: 800; line-height: 1; color: var(--warn); }
+  .alerts2 .alert-card .num-big { font-size: 34px; font-weight: 700; line-height: 1; color: var(--warn); }
   .alerts2 .alert-card.crit .num-big { color: var(--crit); }
   .orders { display: grid; gap: 10px; }
   .order { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px 14px; align-items: center; padding: 12px 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--white); min-height: 64px; }
   .order .id { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 700; color: var(--muted); }
   .order b { display: block; color: var(--blue-ink); font-size: 16.5px; }
-  .order .t { font-weight: 800; font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
+  .order .t { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 64px; text-align: right; }
 
   @media (max-width: 1239px) {
     .sla-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }

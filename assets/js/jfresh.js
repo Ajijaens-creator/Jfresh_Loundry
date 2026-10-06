@@ -7,7 +7,7 @@
   var body = document.body;
   var ROOT = body.getAttribute('data-root') || '';
   var CURRENT = parseInt(body.getAttribute('data-visual') || '0', 10);
-  var PHASE = body.getAttribute('data-phase') === '2' ? 2 : 1;
+  var PHASE = parseInt(body.getAttribute('data-phase') || '1', 10) || 1;
 
   var VISUALS = [
     { n: 1, f: '01-business-model.html', t: 'Business Model Overview', id: 'Siapa dilayani, nilai, alur & pendapatan', en: 'Who we serve, value, flow & revenue', ic: 'briefcase' },
@@ -20,8 +20,13 @@
   ];
   // Phase 2 pages (NP-01 … NP-06) come from the shared config in jfos-config.js
   var NP = (window.JFOS && window.JFOS.NP || []).map(function (p, i) { return { n: i + 1, f: p.f, t: p.t[1], code: p.k, id: p.d[0], en: p.d[1], ic: p.ic }; });
-  var PAGES = PHASE === 2 ? NP : VISUALS;
-  var CH = PHASE === 2 ? {
+  // Phase 3 pages (NP-01 … NP-07 Design System) come from assets/js/jfos-ds-docs.js
+  var DSP = (window.JFDS && window.JFDS.PAGES || []).map(function (p, i) { return { n: i + 1, f: p.f, t: p.t[1], code: p.k, id: p.d[0], en: p.d[1], ic: p.ic }; });
+  var PAGES = PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
+  var CH = PHASE === 3 ? {
+    dir: 'phase3/', home: 'phase3/index.html', sub: ['Fase 3 · Design System', 'Phase 3 · Design System'], ov: ['Ringkasan Fase 3', 'Phase 3 overview'],
+    menu: ['7 Dokumen NP', '7 NP Docs'], all: ['Semua dokumen Fase 3', 'All Phase 3 docs'], foot: ['Fase 3 Design System · NP Versi 1.0', 'Phase 3 Design System · NP Version 1.0'], num: function (v) { return v.code.replace('NP-', ''); }
+  } : PHASE === 2 ? {
     dir: 'phase2/', home: 'phase2/index.html', sub: ['Fase 2 · Struktur & Navigasi', 'Phase 2 · Structure & Navigation'], ov: ['Ringkasan Fase 2', 'Phase 2 overview'],
     menu: ['6 Dokumen NP', '6 NP Docs'], all: ['Semua dokumen Fase 2', 'All Phase 2 docs'], foot: ['Fase 2 Struktur & Navigasi · NP Versi 1.0', 'Phase 2 Structure & Navigation · NP Version 1.0'], num: function (v) { return v.code.replace('NP-', ''); }
   } : {
@@ -59,10 +64,14 @@
   /* ---------- Chrome: top bar + pager ---------- */
   function topbar() {
     var items = '<a class="home" href="' + ROOT + CH.home + '"' + (CURRENT === 0 ? ' aria-current="page"' : '') + '>' + ic('grid') + tx(CH.ov) + '</a>' +
-      (PHASE === 2 ? '<a class="home" href="' + ROOT + 'app/index.html">' + ic('phone') + '<span data-en="Open JFRESH OS app">Buka aplikasi JFRESH OS</span></a>' +
-        '<a class="home" href="' + ROOT + 'phase2/traceability.html">' + ic('link') + '<span data-en="Traceability matrix">Matriks traceability</span></a>' : '') +
+      (PHASE === 3 ? '<a class="home" href="' + ROOT + 'phase3/docs.html">' + ic('component') + '<span data-en="Component documentation">Dokumentasi komponen</span></a>' +
+        '<a class="home" href="' + ROOT + 'phase3/traceability.html">' + ic('link') + '<span data-en="Design traceability">Traceability desain</span></a>' : '') +
+      (PHASE >= 2 ? '<a class="home" href="' + ROOT + 'app/index.html">' + ic('phone') + '<span data-en="Open JFRESH OS app">Buka aplikasi JFRESH OS</span></a>' : '') +
+      (PHASE === 2 ? '<a class="home" href="' + ROOT + 'phase2/traceability.html">' + ic('link') + '<span data-en="Traceability matrix">Matriks traceability</span></a>' : '') +
       '<a class="home" href="' + ROOT + 'preview.html">' + ic('monitor') + '<span data-en="Device preview">Pratinjau perangkat</span></a>' +
-      '<a class="home" href="' + ROOT + (PHASE === 2 ? 'index.html' : 'phase2/index.html') + '">' + ic('layers') + (PHASE === 2 ? '<span data-en="Phase 1 Business Foundation">Fase 1 Fondasi Bisnis</span>' : '<span data-en="Phase 2 Structure &amp; Navigation">Fase 2 Struktur &amp; Navigasi</span>') + '</a>';
+      (PHASE !== 1 ? '<a class="home" href="' + ROOT + 'index.html">' + ic('layers') + '<span data-en="Phase 1 Business Foundation">Fase 1 Fondasi Bisnis</span></a>' : '') +
+      (PHASE !== 2 ? '<a class="home" href="' + ROOT + 'phase2/index.html">' + ic('layers') + '<span data-en="Phase 2 Structure &amp; Navigation">Fase 2 Struktur &amp; Navigasi</span></a>' : '') +
+      (PHASE !== 3 ? '<a class="home" href="' + ROOT + 'phase3/index.html">' + ic('palette') + '<span data-en="Phase 3 Design System">Fase 3 Design System</span></a>' : '');
     PAGES.forEach(function (v) {
       items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">' + CH.num(v) + '</span><span>' + esc(v.t) + '</span></a>';
     });
