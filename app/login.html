@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>JFRESH OS</title>
-<meta name="description" content="JFRESH OS: role-based app shell with secure access (working prototype).">
+<title>Masuk · JFRESH OS</title>
+<meta name="description" content="Masuk ke JFRESH OS, sistem operasional J'Fresh Laundry.">
 <meta name="theme-color" content="#0754A6">
 <link rel="icon" href="../assets/brand/jfresh-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,21 +12,30 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="../assets/css/jfresh.css">
 <link rel="stylesheet" href="../assets/css/jfos-ds.css">
-<link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="access.css">
 </head>
-<body class="app">
-<div id="app" aria-live="off"></div>
+<body class="auth">
+<div class="au" id="au">
+  <section class="au-brand" aria-hidden="true">
+    <div class="au-bubbles"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="au-brand__in">
+      <img class="au-logo" src="../assets/brand/jfresh-logo.png" alt="" width="605" height="373">
+      <p class="au-tag">Clean People. <b>Better Tomorrow.</b></p>
+      <p class="au-sub" data-en="Laundry management that is simple and connected">Sistem manajemen laundry yang sederhana dan terintegrasi</p>
+    </div>
+    <div class="au-wave"></div>
+  </section>
+  <main class="au-main" id="main">
+    <div class="au-card" id="card" aria-live="polite"></div>
+    <ul class="au-trust" id="trust"></ul>
+    <aside class="au-demo" id="demo" aria-label="Demo"></aside>
+  </main>
+</div>
 <noscript><p style="padding:24px">JFRESH OS membutuhkan JavaScript. · JFRESH OS needs JavaScript.</p></noscript>
 <script src="../assets/js/icons.js"></script>
 <script src="../assets/js/jfos-config.js"></script>
 <script src="../assets/js/jfos-ds.js"></script>
 <script src="../assets/js/jfos-access.js"></script>
-<script src="data.js"></script>
-<script src="app.js"></script>
-<script src="screens-ops.js"></script>
-<script src="screens-mgmt.js"></script>
-<script src="screens-access.js"></script>
-<script>JFAPP.start();</script>
+<script src="login.js"></script>
 </body>
 </html>

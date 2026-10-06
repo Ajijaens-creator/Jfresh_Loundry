@@ -93,18 +93,21 @@
       var r = A.R(), wait = orders('receive'), proc = active().filter(function (o) { return ['sort', 'wash', 'qc', 'pack'].indexOf(o.stage) >= 0; });
       var iss = A.db().issues.filter(function (i) { return i.status === 'open'; }), late = active().filter(function (o) { return o.dueAt < A.now(); });
       var queues = ['receive', 'sort', 'wash', 'qc', 'pack'].filter(function (k) { return can(STAGE_SCREENS[k].p); });
-      return '<div class="hello"><h1>' + t(A.greet()) + ', ' + esc(r.person) + '</h1><p>' + t(r.title) + ' · ' + esc(r.site) + '</p></div>' +
+      var ready = orders('deliver');
+      return '<div class="hello"><h1>' + t(A.greet()) + ', ' + esc(r.person) + '</h1><p>' + t(r.title) + ' · ' + esc(r.site) + '</p><p class="hello-q">' + t(L('Apa yang harus saya kerjakan sekarang?', 'What should I do now?')) + '</p></div>' +
         A.attn([
-          { v: wait.length, k: L('Cucian Menunggu', 'Loads Waiting'), icon: 'basket', tone: 'info', go: 'OPS-RCV-002' },
-          { v: proc.length, k: L('Sedang Diproses', 'In Process'), icon: 'washer', tone: 'info', go: 'OPS-TSK-001' },
+          { v: wait.length, k: L('Menunggu', 'Waiting'), icon: 'basket', tone: 'info', go: 'OPS-RCV-002' },
+          { v: proc.length, k: L('Diproses', 'In Process'), icon: 'washer', tone: 'info', go: 'OPS-TSK-001' },
           { v: iss.length, k: L('Ada Masalah', 'Issues'), icon: 'alert', tone: iss.length ? 'warn' : 'ok', go: 'OPS-ISS-001' },
-          { v: late.length, k: L('Terlambat', 'Late'), icon: 'clock', tone: late.length ? 'crit' : 'ok', go: 'OPS-TSK-001' }
-        ]) +
+          { v: ready.length, k: L('Siap Dikirim', 'Ready to Ship'), icon: 'truck', tone: late.length ? 'warn' : 'ok', d: late.length ? T(L(late.length + ' terlambat', late.length + ' late')) : '', go: 'OPS-TSK-001' }
+        ].filter(function (x) { return can(C.screen(x.go).p); })) +
         (can('ops.receive') ? '<a class="cta" href="' + href('OPS-RCV-002') + '"><span class="cta-ic">' + ic('scale') + '</span><span class="cta-t"><b>' + t(L('Terima Cucian', 'Receive Laundry')) + '</b><small>' + t(L(wait.length + ' cucian menunggu · pilih lalu timbang', wait.length + ' loads waiting · pick, then weigh')) + '</small></span>' + ic('arrow') + '</a>' : '') +
         A.section(L('Tugas Saya Hari Ini', 'My Tasks Today'), '<div class="rls">' + queues.map(function (k) {
           var n = orders(k).length, u = orders(k).filter(urgent).length;
           return A.rowLink({ href: href(STAGE_SCREENS[k].q), icon: A.stage(k).i, t: t(C.screen(STAGE_SCREENS[k].q).n), s: u ? t(L(u + ' mendesak', u + ' urgent')) : t(L('Tidak ada yang mendesak', 'Nothing urgent')), n: n, tone: u ? 'warn' : '' });
-        }).join('') + '</div>', { icon: 'clipboard', link: ['OPS-TSK-001', L('Lihat Tugas', 'View Tasks')] });
+        }).join('') + '</div>', { icon: 'clipboard', link: can('ops.receive') || can('ops.sort') ? ['OPS-TSK-001', L('Lihat Tugas', 'View Tasks')] : null }) +
+        '<div class="row3">' + [['OPS-TSK-001', L('Tugas Saya', 'My Tasks'), 'clipboard'], ['OPS-HIS-001', L('Riwayat', 'History'), 'history'], ['OPS-ISS-001', L('Ada Masalah', 'Report Issue'), 'alert']]
+          .filter(function (x) { return can(C.screen(x[0]).p); }).map(function (x) { return A.btn('ghost', x[1], x[2], { go: x[0] }); }).join('') + '</div>';
     }
   };
   V['HOM-DRV-001'] = {
@@ -117,14 +120,21 @@
         nx = '<section class="next"><span class="next-k">' + ic(isP ? 'package' : 'truck') + t(isP ? L('Stop berikutnya · Pickup', 'Next stop · Pickup') : L('Stop berikutnya · Pengiriman', 'Next stop · Delivery')) + '</span>' +
           '<h2>' + esc(A.cname(o.cl)) + '</h2><p>' + ic('pin') + esc(pr.n) + '</p>' +
           '<div class="next-m"><span><small>' + t(L('Jadwal', 'Scheduled')) + '</small><b class="num">' + fmt.time(isP ? o.pickupAt : o.deliverAt) + '</b></span><span><small>' + t(L('Bag', 'Bags')) + '</small><b class="num">' + o.bags + '</b></span>' + (isP && o.pickupAt < A.now() ? A.chip('warn', L('Terlambat ' + fmt.dur(A.now() - o.pickupAt).s, 'Late ' + fmt.dur(A.now() - o.pickupAt).s), 'clock') : '') + '</div>' +
-          A.btn('primary', isP ? L('Mulai Pickup', 'Start Pickup') : L('Mulai Pengiriman', 'Start Delivery'), 'play', { go: isP ? 'OPS-PKP-001' : 'OPS-DLV-001', rec: o.id, cls: 'w100' }) + '</section>';
+          A.btn('primary', L('Mulai Rute', 'Start Route'), 'play', { go: isP ? 'OPS-PKP-001' : 'OPS-DLV-001', rec: o.id, cls: 'w100' }) + '</section>';
       }
+      // §19 Driver: today's route — time, destination, type, status, contact.
+      var stops = pk.map(function (o) { return { o: o, at: o.pickupAt, p: true }; }).concat(dl.map(function (o) { return { o: o, at: o.deliverAt, p: false }; })).sort(function (a, b) { return a.at - b.at; });
+      var route = stops.length ? '<div class="rls">' + stops.slice(0, 6).map(function (x) {
+        var c = DB.client(x.o.cl), late = x.at < A.now();
+        return A.rowLink({ href: href(x.p ? 'OPS-PKP-001' : 'OPS-DLV-001', x.o.id), icon: x.p ? 'package' : 'truck', t: '<span class="num">' + fmt.time(x.at) + '</span> · ' + esc(DB.prop(x.o.prop).n),
+          s: t(x.p ? L('Pickup', 'Pickup') : L('Pengiriman', 'Delivery')) + ' · ' + esc(c ? c.pic + ' · ' + c.phone : '') + '</span><span class="rt-st">' + (late ? A.chip('crit', L('Terlambat', 'Late'), 'clock') : A.chip('info', L('Terjadwal', 'Scheduled'), 'calendar')), tone: late ? 'crit' : '' });
+      }).join('') + '</div>' : A.empty(C.screen('HOM-DRV-001').emp);
       return '<div class="hello"><h1>' + t(L('Halo', 'Hello')) + ', ' + esc(r.person) + '</h1><p>' + t(L('Armada', 'Vehicle')) + ' ' + esc(r.site.replace('Armada ', '')) + ' · ' + esc(fmt.date(A.now())) + '</p></div>' +
         A.attn([
           { v: pk.length, k: L('Pickup Tersisa', 'Pickups Left'), icon: 'package', tone: 'info', go: 'OPS-PKP-002' },
           { v: dl.length, k: L('Pengiriman Tersisa', 'Deliveries Left'), icon: 'truck', tone: 'info', go: 'OPS-DLV-002' },
           { v: pk.filter(function (o) { return o.pickupAt < A.now(); }).length, k: L('Terlambat', 'Late'), icon: 'clock', tone: pk.some(function (o) { return o.pickupAt < A.now(); }) ? 'crit' : 'ok', go: 'LOG-RTE-001' }
-        ]) + (nx || A.empty(C.screen('HOM-DRV-001').emp)) +
+        ]) + (nx || '') + A.section(L('Rute Hari Ini', 'Today\'s Route'), route, { icon: 'route', count: stops.length, link: ['LOG-RTE-001', L('Peta rute', 'Route map')] }) +
         '<div class="row2">' + A.btn('ghost', L('Lihat Rute', 'View Route'), 'route', { go: 'LOG-RTE-001' }) + A.btn('ghost', L('Ada Masalah', 'Report Issue'), 'alert', { go: 'OPS-ISS-001' }) + '</div>';
     }
   };
@@ -138,13 +148,16 @@
       var sc = stageCounts().filter(function (x) { return x.k !== 'pickup' && x.k !== 'deliver'; }), mx = Math.max.apply(null, sc.map(function (x) { return x.v; }));
       sc.forEach(function (x) { x.hi = x.v === mx; x.go = STAGE_SCREENS[x.k].q; });
       var team = A.db().staff.filter(function (s) { return s.present && s.st !== 'driver'; });
-      return A.pageHead(L('Hari Ini', 'Today'), esc(fmt.date(A.now())) + ' · Plant Denpasar', A.pbtn('qlt.review', 'primary', L('Tinjau Masalah', 'Review Issues'), 'alert', { go: 'QLT-ISS-001' }) + A.pbtn('ops.board', 'ghost', L('Lihat Papan', 'Open Board'), 'grid', { go: 'OPS-BRD-001' })) +
+      var ready = orders('deliver');
+      return A.pageHead(L('Operasional Hari Ini', 'Operations Today'), esc(fmt.date(A.now())) + ' · ' + esc(A.R().site), A.pbtn('qlt.review', 'primary', L('Tinjau Masalah', 'Review Issues'), 'alert', { go: 'QLT-ISS-001' }) + A.pbtn('ops.board', 'ghost', L('Lihat Papan', 'Open Board'), 'grid', { go: 'OPS-BRD-001' })) +
         A.attn([
           { v: act.length, k: L('Total Beban Kerja', 'Total Workload'), icon: 'layers', tone: 'info', go: 'OPS-BRD-001' },
           { v: wait.length, k: L('Menunggu', 'Waiting'), icon: 'hourglass', tone: 'info', go: 'OPS-RCV-002' },
           { v: risk.length, k: L('Risiko SLA', 'SLA Risk'), icon: 'clock', tone: risk.length ? 'crit' : 'ok', go: 'SLA-MON-001' },
-          { v: rew.length, k: L('Rewash', 'Rewash'), icon: 'refresh', tone: rew.length ? 'warn' : 'ok', go: 'QLT-ISS-001' }
-        ].concat(A.aprCount() ? [{ v: A.aprCount(), k: L('Menunggu Persetujuan', 'Awaiting Approval'), icon: 'filecheck', tone: 'warn', go: 'APR-INB-001' }] : [])) +
+          { v: iss.length, k: L('Ada Masalah', 'Issues'), icon: 'alert', tone: iss.length ? 'warn' : 'ok', go: 'QLT-ISS-001' },
+          { v: ready.length, k: L('Siap Dikirim', 'Ready to Ship'), icon: 'truck', tone: 'info', go: 'OPS-DLV-002' }
+        ].concat(A.aprCount() ? [{ v: A.aprCount(), k: L('Menunggu Persetujuan', 'Awaiting Approval'), icon: 'filecheck', tone: 'warn', go: 'APR-INB-001' }] : []).filter(function (x) { return can(C.screen(x.go).p); })) +
+        A.section(L('Perlu Perhatian', 'Needs Attention'), A.alertList(A.alerts().concat(rew.length ? [{ tone: 'warn', icon: 'refresh', t: L(rew.length + ' order rewash', rew.length + ' rewash orders'), go: 'QLT-ISS-001' }] : [])), { icon: 'bell' }) +
         '<div class="grid2">' +
         A.section(L('Bottleneck', 'Bottleneck'), '<p class="hint">' + t(L('Tahap dengan antrian terbesar disorot.', 'The stage with the longest queue is highlighted.')) + '</p>' + A.hbars(sc), { icon: 'factory' }) +
         A.section(L('SLA Berisiko', 'SLA at Risk'), risk.length ? '<div class="qcs">' + risk.slice(0, 4).map(function (o) { return qcard(o, 'OPS-TRK-001'); }).join('') + '</div>' : A.empty(L('Semua order on-time.', 'All orders on time.')), { icon: 'clock', count: risk.length, link: ['SLA-MON-001', L('Semua', 'All')] }) +

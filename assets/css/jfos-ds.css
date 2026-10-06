@@ -101,6 +101,10 @@
 .ds-btn.is-loading { color: transparent; pointer-events: none; }
 .ds-btn.is-loading > * { visibility: hidden; }
 .ds-btn.is-loading::after { content: ""; position: absolute; width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid var(--b-fg); border-right-color: transparent; animation: ds-spin .8s linear infinite; }
+.ds-btn.is-busy { pointer-events: none; opacity: .92; }
+.ds-btn--primary.is-busy:disabled { --b-bg: var(--jf-cta-pressed); --b-fg: var(--jf-text-on-cta); --b-bd: var(--jf-cta-pressed); cursor: progress; }
+.ds-btn.is-busy > .i { display: none; }
+.ds-btn.is-busy::before { content: ""; flex: none; width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid currentColor; border-right-color: transparent; animation: ds-spin .8s linear infinite; }
 .ds-btn--primary.is-loading::after { border-color: var(--jf-text-on-cta); border-right-color: transparent; }
 @keyframes ds-spin { to { transform: rotate(360deg); } }
 /* Frontline primary CTA: full width on iPad and mobile */
@@ -132,6 +136,9 @@
 .ds-control__icon + input { padding-left: var(--jf-space-2); }
 .ds-control__end { display: grid; place-items: center; padding-inline: var(--jf-space-3); color: var(--jf-text-muted); pointer-events: none; }
 .ds-control__unit { display: grid; place-items: center; padding-inline: var(--jf-space-4); border-left: 1.5px solid var(--jf-border); color: var(--jf-text-muted); font-weight: var(--jf-weight-semibold); background: var(--jf-surface-page); border-radius: 0 var(--jf-radius-control) var(--jf-radius-control) 0; }
+.ds-control__reveal { flex: none; display: grid; place-items: center; width: var(--jf-touch); min-height: var(--jf-touch); margin-right: 2px; border: 0; border-radius: var(--jf-radius-control); background: transparent; color: var(--jf-text-muted); cursor: pointer; }
+.ds-control__reveal:hover { color: var(--jf-brand-deep); background: var(--jf-surface-page); }
+.ds-control__reveal:focus-visible { outline: 3px solid var(--jf-focus-ring); outline-offset: -3px; }
 .ds-control__state { display: grid; place-items: center; padding-right: var(--jf-space-3); }
 .ds-control--lg { min-height: var(--jf-input-h-lg); }
 .ds-control--lg input { font-size: var(--jf-fs-number); font-weight: var(--jf-weight-bold); color: var(--jf-text-strong); font-variant-numeric: tabular-nums; }
@@ -321,7 +328,7 @@
 .ds-spinner { width: 40px; height: 40px; border-radius: 50%; border: 4px solid var(--jf-brand-deep-100); border-top-color: var(--jf-brand-deep); animation: ds-spin .9s linear infinite; }
 .ds-skeleton { display: block; border-radius: var(--jf-radius-control); background: linear-gradient(90deg, var(--jf-surface-page-2) 25%, var(--jf-surface-page) 50%, var(--jf-surface-page-2) 75%); background-size: 200% 100%; animation: ds-shimmer 1.4s linear infinite; }
 @keyframes ds-shimmer { to { background-position: -200% 0; } }
-@media (prefers-reduced-motion: reduce) { .ds-skeleton, .ds-spinner, .ds-btn.is-loading::after { animation-duration: 3s; } }
+@media (prefers-reduced-motion: reduce) { .ds-skeleton, .ds-spinner, .ds-btn.is-loading::after, .ds-btn.is-busy::before { animation-duration: 3s; } }
 
 /* ---------- Data display (NP-04 · Data.*) ---------- */
 .ds-tablewrap { overflow-x: auto; border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); }
