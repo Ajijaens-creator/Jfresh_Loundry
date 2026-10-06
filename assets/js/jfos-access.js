@@ -295,12 +295,13 @@
       var main = items.filter(function (n) { return n.k !== 'menu'; }).slice(0, 4), menu = items.filter(function (n) { return n.k === 'menu'; });
       return main.concat(menu);
     }
-    return R.nav.filter(ok);
+    // Phase 5: a group (item with sub) keeps only the screens this user can open; empty groups drop out.
+    return R.nav.map(function (n) { return n.sub ? Object.assign({}, n, { sub: n.sub.filter(ok) }) : n; }).filter(function (n) { return n.sub ? n.sub.length > 0 : ok(n); });
   };
   X.landing = function (ctx) {
     var want = ctx.role.landing;
     if (X.canScreen(ctx, want)) return want;
-    return ctx.nav[0] ? ctx.nav[0].s : null;
+    var first = ctx.nav[0]; return first ? (first.sub ? first.sub[0].s : first.s) : null;
   };
   // Phase 4 screens join the Phase 2 screen index (registered by registerScreens)
   X.canScreen = function (ctx, id) {

@@ -1,0 +1,37 @@
+/* Phase 5 overview: open items, NP-01 … NP-10, five scores, demo accounts, rules, backend note, Definition of Done, visuals */
+(function () {
+  var DS = JFDS, D = JFPERF_DOCS, X = JFACCESS, L = DS.L, t = DS.t, ic = DS.ic, esc = DS.esc, B = DS.Button;
+  document.getElementById('herobtns').innerHTML = B.Primary({ label: L('Buka Business Health', 'Open Business Health'), icon: 'arrow', href: D.go('owner', 'HOM-EXE-001') }) +
+    B.Secondary({ label: L('Spesifikasi layar', 'Screen specifications'), icon: 'file', href: 'screens.html' }) +
+    B.Ghost({ label: L('Kasus uji', 'Test cases'), icon: 'checkc', href: 'tests.html' });
+  var h = '';
+  h += P3.section({ id: 'open', icon: 'alert', title: L('Menunggu dari Anda', 'Waiting on you'), desc: L('Dua hal yang belum diterima.', 'Two things not received yet.'),
+    body: '<div style="display:grid;gap:var(--jf-space-3)">' + [D.NOTES.truncated, D.NOTES.nv02].map(function (n) { return '<div class="p4-note">' + ic('alert') + '<p>' + t(n) + '</p></div>'; }).join('') + '</div>' });
+  h += P3.section({ id: 'np', icon: 'layers', title: L('10 Bagian NP Fase 5', 'The 10 Phase 5 NP parts'), desc: L('Semua berjalan di aplikasi. Klik untuk langsung ke bagiannya.', 'All of it runs in the app. Click to jump to a part.'),
+    body: '<div class="p4-np">' + D.NP.map(function (n) { return '<a href="#' + n.id + '"><span class="l">' + ic(n.ic) + '</span><small>' + n.k + ' · ' + n.v + '</small><b>' + t(n.t) + '</b></a>'; }).join('') + '</div>' });
+  h += P3.section({ id: 'scores', icon: 'gauge', title: L('Lima skor, lima arti', 'Five scores, five meanings'), desc: L('Setiap skor punya satu arti dan satu layar. Semua dihitung oleh assets/js/jfos-perf.js.', 'Each score has one meaning and one screen. All are computed by assets/js/jfos-perf.js.'),
+    body: P3.table([L('Skor', 'Score'), L('Arti', 'Meaning'), L('Layar', 'Screen')], D.SCORES.map(function (s) { return ['<b>' + esc(s[0]) + '</b>', s[1], '<a href="screens.html#' + s[2] + '"><code class="p3-code">' + s[2] + '</code></a>']; })) });
+  h += P3.section({ id: 'drill', icon: 'route', title: L('Alur drill-down', 'Drill-down path'), desc: L('Dari angka besar sampai bukti di lapangan, di setiap layar skor.', 'From the headline number down to field evidence, on every score screen.'),
+    body: '<div class="p4-flow">' + [L('Business Health', 'Business Health'), L('Pilar', 'Pillar'), 'KPI', L('Tim', 'Team'), L('User', 'User'), 'Race', L('Bukti', 'Evidence')].map(function (s, i) { return (i ? ic('arrow') : '') + '<span>' + t(s) + '</span>'; }).join('') + '</div>' });
+  D.NP.forEach(function (n, i) {
+    h += P3.section({ id: n.id, n: String(i + 1).padStart(2, '0'), title: L(n.k + ' · ' + n.t[0], n.k + ' · ' + n.t[1]), desc: n.d,
+      body: '<div class="p4-two"><div style="display:grid;gap:var(--jf-space-4);min-width:0">' + P5.list(n.built) + P5.links(n.links) + '</div><div style="min-width:0">' + P5.ref(n.v) + '</div></div>' });
+  });
+  h += P3.section({ id: 'demo', icon: 'users', title: L('Akun demo', 'Demo accounts'), desc: L('Password semua akun: jfresh123. Setiap peran melihat menu Fase 5 sesuai haknya.', 'Every account uses jfresh123. Each role sees the Phase 5 menus its rights allow.'),
+    body: P3.table([L('Username', 'Username'), L('Peran', 'Role'), L('Yang terlihat di Fase 5', 'What Phase 5 shows')], [
+      ['aji', L('Owner / CEO', 'Owner / CEO'), L('Semua: Business Health, Financial Health, goal, KPI, XScore, tim, HR, race, R2RE, refleksi, brief, keputusan, laporan', 'Everything: Business Health, Financial Health, goals, KPIs, XScore, teams, HR, races, R2RE, reflection, brief, decisions, reports')],
+      ['budi', 'Finance', L('Financial Health dengan rekening, Daily Race, goal, Teamwork Score, Kinerja Saya', 'Financial Health with accounts, Daily Race, goals, Teamwork Score, My Performance')],
+      ['saras', 'Supervisor', L('Race, R2RE, refleksi, Teamwork Score, kinerja tim yang dipimpin, Kinerja Saya', 'Races, R2RE, reflection, Teamwork Score, performance of teams led, My Performance')],
+      ['made', 'Operator', L('Kinerja Saya: skor dan target hari ini', 'My Performance: score and today\'s targets')],
+      ['ketut', 'Driver', L('Kinerja Saya: skor dan target hari ini', 'My Performance: score and today\'s targets')]
+    ].map(function (r) { return ['<code class="p3-code">' + r[0] + '</code>', r[1], r[2]]; })) });
+  h += P3.section({ id: 'rules', icon: 'shield', title: L('Aturan wajib', 'Non-negotiables'), desc: L('Dari brief Fase 5.', 'From the Phase 5 brief.'), body: P3.dodont(L('Selalu', 'Always'), D.RULES, L('Jangan', 'Never'), D.DONT) });
+  h += P3.section({ id: 'backend', icon: 'database', title: L('Catatan untuk tim backend', 'Note for the backend team'), desc: L('Apa yang dibuktikan prototipe ini, dan apa yang wajib diulang di server.', 'What this prototype proves, and what the server must repeat.'),
+    body: '<div class="p4-note">' + ic('alert') + '<div style="display:grid;gap:var(--jf-space-2)"><p><b>' + t(L('Angka di Fase 5 adalah data contoh.', 'Phase 5 numbers are sample data.')) + '</b> ' + t(L('Semua rumus skor, bobot, band, lifecycle KPI dan audit ada di satu modul (assets/js/jfos-perf.js) yang dipakai aplikasi dan tes. Datanya dari assets/js/jfos-perf-data.js dan disimpan di browser.', 'Every score formula, weight, band, KPI lifecycle and audit lives in one module (assets/js/jfos-perf.js) shared by the app and the tests. Data comes from assets/js/jfos-perf-data.js and is kept in the browser.')) + '</p>' +
+      '<p>' + t(L('Saat backend dibangun: angka diambil dari transaksi, akuntansi dan HRIS; rumus yang sama dijalankan di server; izin dan cakupan diperiksa ulang di setiap API; audit ditulis di server.', 'When the backend is built: numbers come from transactions, accounting and HRIS; the same formulas run on the server; permissions and scope are checked again on every API; the audit is written on the server.')) + '</p></div></div>' });
+  h += P3.section({ id: 'dod', icon: 'checkc', title: L('Definition of Done', 'Definition of Done'), desc: L('Setiap butir menunjuk ke bukti. Butir kuning menunggu backend.', 'Every item points to its proof. The amber item waits for the backend.'),
+    body: '<ul class="p4-dod">' + D.DOD.map(function (d) { return '<li class="' + d[1] + '">' + ic(d[1] === 'done' ? 'checkc' : 'clock') + '<span>' + t(d[0]) + (d[1] === 'backend' ? ' <small class="hint">(' + t(L('menunggu backend', 'waits for backend')) + ')</small>' : '') + '</span><a href="' + d[2] + '" aria-label="' + esc(d[2]) + '"><span>' + t(L('Lihat', 'View')) + '</span>' + ic('arrow') + '</a></li>'; }).join('') + '</ul>' });
+  h += P3.section({ id: 'visuals', icon: 'image', title: L('Visual acuan NV-01 sampai NV-10', 'Reference visuals NV-01 to NV-10'), desc: L('9 dari 10 visual diterima. NV-02 belum dikirim.', '9 of 10 visuals received. NV-02 not sent yet.'),
+    body: '<div class="p5-vis">' + D.VISUALS.map(function (v) { return v.missing ? '<div class="p5-v miss">' + ic('image') + '<b>' + v.k + '</b><span>' + t(v.t) + '</span><small>' + t(L('Belum dikirim', 'Not sent yet')) + '</small></div>' : '<a class="p5-v" href="../assets/brand/phase5/' + v.f + '" target="_blank" rel="noopener"><img src="../assets/brand/phase5/' + v.f + '" alt="" loading="lazy"><b>' + v.k + '</b><span>' + t(v.t) + '</span></a>'; }).join('') + '</div>' });
+  P3.mount('#page', h);
+})();

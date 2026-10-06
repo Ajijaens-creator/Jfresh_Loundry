@@ -1,0 +1,11 @@
+/* JFRESH OS — Phase 5 documentation pages (layout only). Builds on phase3.css and phase4.css. */
+.p5-vis { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--jf-space-3); }
+.p5-v { display: grid; gap: 2px; padding: var(--jf-space-2); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); text-decoration: none; color: inherit; min-width: 0; }
+.p5-v img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border-radius: calc(var(--jf-radius-card) - 4px); margin-bottom: var(--jf-space-2); background: var(--jf-brand-deep-50); }
+.p5-v b { color: var(--jf-brand-deep); font-size: var(--jf-fs-caption); letter-spacing: .06em; }
+.p5-v span { color: var(--jf-text-strong); font-weight: var(--jf-weight-semibold); font-size: var(--jf-fs-label); }
+.p5-v.miss { place-content: center; justify-items: center; text-align: center; min-height: 180px; border-style: dashed; background: var(--jf-state-warning-bg); border-color: var(--jf-state-warning-line); }
+.p5-v.miss .i { width: 28px; height: 28px; color: var(--jf-state-warning-ink); }
+.p5-v.miss small { color: var(--jf-state-warning-ink); font-weight: var(--jf-weight-semibold); }
+.p5-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--jf-space-4); }
+@media (max-width: 699px) { .p5-grid { grid-template-columns: minmax(0, 1fr); } }
