@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — Traceability Matrix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="phase2.css">
+<style>
+  .guide { display: grid; grid-template-columns: minmax(0, 1.1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: stretch; }
+  .gcol { border-radius: var(--r); border: 1px solid var(--line); background: var(--white); padding: 14px; display: grid; gap: 8px; align-content: start; }
+  .gcol.o { background: var(--orange-50); border-color: var(--orange-100); }
+  .gcol b.h { font-size: 17px; color: var(--blue-ink); }
+  .gcol > .sid { justify-self: start; }
+  .garr { display: grid; place-items: center; color: var(--fresh); }
+  .garr .i { width: 26px; height: 26px; }
+  .gcol .minis { gap: 6px; }
+  .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 22px; margin-top: 14px; }
+  .cols div { font-size: 14px; color: var(--muted); }
+  .cols b { color: var(--blue-ink); }
+
+  .tr-tbl td { white-space: normal; }
+  .tr-tbl td:first-child { min-width: 190px; }
+  .tr-tbl .minis { min-width: 110px; }
+  .tr-tbl tr.is-target > * { background: var(--orange-50) !important; }
+
+  .rev { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 22px; }
+  .rv { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: start; min-width: 0; }
+  .rv .k { font-weight: 700; color: var(--blue-ink); font-size: 15px; display: grid; gap: 4px; }
+  .rv .k .row1 { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+  .rv .sids { display: flex; flex-wrap: wrap; gap: 4px; }
+  .rv .sids .sid { font-size: 12px; padding: 1px 6px; }
+
+  @media (max-width: 1239px) {
+    .guide { grid-template-columns: minmax(0, 1fr); }
+    .gcol > .sid { justify-self: start; }
+  .garr { transform: rotate(90deg); height: 28px; }
+    .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rev { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 699px) {
+    .cols { grid-template-columns: minmax(0, 1fr); }
+    .rv { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  }
+</style>
+</head>
+<body data-root="../" data-phase="2" data-visual="0">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge"><i data-icon="link"></i></span><span data-en="Phase 2 · Requirement traceability">Fase 2 · Traceability kebutuhan</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1 data-en="Traceability Matrix">Matriks Traceability</h1>
+      <p class="sub" data-en="Every screen traced back to Phase 1 (BF), to the Navigation Brief (NB) and to the six navigation visuals (NV), with the permissions that open it and run its main action.">Setiap layar ditelusuri kembali ke Fase 1 (BF), ke Navigation Brief (NB) dan ke enam visual navigasi (NV), beserta izin yang membukanya dan menjalankan aksi utamanya.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Nothing Built <b>Without a Reason</b></div>
+      <a class="applink" href="../docs/phase2/traceability-matrix.csv" download><i data-icon="download"></i><span data-en="Download CSV">Unduh CSV</span></a>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section class="panel tint">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="bulb"></i></span>
+      <div class="ttl"><h2 data-en="How to read one row">Cara membaca satu baris</h2>
+        <p class="desc" data-en="Example from the brief: OPS-RCV-001.">Contoh dari brief: OPS-RCV-001.</p></div>
+    </div>
+    <div class="guide" id="guide"></div>
+    <div class="cols">
+      <div><b>BF</b> · <span data-en="Phase 1 visual the screen comes from.">Visual Fase 1 asal layar.</span></div>
+      <div><b>NB</b> · <span data-en="Navigation Brief requirement it implements. Provisional codes are marked.">Kebutuhan Navigation Brief yang dipenuhi. Kode sementara ditandai.</span></div>
+      <div><b>NV</b> · <span data-en="Approved navigation visual it follows. NV-01 (sitemap) applies to all and is implied.">Visual navigasi yang diikuti. NV-01 (sitemap) berlaku untuk semua dan tidak ditulis.</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="grid"></i></span>
+      <div class="ttl"><h2 data-en="Requirement traceability matrix">Matriks traceability kebutuhan</h2>
+        <p class="desc" data-en="One row per screen. Filter by NB, NV or role.">Satu baris per layar. Saring berdasarkan NB, NV atau peran.</p></div>
+    </div>
+    <div class="filters">
+      <label class="fld grow"><span data-en="Search">Cari</span><input id="q" type="search" data-ph-id="ID atau nama layar…" data-ph-en="Screen ID or name…" placeholder="ID atau nama layar…"></label>
+      <label class="fld"><span>NB</span><select id="fNb"></select></label>
+      <label class="fld"><span>NV</span><select id="fNv"></select></label>
+      <label class="fld"><span data-en="Role">Peran</span><select id="fRole"></select></label>
+      <button class="btn-reset" type="button" id="reset" data-en="Reset">Reset</button>
+    </div>
+    <p class="fcount" id="count" style="margin-top:12px"></p>
+    <div class="tblwrap hide-m"><table class="tbl tr-tbl" id="tbl"></table></div>
+    <div class="mcards hide-d hide-t" id="cards"></div>
+  </section>
+
+  <section class="panel acc" data-acc="m" id="reverse">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="refresh"></i></span>
+      <div class="ttl"><h2 data-en="Reverse view: which screens implement each NB">Tampilan balik: layar mana yang memenuhi setiap NB</h2>
+        <p class="desc" data-en="An NB code without screens is a gap.">Kode NB tanpa layar adalah celah.</p></div>
+    </div>
+    <div class="acc-b rev" id="revNb"></div>
+  </section>
+
+  <section class="panel acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="layers"></i></span>
+      <div class="ttl"><h2 data-en="Reverse view: Phase 1 visuals">Tampilan balik: visual Fase 1</h2>
+        <p class="desc" data-en="Compatibility with Phase 1: every Phase 1 visual is carried by at least one screen.">Kompatibel dengan Fase 1: setiap visual Fase 1 dibawa oleh minimal satu layar.</p></div>
+    </div>
+    <div class="acc-b rev" id="revBf"></div>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script src="phase2.js"></script>
+<script>
+(function () {
+  var C = P2.C, t = P2.t, ic = P2.ic;
+  function nbs(s, names) { return '<span class="minis">' + s.nb.map(function (c) { return P2.nb(c, names); }).join('') + '</span>'; }
+  function nvs(s, names) { return '<span class="minis">' + C.nvFor(s).map(function (c) { return P2.nv(c, names); }).join('') + '</span>'; }
+  function bfs(s, names) { return '<span class="minis">' + s.bf.map(function (c) { return P2.bf(c, names); }).join('') + '</span>'; }
+
+  // Reading guide
+  var g = C.screen('OPS-RCV-001');
+  P2.mount('#guide',
+    '<div class="gcol o"><span class="label">Screen</span>' + P2.sid(g.id) + '<b class="h">' + t(g.n) + '</b>' + P2.rcs(C.rolesFor(g)) + bfs(g, true) + '</div><span class="garr">' + ic('arrow') + '</span>' +
+    '<div class="gcol"><span class="label">Navigation Brief</span>' + g.nb.map(function (c) { return '<span>' + P2.nb(c, true) + '</span>'; }).join('') + '</div><span class="garr">' + ic('arrow') + '</span>' +
+    '<div class="gcol"><span class="label">Navigation Visual</span><span class="minis" style="display:grid;gap:6px;justify-items:start">' + C.nvFor(g).map(function (c) { return P2.nv(c, true); }).join('') + '</span></div>');
+
+  // Filters
+  document.getElementById('fNb').innerHTML = P2.allOpt(['Semua NB', 'All NB']) + P2.options(Object.keys(C.NB).map(function (k) { return [k, [k + ' · ' + C.NB[k][0], k + ' · ' + C.NB[k][1]]]; }));
+  document.getElementById('fNv').innerHTML = P2.allOpt(['Semua NV', 'All NV']) + P2.options(Object.keys(C.NV).map(function (k) { return [k, [k + ' · ' + C.NV[k][0], k + ' · ' + C.NV[k][1]]]; }));
+  document.getElementById('fRole').innerHTML = P2.allOpt(['Semua peran', 'All roles']) + P2.options(P2.roleOptions());
+  var F = { q: '', nb: '', nv: '', role: '' };
+
+  function render() {
+    var q = F.q.trim().toLowerCase();
+    var list = C.SCREENS.filter(function (s) {
+      return (!q || P2.hay(s).indexOf(q) !== -1) && (!F.nb || s.nb.indexOf(F.nb) !== -1) && (!F.role || C.can(F.role, s.p)) &&
+        (!F.nv || F.nv === 'NV-01' || C.nvFor(s).indexOf(F.nv) !== -1);
+    });
+    // The example row leads the table
+    list.sort(function (a, b) { return (b.id === 'OPS-RCV-001') - (a.id === 'OPS-RCV-001'); });
+    var tb = '<thead><tr><th>Screen</th><th data-en="Roles">Peran</th><th>BF</th><th>NB</th><th>NV</th><th data-en="Archetype">Arsitipe</th><th data-en="Flow">Alur</th><th data-en="View perm.">Izin lihat</th><th data-en="Primary-action perm.">Izin aksi utama</th></tr></thead><tbody>', cd = '';
+    list.forEach(function (s) {
+      var fl = C.flowFor(s.id).map(function (f) { return '<span class="mini fl">' + f.code + '</span>'; }).join(' ') || '<span class="note">—</span>';
+      var pri = s.pri ? '<span class="code">' + s.pri[1] + '</span>' : '<span class="note">—</span>';
+      tb += '<tr id="tr-' + s.id + '"' + (s.id === 'OPS-RCV-001' ? ' class="hl"' : '') + '><td>' + P2.sid(s.id) + '<span class="nm" style="display:block;margin-top:4px">' + t(s.n) + '</span></td><td>' + P2.rcs(C.rolesFor(s)) + '</td><td>' + bfs(s) + '</td><td>' + nbs(s) + '</td><td>' + nvs(s) + '</td><td>' + P2.arch(s.a, true) + '</td><td>' + fl + '</td><td><span class="code">' + s.p + '</span></td><td>' + pri + '</td></tr>';
+      cd += '<div class="mcard" id="trc-' + s.id + '"><div class="top">' + P2.sid(s.id) + P2.arch(s.a, true) + '</div><b style="color:var(--blue-ink);font-size:17px">' + t(s.n) + '</b><dl>' +
+        '<dt data-en="Roles">Peran</dt><dd>' + P2.rcs(C.rolesFor(s)) + '</dd><dt>BF</dt><dd>' + bfs(s, true) + '</dd><dt>NB</dt><dd>' + nbs(s, true) + '</dd><dt>NV</dt><dd>' + nvs(s) + '</dd>' +
+        '<dt data-en="Flow">Alur</dt><dd>' + fl + '</dd><dt data-en="View">Lihat</dt><dd><span class="code">' + s.p + '</span></dd><dt data-en="Action">Aksi</dt><dd>' + pri + '</dd></dl></div>';
+    });
+    if (!list.length) { tb += '<tr><td colspan="9"><div class="empty-res" data-en="No screens match this filter.">Tidak ada layar yang cocok dengan filter ini.</div></td></tr>'; cd = '<div class="empty-res" data-en="No screens match this filter.">Tidak ada layar yang cocok dengan filter ini.</div>'; }
+    P2.mount('#tbl', tb + '</tbody>');
+    P2.mount('#cards', cd);
+    P2.mount('#count', t([list.length + ' dari ' + C.SCREENS.length + ' layar', list.length + ' of ' + C.SCREENS.length + ' screens']));
+  }
+  function bind(id, key, ev) { document.getElementById(id).addEventListener(ev || 'change', function () { F[key] = this.value; render(); }); }
+  bind('q', 'q', 'input'); bind('fNb', 'nb'); bind('fNv', 'nv'); bind('fRole', 'role');
+  document.getElementById('reset').addEventListener('click', function () {
+    F = { q: '', nb: '', nv: '', role: '' };
+    ['q', 'fNb', 'fNv', 'fRole'].forEach(function (id) { document.getElementById(id).value = ''; });
+    render();
+  });
+  render();
+
+  // Reverse views
+  function rev(cat, key, chip) {
+    return Object.keys(cat).map(function (k) {
+      var ss = C.SCREENS.filter(function (s) { return s[key].indexOf(k) !== -1; });
+      return '<div class="rv"><span class="k"><span class="row1">' + chip(k) + '</span>' + t(cat[k]) + '<span class="mini" style="justify-self:start">' + ss.length + ' ' + t(['layar', 'screens']) + '</span></span>' +
+        '<span class="sids">' + (ss.length ? ss.map(function (s) { return P2.sid(s.id); }).join('') : '<span class="chip crit">' + ic('alert') + t(['Celah: belum ada layar', 'Gap: no screen yet']) + '</span>') + '</span></div>';
+    }).join('');
+  }
+  P2.mount('#revNb', rev(C.NB, 'nb', function (k) { return P2.nb(k); }));
+  P2.mount('#revBf', rev(C.BF, 'bf', function (k) { return '<a class="mini bf" href="../visuals/' + ['01-business-model', '02-system-scope', '03-user-role-map', '04-golden-workflow', '05-business-rules', '06-kpi-sla', '07-master-data'][+k.slice(3) - 1] + '.html">' + k + '</a>'; }));
+
+  P2.attrs();
+  P2.hashOpen(function (el, id) {
+    var m = /^tr-(.+)$/.exec(id);
+    if (m && window.matchMedia('(max-width: 699px)').matches) { var c = document.getElementById('trc-' + m[1]); if (c) setTimeout(function () { c.scrollIntoView({ block: 'start' }); c.style.boxShadow = '0 0 0 3px var(--orange)'; }, 60); }
+    if (el) el.classList.add('is-target');
+  });
+})();
+</script>
+</body>
+</html>

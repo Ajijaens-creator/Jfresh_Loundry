@@ -1,0 +1,78 @@
+﻿screen_id,name_id,name_en,roles,bf,nb,nb_provisional,nv,archetype,flow,ia_level,domain,view_permission,primary_action_permission
+HOM-OPR-001,Beranda Operator,Operator Home,operator,BF-03 BF-04,NB-04 NB-16,NB-16,NV-02 NV-03 NV-04 NV-05 NV-06,T01,FL-A,1,home,home.op,ops.receive
+HOM-DRV-001,Hari Ini (Driver),Today (Driver),driver,BF-03 BF-04,NB-03 NB-10 NB-15,NB-03 NB-10 NB-15,NV-02 NV-03 NV-05 NV-06,T01,,1,home,home.drv,ops.pickup
+HOM-SPV-001,Dashboard Supervisor,Supervisor Dashboard,supervisor,BF-03 BF-06,NB-16 NB-11,NB-16 NB-11,NV-02 NV-03 NV-05 NV-06,T01,,1,home,home.spv,qlt.review
+HOM-MGR-001,Dashboard Operations Manager,Operations Manager Dashboard,opsmgr,BF-03 BF-06,NB-16,NB-16,NV-02 NV-03 NV-04 NV-05 NV-06,T01,FL-F,1,home,home.mgr,apr.view
+HOM-FIN-001,Dashboard Finance,Finance Dashboard,finance,BF-03 BF-01,NB-12 NB-13,NB-12 NB-13,NV-02 NV-03 NV-05 NV-06,T01,,1,home,home.fin,fin.bill
+HOM-SAL-001,Dashboard Sales / Account,Sales / Account Dashboard,sales,BF-03 BF-01 BF-07,NB-01,NB-01,NV-02 NV-03 NV-05 NV-06,T01,,1,home,home.sal,com.renewal
+HOM-EXE-001,Executive Dashboard,Executive Dashboard,owner,BF-01 BF-06,NB-16,NB-16,NV-02 NV-03 NV-05 NV-06,T01,,1,home,home.exe,apr.view
+HOM-CLT-001,Beranda Klien,Client Home,client,BF-03 BF-01,NB-19,NB-19,NV-02 NV-03 NV-05 NV-06,T01,,1,clt,home.clt,clt.pickup
+OPS-TSK-001,Tugas Saya,My Tasks,operator,BF-04,NB-04 NB-06 NB-07 NB-08 NB-09,NB-06 NB-07 NB-08 NB-09,NV-03 NV-05 NV-06,T02,,2,ops,home.op,home.op
+OPS-PKP-002,Pickup Hari Ini,Today's Pickups,driver,BF-04,NB-02 NB-03,NB-02 NB-03,NV-03 NV-04 NV-05 NV-06,T02,FL-B,2,ops,ops.pickup,ops.pickup
+OPS-PKP-001,Pickup,Pickup,driver,BF-04 BF-05,NB-03,NB-03,NV-03 NV-04 NV-05 NV-06,T04,FL-B,2,ops,ops.pickup,ops.pickup
+OPS-RCV-002,Cucian Menunggu,Loads Waiting,operator supervisor,BF-04,NB-04,,NV-03 NV-04 NV-05 NV-06,T02,FL-A,2,ops,ops.receive,ops.receive
+OPS-RCV-001,Terima Cucian,Receive Laundry,operator supervisor,BF-04 BF-05,NB-04 NB-05,,NV-03 NV-04 NV-05 NV-06,T04,FL-A,2,ops,ops.receive,ops.receive
+OPS-SRT-002,Menunggu Sorting,Waiting Sorting,operator supervisor,BF-04,NB-06,NB-06,NV-03 NV-05 NV-06,T02,,2,ops,ops.sort,ops.sort
+OPS-SRT-001,Sorting,Sorting,operator supervisor,BF-04 BF-05,NB-06 NB-05,NB-06,NV-03 NV-05 NV-06,T04,,2,ops,ops.sort,ops.sort
+OPS-WSH-002,Menunggu Dicuci,Waiting to Wash,operator supervisor,BF-04,NB-07,NB-07,NV-03 NV-04 NV-05 NV-06,T02,FL-C,2,ops,ops.wash,ops.wash
+OPS-WSH-001,Proses Cuci,Washing,operator supervisor,BF-04 BF-05,NB-07,NB-07,NV-03 NV-04 NV-05 NV-06,T04,FL-C,2,ops,ops.wash,ops.wash
+OPS-QC-002,Menunggu QC,Waiting QC,operator supervisor,BF-04,NB-08,NB-08,NV-03 NV-04 NV-05 NV-06,T02,FL-D,2,ops,ops.qc,ops.qc
+OPS-QC-001,Cek QC,QC Check,operator supervisor,BF-04 BF-05,NB-08,NB-08,NV-03 NV-04 NV-05 NV-06,T04,FL-D,2,ops,ops.qc,ops.qc
+OPS-QC-003,Alasan Masalah QC,QC Issue Reason,operator supervisor,BF-04 BF-05,NB-08 NB-11,NB-08 NB-11,NV-03 NV-04 NV-05 NV-06,T04,FL-D,2,qlt,ops.qc,ops.qc
+OPS-PAC-002,Menunggu Packing,Waiting Packing,operator supervisor,BF-04,NB-09,NB-09,NV-03 NV-05 NV-06,T02,,2,ops,ops.pack,ops.pack
+OPS-PAC-001,Packing / Siap Dikirim,Packing / Ready to Ship,operator supervisor,BF-04 BF-05,NB-09 NB-05,NB-09,NV-03 NV-05 NV-06,T04,,2,ops,ops.pack,ops.pack
+OPS-DLV-002,Pengiriman Hari Ini,Today's Deliveries,driver,BF-04,NB-10,NB-10,NV-03 NV-04 NV-05 NV-06,T02,FL-E,2,ops,ops.deliver,ops.deliver
+OPS-DLV-001,Pengiriman,Delivery,driver,BF-04,NB-10,NB-10,NV-03 NV-04 NV-05 NV-06,T04,FL-E,2,ops,ops.deliver,ops.deliver
+OPS-DLV-003,Bukti Pengiriman,Proof of Delivery,driver,BF-04 BF-05,NB-10,NB-10,NV-03 NV-04 NV-05 NV-06,T04,FL-E,2,ops,ops.deliver,ops.deliver
+OPS-ISS-001,Ada Masalah,Report Issue,operator driver supervisor,BF-04 BF-05,NB-11,NB-11,NV-03 NV-05 NV-06,T06,,2,qlt,ops.issue,ops.issue
+OPS-HIS-001,Riwayat,History,operator driver supervisor opsmgr,BF-05,NB-18,NB-18,NV-03 NV-05 NV-06,T02,,3,home,ops.history,ops.detail
+OPS-TRK-001,Detail Cucian,Load Detail,operator driver supervisor opsmgr owner,BF-04 BF-05 BF-07,NB-18 NB-16,NB-18 NB-16,NV-03 NV-04 NV-05 NV-06,T03,FL-F,3,ops,ops.detail,ops.detail
+LOG-RTE-001,Rute Hari Ini,Today's Route,driver,BF-04,NB-15,NB-15,NV-03 NV-05 NV-06,T02,,2,log,log.route,log.route
+OPS-BRD-001,Papan Operasional,Operations Board,supervisor opsmgr owner,BF-04 BF-06,NB-16 NB-07,NB-16 NB-07,NV-05 NV-06,T02,,2,ops,ops.board,ops.detail
+OPS-TEAM-001,Tugas Tim,Team Tasks,supervisor,BF-03,NB-16 NB-17,NB-16 NB-17,NV-05 NV-06,T05,,2,ops,ops.team,ops.team
+QLT-ISS-001,Masalah,Issues,supervisor opsmgr owner,BF-04 BF-05,NB-11,NB-11,NV-05 NV-06,T05,,2,qlt,qlt.view,qlt.review
+QLT-ISS-002,Review Masalah,Issue Review,supervisor opsmgr,BF-05,NB-11 NB-08,NB-11 NB-08,NV-05 NV-06,T07,,4,qlt,qlt.review,qlt.review
+SLA-MON-001,Monitor SLA,SLA Monitor,supervisor opsmgr sales owner,BF-06,NB-16,NB-16,NV-04 NV-05 NV-06,T08,FL-F,1,rpt,sla.view,ops.detail
+RPT-OPS-001,Laporan Operasional,Operations Report,supervisor opsmgr owner,BF-06,NB-16,NB-16,NV-05 NV-06,T08,,4,rpt,rpt.ops,rpt.export
+LOG-FLT-001,Armada & Driver,Fleet & Drivers,opsmgr owner,BF-07,NB-15,NB-15,NV-05 NV-06,T05,,4,log,log.view,sys.master
+PRD-DSH-001,Produksi,Production,opsmgr owner,BF-06,NB-07 NB-16,NB-07 NB-16,NV-05 NV-06,T08,,4,rpt,prd.view,rpt.export
+QLT-DSH-001,Quality,Quality,supervisor opsmgr owner,BF-06,NB-08 NB-11 NB-16,NB-08 NB-11 NB-16,NV-05 NV-06,T08,,4,qlt,qlt.view,qlt.review
+INV-STK-001,Stok,Stock,opsmgr owner,BF-07,NB-14,NB-14,NV-05 NV-06,T05,,4,inv,inv.view,inv.adjust.request
+INV-ADJ-001,Sesuaikan Stok,Stock Adjustment,supervisor opsmgr,BF-05,NB-14 NB-18,NB-14 NB-18,NV-05 NV-06,T06,,4,inv,inv.adjust.request,inv.adjust.request
+APR-INB-001,Persetujuan,Approvals,supervisor opsmgr finance owner,BF-05,NB-18 NB-11 NB-12 NB-14,NB-18 NB-11 NB-12 NB-14,NV-04 NV-05 NV-06,T07,FL-F,4,home,apr.view,apr.view
+FIN-BIL-001,Siap Ditagih,Ready to Bill,finance,BF-05 BF-07,NB-12,NB-12,NV-05 NV-06,T05,,2,fin,fin.bill,fin.bill
+FIN-INV-001,Invoice,Invoices,finance,BF-05,NB-12,NB-12,NV-05 NV-06,T05,,2,fin,fin.invoice,fin.invoice
+FIN-INV-002,Detail Invoice,Invoice Detail,finance,BF-05 BF-07,NB-12 NB-13,NB-12 NB-13,NV-05 NV-06,T03,,3,fin,fin.invoice,fin.payment
+FIN-PAY-002,Pembayaran,Payments,finance,BF-05,NB-13,NB-13,NV-05 NV-06,T05,,2,fin,fin.payment,fin.payment
+FIN-PAY-001,Catat Pembayaran,Record Payment,finance,BF-05,NB-13,NB-13,NV-05 NV-06,T06,,2,fin,fin.payment,fin.payment
+FIN-AR-001,Piutang (AR),Receivables (AR),finance owner,BF-06,NB-13 NB-16,NB-13 NB-16,NV-05 NV-06,T08,,2,fin,fin.ar,rpt.export
+FIN-CN-001,Credit Note,Credit Notes,finance,BF-05,NB-12 NB-13,NB-12 NB-13,NV-05 NV-06,T05,,2,fin,fin.cn.request,fin.cn.request
+FIN-CN-002,Ajukan Credit Note,Request Credit Note,finance,BF-05,NB-12,NB-12,NV-05 NV-06,T06,,2,fin,fin.cn.request,fin.cn.request
+RPT-FIN-001,Laporan Finance,Finance Report,finance owner,BF-01 BF-06,NB-12 NB-13 NB-16,NB-12 NB-13 NB-16,NV-05 NV-06,T08,,4,rpt,rpt.fin,rpt.export
+COM-CLI-001,Klien,Clients,finance sales owner,BF-07,NB-01,NB-01,NV-05 NV-06,T05,,2,com,com.client.view,com.client.edit
+COM-CLI-002,Tambah Klien,Add Client,sales,BF-07,NB-01 NB-20,NB-01 NB-20,NV-05 NV-06,T06,,2,com,com.client.edit,com.client.edit
+COM-PRP-001,Property,Properties,sales,BF-07,NB-01,NB-01,NV-05 NV-06,T05,,2,com,com.property,com.property
+COM-CTR-001,Kontrak,Contracts,sales owner,BF-07 BF-05,NB-01,NB-01,NV-05 NV-06,T05,,2,com,com.contract.view,com.contract.edit
+COM-CTR-002,Buat Kontrak,Create Contract,sales,BF-07,NB-01,NB-01,NV-05 NV-06,T06,,2,com,com.contract.edit,com.contract.edit
+COM-RTC-001,Rate Card,Rate Card,finance sales owner,BF-05 BF-07,NB-01 NB-12,NB-01 NB-12,NV-05 NV-06,T05,,2,com,com.rate.view,com.rate.request
+COM-RTC-002,Ajukan Perubahan Harga,Request Price Change,sales,BF-05,NB-01 NB-12,NB-01 NB-12,NV-05 NV-06,T06,,2,com,com.rate.request,com.rate.request
+COM-SLA-001,SLA Klien,Client SLA,sales,BF-06,NB-01 NB-16,NB-01 NB-16,NV-05 NV-06,T05,,2,com,com.sla,com.sla
+COM-DOC-001,Dokumen,Documents,sales,BF-07,NB-01,NB-01,NV-05 NV-06,T05,,3,com,com.docs,com.docs
+COM-RNW-001,Renewal,Renewals,sales,BF-07,NB-01,NB-01,NV-05 NV-06,T05,,2,com,com.renewal,com.contract.edit
+RPT-COM-001,Komersial & Revenue,Commercial & Revenue,owner,BF-01 BF-06,NB-16 NB-01,NB-16 NB-01,NV-05 NV-06,T08,,4,rpt,rpt.exec,rpt.export
+RPT-CLI-001,Performa Klien,Client Performance,owner,BF-06,NB-16 NB-01,NB-16 NB-01,NV-05 NV-06,T08,,4,rpt,rpt.exec,rpt.export
+RPT-PPL-001,People & Produktivitas,People & Productivity,opsmgr owner,BF-03 BF-06,NB-16 NB-17,NB-16 NB-17,NV-05 NV-06,T08,,4,rpt,people.view,rpt.export
+RPT-LIB-001,Pustaka Laporan,Report Library,owner,BF-06,NB-16,NB-16,NV-05 NV-06,T05,,4,rpt,rpt.exec,rpt.exec
+SYS-HUB-001,Sistem,System,owner,BF-02,NB-17 NB-20,NB-17 NB-20,NV-05 NV-06,T09,,4,sys,sys.settings,sys.settings
+SYS-USR-001,User,Users,owner,BF-03,NB-17,NB-17,NV-05 NV-06,T09,,4,sys,sys.users,sys.users
+SYS-ROL-001,Peran & Hak Akses,Roles & Permissions,owner,BF-03 BF-05,NB-17,NB-17,NV-05 NV-06,T09,,4,sys,sys.roles,sys.roles
+SYS-AUD-001,Audit Log,Audit Log,owner,BF-05,NB-18,NB-18,NV-05 NV-06,T09,,4,sys,sys.audit,rpt.export
+SYS-MD-001,Master Data,Master Data,owner,BF-07,NB-20,NB-20,NV-05 NV-06,T09,,4,sys,sys.master,sys.master
+SYS-SET-001,Pengaturan,Settings,owner,BF-05,NB-20 NB-17,NB-20 NB-17,NV-05 NV-06,T09,,4,sys,sys.settings,sys.settings
+CLT-PKP-001,Minta Pickup,Request Pickup,client,BF-04,NB-19 NB-02,NB-19 NB-02,NV-03 NV-05 NV-06,T06,,2,clt,clt.pickup,clt.pickup
+CLT-ORD-001,Pesanan,Orders,client,BF-04,NB-19,NB-19,NV-03 NV-05 NV-06,T02,,3,clt,clt.portal,clt.portal
+CLT-ORD-002,Status Pesanan,Order Status,client,BF-04,NB-19,NB-19,NV-03 NV-05 NV-06,T03,,3,clt,clt.portal,clt.complaint
+CLT-DLV-001,Pengiriman,Deliveries,client,BF-04,NB-19 NB-10,NB-19 NB-10,NV-03 NV-05 NV-06,T05,,3,clt,clt.portal,clt.portal
+CLT-INV-001,Invoice & Pembayaran,Invoices & Payment,client,BF-01,NB-19 NB-12 NB-13,NB-19 NB-12 NB-13,NV-03 NV-05 NV-06,T05,,3,clt,clt.invoice,clt.invoice
+CLT-CMP-001,Komplain,Complaints,client,BF-04,NB-19 NB-11,NB-19 NB-11,NV-03 NV-05 NV-06,T06,,2,clt,clt.complaint,clt.complaint
+CLT-DOC-001,Dokumen,Documents,client,BF-07,NB-19,NB-19,NV-03 NV-05 NV-06,T05,,3,clt,clt.portal,clt.portal

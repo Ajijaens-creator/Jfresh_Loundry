@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-05 Screen Inventory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="phase2.css">
+<style>
+  .archs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .ar { padding: 18px; display: flex; flex-direction: column; scroll-margin-top: 16px; }
+  .ar.is-target { box-shadow: 0 0 0 3px var(--orange); }
+  .ar .panel-h { gap: 10px; margin-bottom: 12px; }
+  .ar .panel-h h2 { font-size: 18px; }
+  .ar .panel-h .aico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: var(--blue-50); color: var(--blue); flex: none; }
+  .ar .acc-b { display: grid; gap: 12px; align-content: start; flex: 1; }
+  .ar .top { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 14px; align-items: start; }
+  .ar .d { font-size: 15px; }
+  .ar .used { font-size: 13.5px; color: var(--muted); margin-top: 6px; }
+  .ar .used b { color: var(--blue-ink); }
+  .rsp { display: grid; gap: 4px; }
+  .rsp div { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; align-items: start; font-size: 13.5px; }
+  .rsp .i { width: 18px; height: 18px; color: var(--blue); margin-top: 1px; }
+  .ar .use { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .ar .use .sid { font-size: 11.5px; padding: 1px 6px; }
+  .ar .use button { border: 0; background: none; color: var(--blue); font-weight: 800; font-size: 13.5px; cursor: pointer; padding: 4px 6px; min-height: 32px; text-decoration: underline; }
+
+  /* Mini wireframes */
+  .wf { display: grid; gap: 5px; padding: 9px; height: 136px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; align-content: start; }
+  .wf i { display: block; border-radius: 4px; background: var(--line-2); height: 7px; }
+  .wf .r { display: flex; gap: 5px; align-items: center; }
+  .wf .r > * { flex: 1; }
+  .wf .w { background: var(--white); border: 1px solid var(--line); border-radius: 6px; }
+  .wf .o { background: var(--orange); }
+  .wf .b { background: var(--blue); }
+  .wf .f { background: var(--fresh); }
+  .wf .l { background: var(--blue-100); }
+  .wf .g { background: var(--ok); }
+  .wf .dot { flex: none !important; width: 8px; height: 8px; border-radius: 50%; }
+  .wf .k { height: 26px; padding: 4px; display: grid; gap: 3px; align-content: start; }
+  .wf .k i { height: 5px; }
+  .wf .bars { display: flex; gap: 4px; align-items: flex-end; height: 34px; }
+  .wf .bars i { flex: 1; background: var(--fresh); border-radius: 3px 3px 0 0; }
+  .wf .dash { border: 1.5px dashed var(--line-2); background: transparent; }
+
+  .inv-tbl td:nth-child(2) { min-width: 200px; }
+  .inv-tbl .rcs { max-width: 330px; }
+
+  @media (max-width: 1239px) {
+    .archs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .ar .top { grid-template-columns: minmax(0, 1fr); }
+    .wf { height: 128px; }
+  }
+  @media (max-width: 699px) {
+    .archs { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .ar .top { grid-template-columns: 130px minmax(0, 1fr); }
+    .wf { height: 118px; }
+    .rsp div { font-size: 14.5px; }
+    .ar .use button { min-height: 44px; }
+  }
+</style>
+</head>
+<body data-root="../" data-phase="2" data-visual="5">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">05</span><span data-en="Phase 2 · NP-05 · NV-05">Fase 2 · NP-05 · NV-05</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Screen Inventory</h1>
+      <p class="sub" data-en="Nine reusable screen types build every screen in the system. Learn one pattern and you can use every screen that follows it.">Sembilan jenis layar yang dipakai ulang membangun setiap layar di sistem. Pelajari satu pola, dan semua layar dengan pola itu langsung bisa dipakai.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">One Pattern, <b>Many Screens</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="callout blue"><i data-icon="copy"></i><p><b data-en="Screen reuse rule.">Aturan pakai ulang layar.</b> <span data-en="Build a new screen from an existing archetype before inventing a new layout. Receiving Queue and QC Queue use the same Work Queue pattern; only the label, the status and the primary action change.">Bangun layar baru dari arsitipe yang ada sebelum membuat tata letak baru. Antrian Penerimaan dan Antrian QC memakai pola Work Queue yang sama; hanya label, status dan aksi utamanya yang berubah.</span> <span class="minis" style="display:inline-flex;margin-top:4px"><a class="sid" href="np06-screen-framework.html#OPS-RCV-002">OPS-RCV-002</a><a class="sid" href="np06-screen-framework.html#OPS-QC-002">OPS-QC-002</a><span class="mini">T02 Work Queue</span></span></p></div>
+
+  <div class="archs" id="archetypes"></div>
+
+  <section class="panel" id="inventory">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="list"></i></span>
+      <div class="ttl"><h2 data-en="Full screen inventory">Inventaris layar lengkap</h2>
+        <p class="desc" data-en="Every screen in the register. Filter by role, archetype, domain or level, or search by ID or name.">Semua layar di register. Saring berdasarkan peran, arsitipe, domain atau level, atau cari dengan ID atau nama.</p></div>
+    </div>
+    <div class="filters">
+      <label class="fld grow"><span data-en="Search">Cari</span><input id="q" type="search" data-ph-id="ID atau nama layar…" data-ph-en="Screen ID or name…" placeholder="ID atau nama layar…"></label>
+      <label class="fld"><span data-en="Role">Peran</span><select id="fRole"></select></label>
+      <label class="fld"><span data-en="Archetype">Arsitipe</span><select id="fArch"></select></label>
+      <label class="fld"><span>Domain</span><select id="fDom"></select></label>
+      <label class="fld"><span>Level</span><select id="fLvl"></select></label>
+      <button class="btn-reset" type="button" id="reset" data-en="Reset">Reset</button>
+    </div>
+    <p class="fcount" id="count" style="margin-top:12px"></p>
+    <div class="tblwrap hide-m"><table class="tbl inv-tbl" id="tbl"></table></div>
+    <div class="mcards hide-d hide-t" id="cards"></div>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script src="phase2.js"></script>
+<script>
+(function () {
+  var C = P2.C, t = P2.t, ic = P2.ic;
+  var W = {
+    T01: '<i style="width:55%"></i><div class="r"><span class="w k"><i class="b" style="width:50%;height:9px"></i><i></i></span><span class="w k"><i class="b" style="width:40%;height:9px"></i><i></i></span><span class="w k"><i class="o" style="width:30%;height:9px"></i><i></i></span></div><i class="o" style="height:20px;border-radius:6px"></i><div class="r"><span class="w" style="height:14px"></span></div><div class="r"><span class="w" style="height:14px"></span></div>',
+    T02: '<div class="r"><i class="b" style="flex:none;width:34px;height:12px;border-radius:6px"></i><i style="flex:none;width:34px;height:12px;border-radius:6px"></i><span></span><i class="o" style="flex:none;width:26px;height:12px;border-radius:6px"></i></div>' +
+      [0, 1, 2, 3].map(function (n) { return '<div class="r w" style="padding:4px 6px;height:21px"><span class="dot ' + (n === 0 ? 'o' : 'f') + '"></span><i style="flex:2"></i><i class="l"></i></div>'; }).join(''),
+    T03: '<div class="r"><i class="b" style="flex:2;height:10px"></i><i class="l" style="height:12px;border-radius:6px"></i></div><div class="r">' + [1, 1, 1, 0, 0].map(function (x) { return '<span class="dot ' + (x ? 'b' : 'l') + '"></span><i class="' + (x ? 'b' : '') + '" style="height:2px"></i>'; }).join('') + '</div><div class="r" style="align-items:stretch;height:60px"><span class="w k" style="height:auto"><i></i><i style="width:70%"></i><i></i><i style="width:50%"></i></span><span class="w k" style="height:auto;flex:.7"><i class="l"></i><i class="l"></i></span></div><i class="o" style="height:12px;border-radius:5px"></i>',
+    T04: '<i class="b" style="width:60%;height:10px"></i><div class="r"><i class="l" style="height:11px;border-radius:6px"></i><i class="o" style="height:11px;border-radius:6px;opacity:.5"></i><span></span></div><div class="r"><span class="w" style="height:24px"></span><span class="w" style="height:24px"></span><span class="w" style="height:24px"></span></div><span class="dash" style="height:16px;border-radius:6px"></span><i class="o" style="height:24px;border-radius:7px"></i>',
+    T05: '<div class="r"><span class="w" style="flex:3;height:14px"></span><i class="l" style="height:14px"></i><i class="l" style="height:14px"></i><i class="b" style="height:14px"></i></div><i class="l" style="height:10px"></i>' +
+      [0, 1, 2, 3, 4].map(function () { return '<div class="r"><i style="flex:.6"></i><i style="flex:2"></i><i></i><i class="f" style="flex:.6"></i></div>'; }).join(''),
+    T06: '<i class="b" style="width:45%;height:9px"></i>' + [0, 1, 2].map(function () { return '<div class="r"><span><i style="width:50%;height:5px;margin-bottom:3px"></i><span class="w" style="display:block;height:14px"></span></span><span><i style="width:40%;height:5px;margin-bottom:3px"></i><span class="w" style="display:block;height:14px"></span></span></div>'; }).join('') + '<div class="r"><span></span><i class="b" style="flex:none;width:60px;height:16px;border-radius:5px"></i></div>',
+    T07: '<div class="r"><i class="b" style="flex:none;width:44px;height:11px;border-radius:6px"></i><i style="flex:none;width:44px;height:11px;border-radius:6px"></i><span></span></div><div class="w k" style="height:auto;padding:6px;gap:5px"><i style="width:60%"></i><div class="r"><i class="l" style="height:12px"></i><span style="flex:none;color:var(--fresh);font-size:10px;font-weight:800">→</span><i class="f" style="height:12px"></i></div><i style="width:80%"></i><div class="r"><i class="o" style="height:14px;border-radius:5px"></i><span class="w" style="height:14px"></span></div></div>',
+    T08: '<div class="r">' + [0, 1, 2, 3].map(function (n) { return '<span class="w k"><i class="' + (n === 3 ? 'o' : 'b') + '" style="width:60%;height:8px"></i><i class="g" style="width:30%"></i></span>'; }).join('') + '</div><div class="w bars" style="padding:4px 6px">' + [40, 55, 35, 70, 60, 85, 75, 95].map(function (h) { return '<i style="height:' + h + '%"></i>'; }).join('') + '</div><div class="r"><i></i><i></i><i class="l"></i></div><div class="r"><i></i><i></i><i class="l"></i></div>',
+    T09: '<div class="r" style="align-items:stretch;height:116px"><span class="w" style="flex:.55;padding:5px;display:grid;gap:5px;align-content:start"><i class="b"></i><i></i><i></i><i></i><i></i></span><span style="flex:1.45;display:grid;gap:5px;align-content:start">' +
+      [1, 0, 1, 1].map(function (on) { return '<div class="r w" style="padding:4px 6px;height:20px"><i style="flex:2"></i><span style="flex:none;width:20px;height:11px;border-radius:6px;background:' + (on ? 'var(--ok)' : 'var(--line-2)') + '"></span></div>'; }).join('') + '<i style="width:60%;height:5px"></i></span></div>'
+  };
+
+  // Archetype grid
+  var h = '';
+  Object.keys(C.ARCH).forEach(function (a, i) {
+    var A = C.ARCH[a], list = C.SCREENS.filter(function (s) { return s.a === a; }), o = i % 2 ? ' o' : '';
+    h += '<section class="panel ar acc" data-acc="m"' + (i === 3 ? ' data-open="m"' : '') + ' id="arch-' + a + '"><div class="panel-h"><span class="nb-badge' + o + '">' + (i + 1) + '</span><span class="aico">' + ic(A.i) + '</span>' +
+      '<div class="ttl"><h2>' + t(A.n) + '</h2><p class="desc">' + a + ' · ' + list.length + ' ' + t(['layar', 'screens']) + '</p></div></div>' +
+      '<div class="acc-b"><div class="top"><div class="wf" aria-hidden="true">' + W[a] + '</div><div><p class="d">' + t(A.d) + '</p><p class="used"><b data-en="Used for:">Dipakai untuk:</b> ' + t(A.used) + '</p></div></div>' +
+      '<div class="rsp"><div>' + ic('monitor') + '<span>' + t(A.responsive.d) + '</span></div><div>' + ic('tablet') + '<span>' + t(A.responsive.t) + '</span></div><div>' + ic('phone') + '<span>' + t(A.responsive.m) + '</span></div></div>' +
+      '<div class="use">' + list.map(function (s) { return P2.sid(s.id); }).join('') + '<button type="button" data-arch="' + a + '" data-en="Show in list ↓">Tampilkan di daftar ↓</button></div></div></section>';
+  });
+  P2.mount('#archetypes', h);
+
+  // Filters
+  var LV = C.LEVELS.map(function (L) { return [String(L.n), ['L' + L.n + ' · ' + L.t[0], 'L' + L.n + ' · ' + L.t[1]]]; });
+  document.getElementById('fRole').innerHTML = P2.allOpt(['Semua peran', 'All roles']) + P2.options(P2.roleOptions());
+  document.getElementById('fArch').innerHTML = P2.allOpt(['Semua arsitipe', 'All archetypes']) + P2.options(P2.archOptions());
+  document.getElementById('fDom').innerHTML = P2.allOpt(['Semua domain', 'All domains']) + P2.options(P2.domOptions());
+  document.getElementById('fLvl').innerHTML = P2.allOpt(['Semua level', 'All levels']) + P2.options(LV);
+  var F = { q: '', role: '', arch: '', dom: '', lvl: '' };
+
+  function render() {
+    var q = F.q.trim().toLowerCase();
+    var list = C.SCREENS.filter(function (s) {
+      return (!q || P2.hay(s).indexOf(q) !== -1) && (!F.role || C.can(F.role, s.p)) && (!F.arch || s.a === F.arch) && (!F.dom || s.dom === F.dom) && (!F.lvl || String(s.lvl) === F.lvl);
+    });
+    var tb = '<thead><tr><th>Screen ID</th><th data-en="Name">Nama</th><th data-en="Archetype">Arsitipe</th><th data-en="Roles">Peran</th><th class="c">Level</th><th>Domain</th><th data-en="Flow">Alur</th></tr></thead><tbody>', cd = '';
+    list.forEach(function (s) {
+      var d = P2.dom(s.dom), fl = C.flowFor(s.id), roles = C.rolesFor(s);
+      var flh = fl.length ? fl.map(function (f) { return '<span class="mini fl">' + f.code + '</span>'; }).join(' ') : '<span class="note">—</span>';
+      tb += '<tr><td>' + P2.sid(s.id) + '</td><td><span class="nm">' + t(s.n) + '</span><span class="sub">' + t(s.pur) + '</span></td><td>' + P2.arch(s.a) + '</td><td>' + P2.rcs(roles) + '</td><td class="c">' + P2.lvl(s.lvl) + '</td><td>' + d.n + '. ' + t(d.t) + '</td><td>' + flh + '</td></tr>';
+      cd += '<div class="mcard"><div class="top">' + P2.sid(s.id) + P2.arch(s.a, true) + P2.lvl(s.lvl) + '</div><b style="color:var(--blue-ink);font-size:17px">' + t(s.n) + '</b><span class="note">' + t(s.pur) + '</span>' +
+        '<dl><dt data-en="Roles">Peran</dt><dd>' + P2.rcs(roles) + '</dd><dt>Domain</dt><dd>' + d.n + '. ' + t(d.t) + '</dd><dt data-en="Flow">Alur</dt><dd>' + flh + '</dd></dl></div>';
+    });
+    if (!list.length) { tb += '<tr><td colspan="7"><div class="empty-res" data-en="No screens match this filter.">Tidak ada layar yang cocok dengan filter ini.</div></td></tr>'; cd = '<div class="empty-res" data-en="No screens match this filter.">Tidak ada layar yang cocok dengan filter ini.</div>'; }
+    P2.mount('#tbl', tb + '</tbody>');
+    P2.mount('#cards', cd);
+    P2.mount('#count', t([list.length + ' dari ' + C.SCREENS.length + ' layar', list.length + ' of ' + C.SCREENS.length + ' screens']));
+  }
+  function bind(id, key, ev) { document.getElementById(id).addEventListener(ev || 'change', function () { F[key] = this.value; render(); }); }
+  bind('q', 'q', 'input'); bind('fRole', 'role'); bind('fArch', 'arch'); bind('fDom', 'dom'); bind('fLvl', 'lvl');
+  document.getElementById('reset').addEventListener('click', function () {
+    F = { q: '', role: '', arch: '', dom: '', lvl: '' };
+    ['q', 'fRole', 'fArch', 'fDom', 'fLvl'].forEach(function (id) { document.getElementById(id).value = ''; });
+    render();
+  });
+  document.getElementById('archetypes').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-arch]');
+    if (!b) return;
+    F.arch = b.getAttribute('data-arch'); document.getElementById('fArch').value = F.arch;
+    render();
+    document.getElementById('inventory').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
+  render();
+  P2.attrs();
+  JF.apply();
+  P2.hashOpen(function (el) { if (el && el.classList.contains('acc')) el.classList.add('is-open'); });
+})();
+</script>
+</body>
+</html>

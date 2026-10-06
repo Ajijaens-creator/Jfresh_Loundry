@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-01 Master Sitemap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="phase2.css">
+<style>
+  .os-pill { justify-self: center; display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 999px; background: var(--blue); color: var(--white); font-weight: 800; font-size: 17px; box-shadow: var(--shadow); text-align: center; }
+  .os-pill b { color: var(--yellow); }
+  .os-pill .i { width: 22px; height: 22px; }
+  .stem { justify-self: center; width: 2px; height: 18px; background: var(--line-2); margin: -22px 0; }
+
+  .domains { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+  .dom { padding: 16px; display: flex; flex-direction: column; gap: 0; scroll-margin-top: 16px; }
+  .dom .panel-h { gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .dom .panel-h .dico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: var(--blue-50); color: var(--blue); flex: none; }
+  .dom.o .panel-h .dico { background: var(--orange-50); color: var(--orange-ink); }
+  .dom .panel-h h2 { font-size: 17px; }
+  .dom .panel-h .desc { font-size: 13px; }
+  .dom.is-target { box-shadow: 0 0 0 3px var(--orange); }
+  .kids { display: grid; gap: 6px; }
+  .kid { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 10px; padding: 8px 10px; border-radius: 12px; background: var(--bg); border: 1px solid transparent; text-decoration: none; color: inherit; min-height: 44px; }
+  .kid:hover { border-color: var(--line-2); background: var(--white); }
+  .kid > .i { width: 18px; height: 18px; color: var(--blue); margin-top: 2px; }
+  .kid .kt { font-weight: 700; color: var(--blue-ink); font-size: 14.5px; line-height: 1.3; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+  .kid .kt .sid { font-size: 11.5px; padding: 1px 6px; }
+  .kid .rcs { grid-column: 2; gap: 4px; }
+  .kid .rc { font-size: 11.5px; padding: 1px 7px 1px 5px; }
+  .kid .rc .i { width: 13px; height: 13px; }
+
+  .cov { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 22px; align-items: start; }
+  #covK { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bars { display: grid; gap: 8px; }
+  .bar { display: grid; grid-template-columns: 170px minmax(0, 1fr) 40px; gap: 10px; align-items: center; font-size: 14.5px; }
+  .bar .nm { font-weight: 700; color: var(--blue-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar .tr { height: 12px; border-radius: 999px; background: var(--bg-2); overflow: hidden; }
+  .bar .tr i { display: block; height: 100%; border-radius: 999px; background: var(--fresh); }
+  .bar .v { font-weight: 800; color: var(--blue-ink); text-align: right; font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 1239px) {
+    .domains { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .dom { padding: 18px; }
+    .dom .panel-h h2 { font-size: 19px; }
+    .kids { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .kid .kt { font-size: 15px; }
+    .kid .rc { font-size: 12.5px; }
+    .cov { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 699px) {
+    .domains { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .kids { grid-template-columns: minmax(0, 1fr); }
+    .kid { padding: 10px 12px; }
+    .kid .kt { font-size: 16px; }
+    .kid .rc { font-size: 13px; }
+    .os-pill { font-size: 15px; padding: 10px 16px; }
+    .stem { display: none; }
+    .bar { grid-template-columns: 120px minmax(0, 1fr) 32px; font-size: 14px; }
+  }
+</style>
+</head>
+<body data-root="../" data-phase="2" data-visual="1">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">01</span><span data-en="Phase 2 · NP-01 · NV-01">Fase 2 · NP-01 · NV-01</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Master Sitemap</h1>
+      <p class="sub" data-en="The full module structure of JFRESH OS: ten domains, every item mapped to the screen that serves it and to the roles allowed to open it.">Struktur modul lengkap JFRESH OS: sepuluh domain, setiap item dipetakan ke layar yang melayaninya dan ke peran yang boleh membukanya.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">One Connected <b>JFRESH OS</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="callout"><i data-icon="alert"></i><p><b data-en="Sitemap = global architecture, not the visible navigation.">Sitemap = arsitektur global, bukan navigasi yang terlihat.</b> <span data-en="No single user sees this whole tree. Each role only gets the menus its permissions allow (see NP-03). A frontline operator sees four menus; the owner sees management menus but never daily operational input.">Tidak ada satu user pun yang melihat seluruh pohon ini. Setiap peran hanya mendapat menu sesuai izinnya (lihat NP-03). Operator frontline melihat empat menu; owner melihat menu manajemen tetapi tidak pernah input operasional harian.</span> <a href="np03-role-navigation.html" data-en="Role navigation →">Navigasi per peran →</a></p></div>
+
+  <div class="legend-r" id="legend"></div>
+
+  <div class="os-pill"><i data-icon="layers"></i><span>JFRESH <b>OS</b> — All-in-One Laundry Management System</span></div>
+  <div class="stem hide-m"></div>
+  <div class="domains" id="domains"></div>
+
+  <section class="panel acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="chart"></i></span>
+      <div class="ttl"><h2 data-en="Coverage summary">Ringkasan cakupan</h2>
+        <p class="desc" data-en="Computed from the configuration: every sitemap item points at a real screen.">Dihitung dari konfigurasi: setiap item sitemap menunjuk ke layar yang nyata.</p>
+        <p class="sum-preview" id="covPrev"></p></div>
+    </div>
+    <div class="acc-b cov">
+      <div class="kpis" id="covK"></div>
+      <div>
+        <p class="label" style="margin-bottom:10px" data-en="Screens per domain">Layar per domain</p>
+        <div class="bars" id="bars"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script src="phase2.js"></script>
+<script>
+(function () {
+  var C = P2.C, t = P2.t, ic = P2.ic;
+  // Icon for a sitemap child: the icon a role's menu uses for that screen, else the archetype icon
+  function kidIcon(sid) {
+    for (var i = 0; i < C.ROLE_ORDER.length; i++) {
+      var r = C.ROLES[C.ROLE_ORDER[i]], all = r.nav.concat(r.extra || []);
+      for (var j = 0; j < all.length; j++) if (all[j].s === sid) return all[j].i;
+    }
+    return C.ARCH[C.screen(sid).a].i;
+  }
+  var lg = '<span><b data-en="Who can open it:">Siapa yang bisa membuka:</b></span>';
+  C.ROLE_ORDER.forEach(function (k) { lg += P2.rc(k); });
+  P2.mount('#legend', lg);
+
+  var h = '';
+  C.SITEMAP.forEach(function (d, i) {
+    var o = i % 2 ? ' o' : '';
+    var nScr = C.SCREENS.filter(function (s) { return s.dom === d.k; }).length;
+    h += '<section class="panel dom acc' + o + '" data-acc="m"' + (i === 1 ? ' data-open="m"' : '') + ' id="dom-' + d.k + '">' +
+      '<div class="panel-h"><span class="nb-badge' + o + '">' + d.n + '</span><span class="dico">' + ic(d.i) + '</span>' +
+      '<div class="ttl"><h2>' + t(d.t) + '</h2><p class="desc">' + d.items.length + ' item · ' + nScr + ' ' + t(['layar', 'screens']) + '</p></div></div>' +
+      '<div class="acc-b kids">';
+    d.items.forEach(function (it) {
+      var s = C.screen(it.s);
+      h += '<a class="kid" href="' + P2.specHref(it.s) + '">' + ic(kidIcon(it.s)) + '<span class="kt">' + t(it.t) + '<span class="sid">' + it.s + '</span></span>' +
+        P2.rcs(C.rolesFor(s)) + '</a>';
+    });
+    h += '</div></section>';
+  });
+  P2.mount('#domains', h);
+
+  // Coverage
+  var items = 0, ref = {};
+  C.SITEMAP.forEach(function (d) { d.items.forEach(function (it) { items++; ref[it.s] = 1; }); });
+  var nRef = Object.keys(ref).length;
+  var k = [
+    ['layers', C.SITEMAP.length, ['Domain', 'Domains']],
+    ['list', items, ['Item sitemap', 'Sitemap items']],
+    ['link', nRef, ['Layar ditautkan langsung', 'Screens linked directly']],
+    ['file', C.SCREENS.length, ['Total layar', 'Total screens']]
+  ];
+  var kh = '';
+  k.forEach(function (x) { kh += '<div class="kpi"><span class="ic">' + ic(x[0]) + '</span><span class="v num">' + x[1] + '</span><span class="k">' + t(x[2]) + '</span></div>'; });
+  kh += '<p class="note" style="grid-column:1/-1">' + t(['Layar lain (detail, form, persetujuan) dibuka dari layar yang ditautkan dan tetap tercatat di domainnya.', 'Other screens (detail, forms, approvals) are opened from a linked screen and are still assigned to their domain.']) + '</p>';
+  P2.mount('#covK', kh);
+  P2.mount('#covPrev', t([C.SITEMAP.length + ' domain · ' + items + ' item · ' + C.SCREENS.length + ' layar', C.SITEMAP.length + ' domains · ' + items + ' items · ' + C.SCREENS.length + ' screens']));
+  var max = 0, counts = C.SITEMAP.map(function (d) { var n = C.SCREENS.filter(function (s) { return s.dom === d.k; }).length; if (n > max) max = n; return n; });
+  var bh = '';
+  C.SITEMAP.forEach(function (d, i) { bh += '<div class="bar"><span class="nm">' + d.n + '. ' + t(d.t) + '</span><span class="tr"><i style="width:' + Math.round(counts[i] / max * 100) + '%"></i></span><span class="v">' + counts[i] + '</span></div>'; });
+  P2.mount('#bars', bh);
+
+  P2.hashOpen(function (el) { if (el && el.classList.contains('acc')) el.classList.add('is-open'); });
+})();
+</script>
+</body>
+</html>

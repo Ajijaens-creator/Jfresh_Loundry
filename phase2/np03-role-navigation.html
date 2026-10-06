@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-03 Role-Based Navigation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="phase2.css">
+<style>
+  .roles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .role { padding: 16px; display: flex; flex-direction: column; scroll-margin-top: 16px; }
+  .role.is-target { box-shadow: 0 0 0 3px var(--orange); }
+  .role .panel-h { gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+  .role .panel-h h2 { font-size: 17px; }
+  .role .panel-h .rico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: var(--blue-50); color: var(--blue); flex: none; }
+  .role.f .panel-h .rico { background: var(--orange-50); color: var(--orange-ink); }
+  .role.c .panel-h .rico { background: var(--fresh-50); color: #0077A8; }
+  .role .acc-b { display: grid; gap: 14px; flex: 1; align-content: start; }
+  .role .q { padding: 10px 12px; border-radius: 12px; background: var(--bg); font-weight: 700; color: var(--blue-ink); font-size: 15px; }
+  .role .q small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  .menu { display: grid; gap: 4px; }
+  .menu a { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 40px; padding: 6px 10px; border-radius: 10px; text-decoration: none; color: var(--ink); font-weight: 600; font-size: 15px; }
+  .menu a:hover { background: var(--blue-50); }
+  .menu a:first-child { background: var(--blue); color: var(--white); }
+  .menu a:first-child .i { color: var(--white); }
+  .menu a:first-child .sid { background: rgba(255, 255, 255, .18); color: var(--white); }
+  .menu a .i { color: var(--blue); width: 19px; height: 19px; }
+  .menu a .sid { font-size: 11.5px; padding: 1px 6px; }
+  .menu a.x { border: 1px dashed var(--line-2); }
+  .phone { border-radius: 18px; border: 1px solid var(--line-2); background: var(--white); padding: 6px; box-shadow: var(--shadow); }
+  .phone .bar { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; }
+  .phone .bar span { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px; border-radius: 12px; font-size: 10.5px; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.15; min-width: 0; overflow: hidden; letter-spacing: -.01em; }
+  .phone .bar span .i { width: 20px; height: 20px; }
+  .phone .bar span.on { color: var(--blue); background: var(--blue-50); }
+  .phone .cap { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--faint); font-weight: 700; padding: 0 6px 4px; }
+  .hide-l { display: flex; flex-wrap: wrap; gap: 5px; }
+  .hide-l span { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: 13px; font-weight: 600; background: var(--bg-2); color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(79, 106, 136, .5); }
+  .hide-l span .i { width: 14px; height: 14px; color: var(--crit); }
+  .role .btn { min-height: 48px; font-size: 15.5px; padding: 0 14px; width: 100%; margin-top: auto; }
+
+  .rules { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+  .rules .tile { min-height: 0; padding: 14px 10px; }
+  .rules .tile small { margin-top: 2px; }
+
+  .mx .tbl th.c, .mx .tbl td.c { width: 84px; }
+  .mx .tbl thead th.c { text-transform: none; letter-spacing: 0; font-size: 12.5px; color: var(--blue-ink); text-align: center; }
+  .mx .tbl thead th.c .i { display: block; margin: 0 auto 4px; width: 20px; height: 20px; color: var(--blue); }
+  .mx .tbl td.c .cnt { display: block; font-size: 12px; color: var(--muted); }
+
+  .pgs { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+  details.pg { min-width: 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--white); }
+  details.pg > summary { list-style: none; display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px; cursor: pointer; font-weight: 800; color: var(--blue-ink); font-size: 17px; }
+  details.pg > summary::-webkit-details-marker { display: none; }
+  details.pg > summary .ico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: var(--blue-50); color: var(--blue); flex: none; }
+  details.pg > summary .count { margin-left: auto; padding: 3px 10px; border-radius: 999px; background: var(--blue-50); color: var(--blue); font-size: 13.5px; }
+  details.pg > summary .chev2 { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--bg); color: var(--blue); transition: transform .2s; }
+  details.pg[open] > summary .chev2 { transform: rotate(180deg); }
+  details.pg .pgb { padding: 0 12px 12px; }
+  details.pg .tblwrap { border-radius: 12px; }
+
+  @media (max-width: 1239px) {
+    .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .role .panel-h h2 { font-size: 19px; }
+    .menu a { min-height: 46px; font-size: 16px; }
+    .phone .bar span { font-size: 11px; }
+    .rules { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width: 699px) {
+    .roles { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .menu a { min-height: 48px; }
+    .phone .bar span { font-size: 12px; }
+    .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    details.pg > summary { font-size: 16px; padding: 8px 12px; }
+  }
+</style>
+</head>
+<body data-root="../" data-phase="2" data-visual="3">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">03</span><span data-en="Phase 2 · NP-03 · NV-03">Fase 2 · NP-03 · NV-03</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1 data-en="Role-Based Navigation">Navigasi Berdasarkan Peran</h1>
+      <p class="sub" data-en="Each role gets its own menu, its own mobile bottom bar and its own home question. Everything is computed from the role's permissions.">Setiap peran punya menu sendiri, navigasi bawah mobile sendiri dan pertanyaan beranda sendiri. Semuanya dihitung dari izin peran tersebut.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Right Access for <b>Right People</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="roles" id="roles"></div>
+
+  <section class="panel" id="perm-rules">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="key"></i></span>
+      <div class="ttl"><h2 data-en="Permission rules">Aturan izin</h2>
+        <p class="desc" data-en="A permission decides seven things. No permission means the item is not there at all.">Satu izin menentukan tujuh hal. Tanpa izin berarti item itu tidak ada sama sekali.</p></div>
+    </div>
+    <div class="rules" id="rules"></div>
+    <div class="callout blue" style="margin-top:14px"><i data-icon="eye"></i><p><b data-en="Hidden, not disabled.">Disembunyikan, bukan dinonaktifkan.</b> <span data-en="A grey button invites questions and support calls. If a role cannot use something, the menu, button or column is not rendered. The no-permission message only appears when someone opens a link they are not allowed to see.">Tombol abu-abu memancing pertanyaan dan telepon ke support. Jika peran tidak bisa memakai sesuatu, menu, tombol atau kolomnya tidak ditampilkan. Pesan tanpa akses hanya muncul jika seseorang membuka tautan yang tidak boleh dilihatnya.</span></p></div>
+  </section>
+
+  <section class="panel mx acc" data-acc="m" id="modules">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="grid"></i></span>
+      <div class="ttl"><h2 data-en="Module visibility per role">Visibilitas modul per peran</h2>
+        <p class="desc" data-en="A module is visible when at least one of its screens is permitted for the role. The number is how many screens.">Modul terlihat jika minimal satu layarnya diizinkan untuk peran itu. Angkanya adalah jumlah layar.</p></div>
+    </div>
+    <div class="acc-b">
+      <div class="tblwrap hide-m"><table class="tbl" id="modT"></table></div>
+      <div class="mcards hide-d hide-t" id="modC"></div>
+    </div>
+  </section>
+
+  <section class="panel mx">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="lock"></i></span>
+      <div class="ttl"><h2 data-en="Permission × role matrix">Matriks izin × peran</h2>
+        <p class="desc" id="pmDesc"></p></div>
+    </div>
+    <div class="pgs" id="pgs"></div>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script src="phase2.js"></script>
+<script>
+(function () {
+  var C = P2.C, t = P2.t, ic = P2.ic, esc = P2.esc;
+
+  // Role columns
+  var h = '';
+  C.ROLE_ORDER.forEach(function (k, i) {
+    var r = C.ROLES[k], d = P2.DEV[r.device], g = P2.grp(k), o = i % 2 ? ' o' : '';
+    h += '<section class="panel role acc ' + g + '" data-acc="m"' + (i === 0 ? ' data-open="m"' : '') + ' id="role-' + k + '">' +
+      '<div class="panel-h"><span class="nb-badge' + o + '">' + (i + 1) + '</span><span class="rico">' + ic(P2.RS[k].i) + '</span>' +
+      '<div class="ttl"><h2>' + t(r.n) + '</h2><p class="desc">' + esc(r.person) + ' · ' + ic(d[2]) + ' ' + t([d[0], d[1]]) + '</p></div></div>' +
+      '<div class="acc-b"><div class="q"><small data-en="Home question">Pertanyaan beranda</small>“' + t(r.q) + '”</div>' +
+      '<div><p class="label" style="margin-bottom:6px" data-en="Menu · PC &amp; iPad">Menu · PC &amp; iPad</p><nav class="menu">';
+    r.nav.forEach(function (n) { h += '<a href="' + P2.specHref(n.s) + '">' + ic(n.i) + '<span>' + t(n.l) + '</span><span class="sid">' + n.s + '</span></a>'; });
+    (r.extra || []).forEach(function (n) { h += '<a class="x" href="' + P2.specHref(n.s) + '">' + ic(n.i) + '<span>' + t(n.l) + '</span><span class="sid">' + n.s + '</span></a>'; });
+    h += '</nav></div><div><p class="label" style="margin-bottom:6px" data-en="Mobile bottom navigation">Navigasi bawah mobile</p><div class="phone"><div class="cap"><span>9:41</span><span>' + r.mnav.length + '/5</span></div><div class="bar">';
+    r.mnav.forEach(function (n, j) { h += '<span' + (j === 0 ? ' class="on"' : '') + '>' + ic(n.i) + t(n.l) + '</span>'; });
+    h += '</div></div></div><div><p class="label" style="margin-bottom:6px" data-en="Never sees">Tidak pernah melihat</p><div class="hide-l">' +
+      r.hide.map(function (x) { return '<span>' + ic('ban') + t(x) + '</span>'; }).join('') + '</div></div>' +
+      '<a class="btn ' + (g === 'f' ? 'btn-primary' : 'btn-ghost') + '" href="' + P2.appHref(k, P2.home(k)) + '">' + ic('phone') + '<span data-en="Open as this role">Buka sebagai peran ini</span></a></div></section>';
+  });
+  P2.mount('#roles', h);
+
+  // Permission rules (§18)
+  var R = [
+    ['menu', ['Menu', 'Menu'], ['Menu tanpa izin tidak muncul', 'No menu without permission']],
+    ['file', ['Halaman', 'Page'], ['Tautan langsung → tanpa akses', 'Direct link → no access']],
+    ['pointer', ['Tombol', 'Button'], ['Aksi tanpa izin tidak dirender', 'Unpermitted actions not rendered']],
+    ['database', ['Data', 'Data'], ['Klien hanya melihat datanya', 'Clients only see their data']],
+    ['filecheck', ['Persetujuan', 'Approval'], ['Pengaju ≠ penyetuju', 'Requester ≠ approver']],
+    ['edit', ['Edit', 'Edit'], ['Ubah hanya dengan izin edit', 'Change only with edit permission']],
+    ['download', ['Export', 'Export'], ['Export hanya rpt.export', 'Export only with rpt.export']]
+  ];
+  P2.mount('#rules', R.map(function (x, i) { return '<div class="tile' + (i % 2 ? ' o' : '') + '"><span class="ic">' + ic(x[0]) + '</span>' + t(x[1]) + '<small>' + t(x[2]) + '</small></div>'; }).join(''));
+
+  // Module × role
+  function head() { return C.ROLE_ORDER.map(function (k) { return '<th class="c">' + ic(P2.RS[k].i) + P2.rshort(k) + '</th>'; }).join(''); }
+  h = '<thead><tr><th data-en="Module">Modul</th>' + head() + '</tr></thead><tbody>';
+  var mc = '';
+  C.SITEMAP.forEach(function (d) {
+    var scr = C.SCREENS.filter(function (s) { return s.dom === d.k; });
+    var vis = [], hid = [];
+    h += '<tr><td class="nm">' + d.n + '. ' + t(d.t) + '<span class="sub">' + scr.length + ' ' + t(['layar', 'screens']) + '</span></td>';
+    C.ROLE_ORDER.forEach(function (k) {
+      var n = scr.filter(function (s) { return C.can(k, s.p); }).length;
+      (n ? vis : hid).push(k);
+      h += '<td class="c">' + P2.yn(n) + (n ? '<span class="cnt num">' + n + '</span>' : '') + '</td>';
+    });
+    h += '</tr>';
+    mc += '<div class="mcard"><div class="top"><span class="nb-badge">' + d.n + '</span><b>' + t(d.t) + '</b></div><dl><dt>' + ic('eye') + ' <span data-en="Visible">Terlihat</span></dt><dd>' + (vis.length ? P2.rcs(vis) : '—') + '</dd>' +
+      '<dt>' + ic('ban') + ' <span data-en="Hidden">Tersembunyi</span></dt><dd>' + (hid.length ? '<span class="rcs">' + hid.map(function (k) { return '<span class="mini">' + P2.rshort(k) + '</span>'; }).join('') + '</span>' : '—') + '</dd></dl></div>';
+  });
+  P2.mount('#modT', h + '</tbody>');
+  P2.mount('#modC', mc);
+
+  // Permission × role, grouped by prefix
+  var G = [
+    [['home'], ['Beranda', 'Home'], 'home'], [['ops', 'log', 'prd'], ['Operasional & Logistik', 'Operations & Logistics'], 'washer'],
+    [['qlt', 'sla'], ['Kualitas & SLA', 'Quality & SLA'], 'shield'], [['inv'], ['Inventory', 'Inventory'], 'package'],
+    [['fin'], ['Finance', 'Finance'], 'coins'], [['com'], ['Komersial', 'Commercial'], 'briefcase'],
+    [['rpt', 'people'], ['Laporan & People', 'Reports & People'], 'chart'], [['apr', 'sys'], ['Persetujuan & Sistem', 'Approvals & System'], 'cog'],
+    [['clt'], ['Client Portal', 'Client Portal'], 'hotel']
+  ];
+  var P = Object.keys(C.PERMS);
+  P2.mount('#pmDesc', t(['Semua ' + P.length + ' izin. Klik grup untuk membuka. Kolom "Layar" menunjukkan berapa layar memakai izin itu untuk dibuka atau untuk aksi.', 'All ' + P.length + ' permissions. Click a group to open it. The "Screens" column shows how many screens use the permission to open or to act.']));
+  function uses(p) { return C.SCREENS.filter(function (s) { return s.p === p || (s.pri && s.pri[1] === p) || (s.sec || []).some(function (x) { return x[1] === p; }); }).length; }
+  h = '';
+  G.forEach(function (g, gi) {
+    var ps = P.filter(function (p) { return g[0].indexOf(p.split('.')[0]) !== -1; });
+    var tb = '<thead><tr><th data-en="Permission">Izin</th><th class="c" data-en="Screens">Layar</th>' + head() + '</tr></thead><tbody>', cards = '';
+    ps.forEach(function (p) {
+      var u = uses(p), held = C.ROLE_ORDER.filter(function (k) { return C.can(k, p); });
+      tb += '<tr><td><span class="code">' + p + '</span><span class="sub">' + t(C.PERMS[p]) + '</span></td><td class="c num">' + (u || '—') + '</td>' +
+        C.ROLE_ORDER.map(function (k) { return '<td class="c">' + P2.yn(C.can(k, p)) + '</td>'; }).join('') + '</tr>';
+      cards += '<div class="mcard"><div class="top"><span class="code">' + p + '</span></div><span>' + t(C.PERMS[p]) + '</span>' + (held.length ? P2.rcs(held) : '<span class="note">—</span>') + '</div>';
+    });
+    h += '<details class="pg"' + (gi === 1 ? ' open' : '') + '><summary><span class="ico">' + ic(g[2]) + '</span>' + t(g[1]) + '<span class="count num">' + ps.length + '</span><span class="chev2">' + ic('chevd') + '</span></summary>' +
+      '<div class="pgb"><div class="tblwrap hide-m"><table class="tbl">' + tb + '</tbody></table></div><div class="mcards hide-d hide-t">' + cards + '</div></div></details>';
+  });
+  P2.mount('#pgs', h);
+
+  P2.hashOpen(function (el) { if (el && el.classList.contains('acc')) el.classList.add('is-open'); });
+})();
+</script>
+</body>
+</html>

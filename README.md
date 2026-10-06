@@ -1,4 +1,4 @@
-# JFRESH OS — Phase 1: Business Foundation
+# JFRESH OS — Phase 1 & Phase 2
 
 The seven connected Phase 1 visuals for JFRESH OS, built as responsive HTML pages that share one design system.
 
@@ -19,6 +19,26 @@ Open `index.html` in a browser. No build step and no server needed.
 | 07 | Master Data Relationship Diagram | `visuals/07-master-data.html` |
 
 `preview.html` shows any visual in PC, iPad and mobile frames side by side.
+
+## Phase 2 — System Structure & Navigation (NP 1.0)
+
+Phase 2 turns the Phase 1 foundation into the structure of the system: what screens exist, who sees them, how people move between them, and how every screen is built.
+
+| Part | Where |
+|------|-------|
+| Phase 2 home (NP-01 to NP-06 + Definition of Done) | `phase2/index.html` |
+| NP-01 Master Sitemap · NP-02 Information Architecture · NP-03 Role Navigation · NP-04 User Flows · NP-05 Screen Inventory · NP-06 Screen Framework | `phase2/np0*.html` |
+| Traceability matrix (Phase 1 requirement → NB → NV → screen → role → workflow → permission) | `phase2/traceability.html`, `docs/phase2/traceability-matrix.csv` |
+| Working app: role-based shells, 9 screen archetypes, 77 screens, all screen states | `app/index.html` |
+| Markdown copies of every NP document | `docs/phase2/` |
+
+**One source of truth.** Roles, permissions, menus, screens, flows and the 24 framework fields live in `assets/js/jfos-config.js`. The app, the HTML docs and the Markdown docs all read it, so they cannot drift. After editing it, run `node tools/build-phase2-docs.js` to refresh `docs/phase2/`.
+
+**App routes.** `app/index.html#/<role>/<SCREEN-ID>[/<record>][?state=loading|empty|error|warning|success|noperm|offline]`. Roles: `operator`, `driver`, `supervisor`, `opsmgr`, `finance`, `sales`, `owner`, `client`. The demo strip at the top switches role and screen state; demo data is kept in the browser and can be reset there.
+
+**Rules the app follows.** Menus, pages, buttons and price columns are hidden (not disabled) without the permission. Frontline gets one main action per screen and a bottom bar of at most five items on mobile; management gets a sidebar, filters and drill-down. Every change writes an audit entry (user, time, event, record, old → new value), saves are protected against double submit, and messages are plain Indonesian with English available.
+
+NB codes: NB-04 (Receiving) and NB-05 (Reconciliation) come from the brief; the other NB codes are provisional until the approved list is supplied.
 
 ## Three form factors
 

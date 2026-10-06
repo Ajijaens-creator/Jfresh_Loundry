@@ -9,7 +9,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="assets/css/jfresh.css">
 <style>
-  .picker { display: flex; flex-wrap: wrap; gap: 8px; }
+  .picker { display: flex; flex-direction: column; gap: 12px; }
+  .pgrp { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .pgl { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); min-width: 100%; }
   .picker button { min-height: 46px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--white); color: var(--blue); font-weight: 700; cursor: pointer; }
   .picker button[aria-pressed="true"] { background: var(--blue); color: var(--white); border-color: var(--blue); }
   .stage { display: grid; grid-template-columns: 5.2fr 2.6fr 1.3fr; gap: 24px; align-items: end; }
@@ -52,13 +54,20 @@
 </main>
 
 <script src="assets/js/icons.js"></script>
+<script src="assets/js/jfos-config.js"></script>
 <script src="assets/js/jfresh.js"></script>
 <script>
 (function () {
   var screens = document.querySelectorAll('.screen');
   var picker = document.getElementById('picker');
-  var current = 1;
-  try { var h = (location.hash || '').replace('#v', ''); if (+h >= 1 && +h <= 7) current = +h; } catch (e) {}
+  // Phase 1 visuals, Phase 2 NP pages and the Phase 2 app (one entry per role).
+  var C = window.JFOS;
+  var ITEMS = JF.VISUALS.map(function (v) { return { k: 'v' + v.n, l: '0' + v.n + ' ' + v.t, src: 'visuals/' + v.f, g: 1 }; })
+    .concat(C.NP.map(function (v, i) { return { k: 'np' + (i + 1), l: 'NP-0' + (i + 1) + ' ' + JF.tx(v.t), src: 'phase2/' + v.f, g: 2 }; }))
+    .concat([{ k: 'trace', l: 'Traceability', src: 'phase2/traceability.html', g: 2 }])
+    .concat(C.ROLE_ORDER.map(function (r) { var R = C.ROLES[r]; return { k: 'app-' + r, l: 'App · ' + JF.tx(R.n), src: 'app/index.html#/' + r + '/' + R.nav[0].s, g: 3 }; }));
+  var current = ITEMS[0].k;
+  try { var h = (location.hash || '').slice(1); if (/^\d$/.test(h)) h = 'v' + h; if (ITEMS.some(function (x) { return x.k === h; })) current = h; } catch (e) {}
   function fit() {
     screens.forEach(function (s) {
       var w = +s.dataset.w, h = +s.dataset.h, k = s.clientWidth / w;
@@ -67,17 +76,22 @@
       if (f) { f.style.width = w + 'px'; f.style.height = h + 'px'; f.style.transform = 'scale(' + k + ')'; }
     });
   }
-  function load(n) {
-    current = n;
-    var v = JF.VISUALS[n - 1];
+  function load(key) {
+    current = key;
+    var v = ITEMS.filter(function (x) { return x.k === key; })[0] || ITEMS[0];
     screens.forEach(function (s) {
-      s.innerHTML = '<iframe title="' + v.t + ' ' + s.dataset.w + 'px" src="visuals/' + v.f + '" loading="lazy"></iframe>';
+      s.innerHTML = '<iframe title="' + v.k + ' ' + s.dataset.w + 'px" src="' + v.src + '" loading="lazy"></iframe>';
     });
-    picker.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.n === n ? 'true' : 'false'); });
+    picker.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.k === v.k ? 'true' : 'false'); });
+    try { history.replaceState(null, '', '#' + v.k); } catch (e) {}
     fit();
   }
-  picker.innerHTML = JF.VISUALS.map(function (v) { return '<button type="button" data-n="' + v.n + '">0' + v.n + ' ' + v.t + '</button>'; }).join('');
-  picker.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) load(+b.dataset.n); });
+  var GL = { 1: ['Fase 1 · Visual', 'Phase 1 · Visuals'], 2: ['Fase 2 · NP', 'Phase 2 · NP'], 3: ['Fase 2 · Aplikasi per peran', 'Phase 2 · App by role'] };
+  picker.innerHTML = [1, 2, 3].map(function (g) {
+    return '<div class="pgrp"><span class="pgl" data-en="' + GL[g][1] + '">' + GL[g][0] + '</span>' + ITEMS.filter(function (x) { return x.g === g; }).map(function (v) { return '<button type="button" data-k="' + v.k + '">' + v.l + '</button>'; }).join('') + '</div>';
+  }).join('');
+  if (JF.apply) JF.apply();
+  picker.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) load(b.dataset.k); });
   window.addEventListener('resize', fit);
   load(current);
 })();

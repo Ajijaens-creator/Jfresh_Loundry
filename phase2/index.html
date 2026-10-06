@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS Phase 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="phase2.css">
+<style>
+  .p2-hero h1 { font-size: clamp(30px, 4vw, 48px); letter-spacing: -.03em; }
+  .principle { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .principle span { padding: 8px 14px; border-radius: 999px; font-weight: 800; font-size: 15px; background: var(--blue-50); color: var(--blue); }
+  .principle span:nth-child(2) { background: var(--orange-50); color: var(--orange-ink); }
+  .principle span:nth-child(3) { background: var(--blue); color: var(--white); }
+
+  .twin { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .side { border-radius: var(--r); border: 1px solid var(--line); padding: 18px; display: grid; gap: 12px; align-content: start; }
+  .side.f { background: linear-gradient(180deg, var(--orange-50), var(--white) 75%); border-color: var(--orange-100); }
+  .side.m { background: linear-gradient(180deg, var(--blue-50), var(--white) 75%); border-color: var(--blue-100); }
+  .side h3 { display: flex; align-items: center; gap: 10px; font-size: 20px; }
+  .side.f h3 .i { color: var(--orange-ink); }
+  .side .checks li { font-size: 16px; }
+
+  .app-card { position: relative; overflow: hidden; border-radius: var(--r-lg); padding: 26px; background: linear-gradient(135deg, var(--blue) 0%, #0A63C2 55%, #0B8FD6 100%); color: var(--white); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px 28px; align-items: center; box-shadow: var(--shadow-lift); }
+  .app-card::after { content: ""; position: absolute; right: -60px; top: -60px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.22), rgba(255,255,255,0) 70%); pointer-events: none; }
+  .app-card h2 { color: var(--white); font-size: 26px; }
+  .app-card p { color: #D9E9FA; margin-top: 6px; max-width: 60ch; }
+  .app-card .btn { position: relative; z-index: 1; }
+  .roles-go { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .rgo { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding: 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--white); text-decoration: none; color: inherit; min-height: 76px; transition: border-color .2s, box-shadow .2s; }
+  .rgo:hover { border-color: var(--line-2); box-shadow: var(--shadow); }
+  .rgo .ic { grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--blue-50); color: var(--blue); }
+  .rgo.f .ic { background: var(--orange-50); color: var(--orange-ink); }
+  .rgo.c .ic { background: var(--fresh-50); color: #0077A8; }
+  .rgo b { color: var(--blue-ink); font-size: 16px; line-height: 1.25; }
+  .rgo small { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; }
+  .rgo .go { grid-row: span 2; color: var(--blue); }
+
+  .npcards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .lcard .stat { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .lcard.tr { background: linear-gradient(180deg, var(--bg-2), var(--white) 70%); }
+
+  .dod { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 28px; counter-reset: d; }
+  .dod li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .dod li > .i { color: var(--ok); width: 22px; height: 22px; margin-top: 1px; }
+  .dod li b { color: var(--blue-ink); font-size: 16px; font-weight: 700; }
+  .dod li .where { grid-column: 2; display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 14px; color: var(--muted); }
+  .dod li .where a { font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 28px; }
+  .dod li .where a .i { width: 15px; height: 15px; }
+
+  @media (max-width: 1239px) {
+    .npcards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .roles-go { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .app-card { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 699px) {
+    .twin, .npcards, .roles-go, .dod { grid-template-columns: minmax(0, 1fr); }
+    .app-card { padding: 20px; }
+    .app-card h2 { font-size: 22px; }
+    .dod li .where a { min-height: 44px; }
+  }
+</style>
+</head>
+<body data-root="../" data-phase="2" data-visual="0">
+
+<section class="hero p2-hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span data-en="JFRESH OS · Phase 2 · System Structure &amp; Navigation">JFRESH OS · Fase 2 · Struktur Sistem &amp; Navigasi</span></div>
+      <h1 data-en="System Structure &amp; Navigation">Struktur Sistem &amp; Navigasi</h1>
+      <p class="sub" data-en="How JFRESH OS is organised: the modules, what each role sees, how work flows, which screen types are reused, and the standard every screen follows. NP version 1.0.">Bagaimana JFRESH OS disusun: modul, apa yang dilihat setiap peran, alur kerja, jenis layar yang dipakai ulang, dan standar yang diikuti setiap layar. NP versi 1.0.</p>
+      <div class="principle"><span>Simple Frontline</span><span>Powerful Management</span><span>One Connected JFRESH OS</span></div>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Simple Frontline — <b>Powerful Management</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section class="panel">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="target"></i></span>
+      <div class="ttl"><h2 data-en="Core principle">Prinsip utama</h2>
+        <p class="desc" data-en="One system, two depths. Every structure decision in Phase 2 follows this.">Satu sistem, dua kedalaman. Setiap keputusan struktur di Fase 2 mengikuti prinsip ini.</p></div>
+    </div>
+    <div class="twin">
+      <div class="side f">
+        <h3><i data-icon="pointer"></i>Simple Frontline</h3>
+        <ul class="checks">
+          <li><i data-icon="check"></i><span data-en="One clear next action, one dominant orange button">Satu aksi berikutnya yang jelas, satu tombol oranye yang dominan</span></li>
+          <li><i data-icon="check"></i><span data-en="Four to six menu items, bottom navigation with at most five">Empat sampai enam menu, navigasi bawah maksimal lima</span></li>
+          <li><i data-icon="check"></i><span data-en="Known data is prefilled, never typed twice">Data yang sudah diketahui terisi otomatis, tidak diketik ulang</span></li>
+          <li><i data-icon="check"></i><span data-en="Plain operational words, no ERP terms">Kata operasional sehari-hari, tanpa istilah ERP</span></li>
+        </ul>
+      </div>
+      <div class="side m">
+        <h3><i data-icon="gauge"></i>Powerful Management</h3>
+        <ul class="checks">
+          <li><i data-icon="check"></i><span data-en="KPI and alerts first, then drill-down to the transaction">KPI dan alert dulu, lalu drill-down sampai transaksi</span></li>
+          <li><i data-icon="check"></i><span data-en="Approvals with old vs new value and reason">Persetujuan dengan nilai lama vs baru dan alasan</span></li>
+          <li><i data-icon="check"></i><span data-en="Reports, export and configuration where permitted">Laporan, export dan konfigurasi sesuai izin</span></li>
+          <li><i data-icon="check"></i><span data-en="Every important change is audited">Setiap perubahan penting tercatat di audit</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="kpis" id="stats" style="margin-top:18px"></div>
+  </section>
+
+  <section class="app-card">
+    <div>
+      <h2 data-en="Open the JFRESH OS app">Buka aplikasi JFRESH OS</h2>
+      <p data-en="The working app is built from the same configuration as these documents. Choose a role to see exactly the menu, screens and buttons that role gets.">Aplikasi yang berjalan dibangun dari konfigurasi yang sama dengan dokumen ini. Pilih peran untuk melihat menu, layar dan tombol yang didapat peran tersebut.</p>
+    </div>
+    <a class="btn btn-primary" href="../app/index.html"><i data-icon="phone"></i><span data-en="Open JFRESH OS app">Buka aplikasi JFRESH OS</span><i data-icon="arrow"></i></a>
+  </section>
+
+  <section class="panel">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="users"></i></span>
+      <div class="ttl"><h2 data-en="Open the app as a role">Buka aplikasi sebagai peran</h2>
+        <p class="desc" data-en="Each link opens that role's home screen.">Setiap tautan membuka layar beranda peran tersebut.</p></div>
+    </div>
+    <div class="roles-go" id="roles"></div>
+  </section>
+
+  <section>
+    <div class="panel-h">
+      <span class="ico"><i data-icon="layers"></i></span>
+      <div class="ttl"><h2 data-en="The 6 Phase 2 documents">6 Dokumen Fase 2</h2>
+        <p class="desc" data-en="NP-01 to NP-06, each matching one approved navigation visual (NV-01 to NV-06), plus the traceability matrix.">NP-01 sampai NP-06, masing-masing sesuai satu visual navigasi yang disetujui (NV-01 sampai NV-06), ditambah matriks traceability.</p></div>
+    </div>
+    <div class="npcards" id="npcards"></div>
+  </section>
+
+  <section class="panel acc" data-acc="m" data-open="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="clipboard"></i></span>
+      <div class="ttl"><h2 data-en="Definition of Done">Definition of Done</h2>
+        <p class="desc" data-en="From section 40 of the Phase 2 brief. Each line links to where it is met.">Dari bagian 40 brief Fase 2. Setiap baris menautkan ke tempat syarat itu dipenuhi.</p></div>
+    </div>
+    <div class="acc-b">
+      <ul class="dod" id="dod"></ul>
+    </div>
+  </section>
+
+  <div class="callout"><i data-icon="alert"></i><p><b data-en="NB codes are provisional.">Kode NB masih sementara.</b> <span data-en="Only NB-04 Receiving and NB-05 Reconciliation come from the Phase 2 master prompt. The other NB codes follow the Phase 1 golden workflow and are marked provisional until the approved Navigation Brief list is attached; then only the catalog in jfos-config.js changes.">Hanya NB-04 Penerimaan dan NB-05 Rekonsiliasi berasal dari master prompt Fase 2. Kode NB lainnya mengikuti golden workflow Fase 1 dan ditandai sementara sampai daftar Navigation Brief yang disetujui dilampirkan; setelah itu hanya katalog di jfos-config.js yang berubah.</span></p></div>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script src="phase2.js"></script>
+<script>
+(function () {
+  var C = P2.C, t = P2.t, ic = P2.ic;
+  var items = C.SITEMAP.reduce(function (n, d) { return n + d.items.length; }, 0);
+
+  // Stats
+  var stats = [
+    ['layers', C.SITEMAP.length, ['Domain modul', 'Module domains']],
+    ['file', C.SCREENS.length, ['Layar', 'Screens']],
+    ['grid', Object.keys(C.ARCH).length, ['Jenis layar', 'Screen types']],
+    ['users', C.ROLE_ORDER.length, ['Peran', 'Roles']],
+    ['route', C.FLOWS.length, ['Alur utama', 'Main flows']],
+    ['key', Object.keys(C.PERMS).length, ['Izin', 'Permissions']]
+  ];
+  var h = '';
+  stats.forEach(function (s) { h += '<div class="kpi"><span class="ic">' + ic(s[0]) + '</span><span class="v num">' + s[1] + '</span><span class="k">' + t(s[2]) + '</span></div>'; });
+  P2.mount('#stats', h);
+
+  // Roles
+  h = '';
+  C.ROLE_ORDER.forEach(function (k) {
+    var r = C.ROLES[k], d = P2.DEV[r.device];
+    h += '<a class="rgo ' + P2.grp(k) + '" href="' + P2.appHref(k, P2.home(k)) + '"><span class="ic">' + ic(P2.RS[k].i) + '</span><b>' + t(r.n) + '</b>' +
+      '<span class="go">' + ic('arrow') + '</span><small>' + ic(d[2]) + t([d[0], d[1]]) + ' · <span class="sid">' + P2.home(k) + '</span></small></a>';
+  });
+  P2.mount('#roles', h);
+
+  // NP cards
+  var facts = {
+    'NP-01': [C.SITEMAP.length + ' domain', items + ' item'],
+    'NP-02': ['4 level', Object.keys(C.ALERTS).length + ' alert'],
+    'NP-03': [C.ROLE_ORDER.length + ' peran / roles', Object.keys(C.PERMS).length + ' izin / perms'],
+    'NP-04': [C.FLOWS.length + ' alur / flows', C.FLOW_RULES.length + ' aturan / rules'],
+    'NP-05': [Object.keys(C.ARCH).length + ' arsitipe', C.SCREENS.length + ' layar / screens'],
+    'NP-06': [C.FRAMEWORK_FIELDS.length + ' field', C.SCREENS.length + ' spesifikasi / specs']
+  };
+  h = '';
+  C.NP.forEach(function (p, i) {
+    h += '<a class="lcard" href="' + p.f + '"><span class="vbadge">' + p.k.replace('NP-', '') + '</span><h3>' + t(p.t) + '</h3><p>' + t(p.d) + '</p>' +
+      '<span class="stat"><span class="mini nv">NV-0' + (i + 1) + '</span>' + facts[p.k].map(function (f) { return '<span class="mini">' + P2.esc(f) + '</span>'; }).join('') + '</span></a>';
+  });
+  h += '<a class="lcard tr" href="traceability.html"><span class="vbadge" style="background:var(--orange);color:#3A1D00">' + ic('link') + '</span><h3 data-en="Traceability Matrix">Matriks Traceability</h3>' +
+    '<p data-en="Every screen traced to Phase 1 (BF), the Navigation Brief (NB) and the navigation visuals (NV).">Setiap layar ditelusuri ke Fase 1 (BF), Navigation Brief (NB) dan visual navigasi (NV).</p>' +
+    '<span class="stat"><span class="mini">' + C.SCREENS.length + ' ' + t(['baris', 'rows']) + '</span><span class="mini">CSV</span></span></a>';
+  P2.mount('#npcards', h);
+
+  // Definition of Done (§40)
+  var dod = [
+    [['Master sitemap ada', 'Master sitemap exists'], [['np01-sitemap.html', 'NP-01']], C.SITEMAP.length + ' domain · ' + items + ' item'],
+    [['Information architecture diterapkan', 'Information architecture implemented'], [['np02-information-architecture.html', 'NP-02']], '4 level'],
+    [['Navigasi berdasarkan peran ada', 'Role-based navigation exists'], [['np03-role-navigation.html', 'NP-03']], [C.ROLE_ORDER.length + ' peran', C.ROLE_ORDER.length + ' roles']],
+    [['Frontline disederhanakan', 'Frontline simplified'], [['np03-role-navigation.html#role-operator', 'NP-03 · Operator'], ['np04-user-flows.html', 'NP-04']], ['Operator ' + C.ROLES.operator.nav.length + ' menu', 'Operator ' + C.ROLES.operator.nav.length + ' menus']],
+    [['Client portal terpisah', 'Client portal separated'], [['np01-sitemap.html#dom-clt', 'NP-01'], ['np03-role-navigation.html#role-client', 'NP-03 · Klien / Client']], ''],
+    [['Alur utama didefinisikan', 'Main flows defined'], [['np04-user-flows.html', 'NP-04']], [C.FLOWS.length + ' alur', C.FLOWS.length + ' flows']],
+    [['Arsitipe layar dapat dipakai ulang', 'Screen archetypes reusable'], [['np05-screen-inventory.html', 'NP-05']], Object.keys(C.ARCH).length + ' → ' + C.SCREENS.length],
+    [['Functional screen framework ada', 'Functional screen framework exists'], [['np06-screen-framework.html', 'NP-06']], C.FRAMEWORK_FIELDS.length + ' field × ' + C.SCREENS.length],
+    [['Perilaku desktop, iPad & mobile didefinisikan', 'Desktop, iPad & mobile behaviour defined'], [['np05-screen-inventory.html#archetypes', 'NP-05'], ['np06-screen-framework.html#responsive', 'NP-06']], ''],
+    [['Bahasa Indonesia default, English tersedia', 'Indonesian default, English available'], [['np06-screen-framework.html#language', 'NP-06']], 'ID | EN'],
+    [['Izin mengatur navigasi dan aksi', 'Permissions affect navigation and actions'], [['np03-role-navigation.html#perm-rules', 'NP-03']], ''],
+    [['State memuat, kosong, berhasil, peringatan, error & tanpa akses didefinisikan', 'Loading, empty, success, warning, error & no-permission states defined'], [['np06-screen-framework.html#states', 'NP-06']], Object.keys(C.STATES).length + ' state'],
+    [['Interaksi seminimal mungkin', 'Minimum interaction'], [['np04-user-flows.html#rules', 'NP-04']], ''],
+    [['Tanpa istilah & menu ERP yang tidak perlu', 'No unnecessary ERP terms or menus'], [['np06-screen-framework.html#copy', 'NP-06'], ['np03-role-navigation.html', 'NP-03']], ''],
+    [['Fitur tanpa akses tidak ditampilkan', 'No inaccessible features exposed'], [['np03-role-navigation.html#perm-rules', 'NP-03'], ['np03-role-navigation.html#modules', 'NP-03 · Modul / Modules']], ''],
+    [['Brand diikuti', 'Brand followed'], [['np06-screen-framework.html#tokens', 'NP-06']], ''],
+    [['Logo dipertahankan', 'Logo preserved'], [['../index.html', 'Fase 1 · Phase 1']], 'assets/brand/jfresh-logo.png'],
+    [['Kompatibel dengan Fase 1', 'Compatible with Phase 1'], [['traceability.html', 'Traceability']], 'BF-01 … BF-07']
+  ];
+  h = '';
+  dod.forEach(function (d) {
+    h += '<li>' + ic('checkc') + '<b>' + t(d[0]) + '</b><span class="where">' + d[1].map(function (l) { return '<a href="' + l[0] + '">' + ic('arrow') + P2.esc(l[1]) + '</a>'; }).join('') +
+      (d[2] ? '<span>' + t(d[2]) + '</span>' : '') + '</span></li>';
+  });
+  P2.mount('#dod', h);
+})();
+</script>
+</body>
+</html>

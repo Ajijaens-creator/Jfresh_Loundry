@@ -7,6 +7,7 @@
   var body = document.body;
   var ROOT = body.getAttribute('data-root') || '';
   var CURRENT = parseInt(body.getAttribute('data-visual') || '0', 10);
+  var PHASE = body.getAttribute('data-phase') === '2' ? 2 : 1;
 
   var VISUALS = [
     { n: 1, f: '01-business-model.html', t: 'Business Model Overview', id: 'Siapa dilayani, nilai, alur & pendapatan', en: 'Who we serve, value, flow & revenue', ic: 'briefcase' },
@@ -17,7 +18,18 @@
     { n: 6, f: '06-kpi-sla.html', t: 'Performance & SLA Architecture', id: 'Dari aktivitas menjadi KPI & alert', en: 'From activity to KPI & alerts', ic: 'gauge' },
     { n: 7, f: '07-master-data.html', t: 'Master Data Relationship Diagram', id: 'Hubungan antar master data', en: 'How master data connects', ic: 'database' }
   ];
-  function href(v) { return ROOT + 'visuals/' + v.f; }
+  // Phase 2 pages (NP-01 … NP-06) come from the shared config in jfos-config.js
+  var NP = (window.JFOS && window.JFOS.NP || []).map(function (p, i) { return { n: i + 1, f: p.f, t: p.t[1], code: p.k, id: p.d[0], en: p.d[1], ic: p.ic }; });
+  var PAGES = PHASE === 2 ? NP : VISUALS;
+  var CH = PHASE === 2 ? {
+    dir: 'phase2/', home: 'phase2/index.html', sub: ['Fase 2 · Struktur & Navigasi', 'Phase 2 · Structure & Navigation'], ov: ['Ringkasan Fase 2', 'Phase 2 overview'],
+    menu: ['6 Dokumen NP', '6 NP Docs'], all: ['Semua dokumen Fase 2', 'All Phase 2 docs'], foot: ['Fase 2 Struktur & Navigasi · NP Versi 1.0', 'Phase 2 Structure & Navigation · NP Version 1.0'], num: function (v) { return v.code.replace('NP-', ''); }
+  } : {
+    dir: 'visuals/', home: 'index.html', sub: ['Fase 1 · Fondasi Bisnis', 'Phase 1 · Business Foundation'], ov: ['Ringkasan Fase 1', 'Phase 1 overview'],
+    menu: ['7 Visual', '7 Visuals'], all: ['Semua visual Fase 1', 'All Phase 1 visuals'], foot: ['Fase 1 Fondasi Bisnis · Versi 1.0', 'Phase 1 Business Foundation · Version 1.0'], num: function (v) { return '0' + v.n; }
+  };
+  function href(v) { return ROOT + CH.dir + v.f; }
+  function tx(p) { return '<span data-en="' + esc(p[1]) + '">' + esc(p[0]) + '</span>'; }
   function ic(name, cls) { return '<svg class="i' + (cls ? ' ' + cls : '') + '" aria-hidden="true"><use href="#i-' + name + '"/></svg>'; }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -46,18 +58,20 @@
 
   /* ---------- Chrome: top bar + pager ---------- */
   function topbar() {
-    var items = '<a class="home" href="' + ROOT + 'index.html"' + (CURRENT === 0 ? ' aria-current="page"' : '') + '>' + ic('grid') +
-      '<span data-en="Phase 1 overview">Ringkasan Fase 1</span></a>' +
-      '<a class="home" href="' + ROOT + 'preview.html">' + ic('monitor') + '<span data-en="Device preview">Pratinjau perangkat</span></a>';
-    VISUALS.forEach(function (v) {
-      items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">0' + v.n + '</span><span>' + esc(v.t) + '</span></a>';
+    var items = '<a class="home" href="' + ROOT + CH.home + '"' + (CURRENT === 0 ? ' aria-current="page"' : '') + '>' + ic('grid') + tx(CH.ov) + '</a>' +
+      (PHASE === 2 ? '<a class="home" href="' + ROOT + 'app/index.html">' + ic('phone') + '<span data-en="Open JFRESH OS app">Buka aplikasi JFRESH OS</span></a>' +
+        '<a class="home" href="' + ROOT + 'phase2/traceability.html">' + ic('link') + '<span data-en="Traceability matrix">Matriks traceability</span></a>' : '') +
+      '<a class="home" href="' + ROOT + 'preview.html">' + ic('monitor') + '<span data-en="Device preview">Pratinjau perangkat</span></a>' +
+      '<a class="home" href="' + ROOT + (PHASE === 2 ? 'index.html' : 'phase2/index.html') + '">' + ic('layers') + (PHASE === 2 ? '<span data-en="Phase 1 Business Foundation">Fase 1 Fondasi Bisnis</span>' : '<span data-en="Phase 2 Structure &amp; Navigation">Fase 2 Struktur &amp; Navigasi</span>') + '</a>';
+    PAGES.forEach(function (v) {
+      items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">' + CH.num(v) + '</span><span>' + esc(v.t) + '</span></a>';
     });
     var h = '<header class="topbar"><div class="wrap">' +
       '<a class="brand" href="' + ROOT + 'index.html" aria-label="J\'Fresh Laundry — JFRESH OS">' +
       '<img class="brand-logo" src="' + ROOT + 'assets/brand/jfresh-logo.png" alt="J\'Fresh Laundry" width="605" height="373">' +
-      '<span class="brand-txt"><span class="wordmark">JFRESH <b>OS</b></span><span class="brand-sub" data-en="Phase 1 · Business Foundation">Fase 1 · Fondasi Bisnis</span></span></a>' +
+      '<span class="brand-txt"><span class="wordmark">JFRESH <b>OS</b></span><span class="brand-sub" data-en="' + esc(CH.sub[1]) + '">' + esc(CH.sub[0]) + '</span></span></a>' +
       '<span class="topbar-sp"></span>' +
-      '<details class="vmenu"><summary aria-label="Menu visual">' + ic('menu') + '<span class="vlabel" data-en="7 Visuals">7 Visual</span></summary><nav class="vmenu-list">' + items + '</nav></details>' +
+      '<details class="vmenu"><summary aria-label="Menu visual">' + ic('menu') + '<span class="vlabel" data-en="' + CH.menu[1] + '">' + CH.menu[0] + '</span></summary><nav class="vmenu-list">' + items + '</nav></details>' +
       '<div class="lang" role="group" aria-label="Bahasa / Language"><button type="button" data-l="id">ID</button><button type="button" data-l="en">EN</button></div>' +
       '</div></header>';
     body.insertAdjacentHTML('afterbegin', h);
@@ -71,18 +85,18 @@
 
   function pager() {
     if (!CURRENT) return;
-    var prev = VISUALS[CURRENT - 2], next = VISUALS[CURRENT];
+    var prev = PAGES[CURRENT - 2], next = PAGES[CURRENT];
     var h = '<nav class="wrap pager" aria-label="Navigasi visual">';
-    h += prev ? '<a href="' + href(prev) + '">' + ic('arrowl') + '<span><small data-en="Previous">Sebelumnya</small>0' + prev.n + ' ' + esc(prev.t) + '</span></a>' : '<span></span>';
-    h += '<a class="home" href="' + ROOT + 'index.html">' + ic('grid') + '<span data-en="All Phase 1 visuals">Semua visual Fase 1</span></a>';
-    h += next ? '<a class="nx" href="' + href(next) + '"><span><small data-en="Next">Berikutnya</small>0' + next.n + ' ' + esc(next.t) + '</span>' + ic('arrow') + '</a>' : '<span></span>';
+    h += prev ? '<a href="' + href(prev) + '">' + ic('arrowl') + '<span><small data-en="Previous">Sebelumnya</small>' + CH.num(prev) + ' ' + esc(prev.t) + '</span></a>' : '<span></span>';
+    h += '<a class="home" href="' + ROOT + CH.home + '">' + ic('grid') + tx(CH.all) + '</a>';
+    h += next ? '<a class="nx" href="' + href(next) + '"><span><small data-en="Next">Berikutnya</small>' + CH.num(next) + ' ' + esc(next.t) + '</span>' + ic('arrow') + '</a>' : '<span></span>';
     h += '</nav>';
     var main = document.querySelector('main');
     if (main) main.insertAdjacentHTML('afterend', h);
   }
 
   function footer() {
-    body.insertAdjacentHTML('beforeend', '<footer class="foot"><div class="wrap"><span><b>JFRESH OS</b> · <span data-en="Phase 1 Business Foundation · Version 1.0">Fase 1 Fondasi Bisnis · Versi 1.0</span></span>' +
+    body.insertAdjacentHTML('beforeend', '<footer class="foot"><div class="wrap"><span><b>JFRESH OS</b> · ' + tx(CH.foot) + '</span>' +
       '<span data-en="Simple Frontline. Powerful Management. One Connected JFRESH OS.">Simple Frontline. Powerful Management. One Connected JFRESH OS.</span></div></footer>');
   }
 
@@ -232,7 +246,7 @@
   langListeners.push(function () { diagrams.forEach(function (d) { d.el.innerHTML = d.render(lang, S); }); });
 
   /* ---------- Boot ---------- */
-  window.JF = { ic: ic, diagram: diagram, svg: S, onLang: function (f) { langListeners.push(f); }, lang: function () { return lang; }, VISUALS: VISUALS };
+  window.JF = { ic: ic, diagram: diagram, svg: S, onLang: function (f) { langListeners.push(f); }, lang: function () { return lang; }, VISUALS: VISUALS, PAGES: PAGES, esc: esc, tx: tx, apply: function () { var ph = document.querySelectorAll("[data-icon]"); for (var i = 0; i < ph.length; i++) ph[i].outerHTML = ic(ph[i].getAttribute("data-icon"), ph[i].className); applyLang(); setupAcc(); } };
 
   topbar();
   formFactor();

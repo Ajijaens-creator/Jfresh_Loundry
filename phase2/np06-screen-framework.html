@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-06 Functional Screen Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="phase2.css">
+<style>
+  section[id], div[id] { scroll-margin-top: 12px; }
+  .sh { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .sh h2 { font-size: var(--fs-h2); font-weight: 800; }
+  .sh .desc { font-size: var(--fs-small); color: var(--muted); }
+
+  /* Standard structure + annotated example */
+  .top2 { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 22px; align-items: start; }
+  .std ol { display: grid; gap: 6px; }
+  .std li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 10px; padding: 8px 10px; border-radius: 12px; align-items: start; }
+  .std li:nth-child(odd) { background: var(--bg); }
+  .std li b { color: var(--blue-ink); font-size: 15px; }
+  .std li span.d { grid-column: 2; font-size: 13.5px; color: var(--muted); line-height: 1.4; }
+  .mk { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--orange); color: #3A1D00; font-weight: 800; font-size: 12.5px; box-shadow: 0 0 0 3px var(--white); font-variant-numeric: tabular-nums; flex: none; }
+  .an { position: relative; }
+  .an > .mk { position: absolute; top: -11px; left: -11px; z-index: 2; }
+  .an.rt > .mk { left: auto; right: -11px; }
+
+  .mock { position: relative; border-radius: 26px; background: #12304F; padding: 12px; box-shadow: var(--shadow-lift); }
+  .scr { border-radius: 18px; background: var(--bg); display: grid; }
+  .scr > .m-hd { border-radius: 18px 18px 0 0; }
+  .scr > .bnav { border-radius: 0 0 18px 18px; }
+  .m-hd > .mk { top: 6px; left: 6px; }
+  .bnav > .mk { top: -13px; left: 8px; }
+  .mini-lang > .mk { left: -34px !important; right: auto !important; top: 50% !important; transform: translateY(-50%); }
+  .m-hd { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: var(--white); border-bottom: 1px solid var(--line); }
+  .m-hd .bk { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--blue-50); color: var(--blue); flex: none; }
+  .m-hd h3 { font-size: 21px; }
+  .m-hd p { font-size: 14px; color: var(--muted); }
+  .m-hd .mini-lang { margin-left: auto; display: inline-flex; border: 1.5px solid var(--orange); border-radius: 999px; padding: 2px; font-size: 12px; font-weight: 800; }
+  .m-hd .mini-lang span { padding: 3px 9px; border-radius: 999px; color: var(--blue); }
+  .m-hd .mini-lang span:first-child { background: var(--blue); color: var(--white); }
+  .m-body { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 16px; padding: 18px; }
+  .m-st { grid-column: 1 / -1; display: grid; gap: 12px; padding: 14px; border-radius: 14px; background: var(--white); border: 1px solid var(--line); }
+  .m-st .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .stp { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; }
+  .stp span { display: grid; justify-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--faint); text-align: center; position: relative; }
+  .stp span i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--bg-2); color: var(--faint); font-style: normal; font-size: 11px; }
+  .stp span.dn i { background: var(--ok); color: var(--white); }
+  .stp span.dn { color: var(--ok); }
+  .stp span.cur i { background: var(--orange); color: #3A1D00; box-shadow: 0 0 0 4px var(--orange-50); }
+  .stp span.cur { color: var(--orange-ink); }
+  .m-main { display: grid; gap: 12px; align-content: start; }
+  .flds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .fd { padding: 10px 12px; border-radius: 14px; background: var(--white); border: 1.5px solid var(--line-2); display: grid; gap: 2px; }
+  .fd small { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+  .fd b { font-size: 24px; color: var(--blue-ink); font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .fd b em { font-style: normal; font-size: 14px; color: var(--muted); margin-left: 3px; }
+  .fd.ed { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-50); }
+  .fd .pf { font-size: 11.5px; font-weight: 700; color: var(--ok); }
+  .fd.tx b { font-size: 17px; padding-top: 6px; }
+  .note-b { padding: 10px 12px; border-radius: 12px; background: var(--yellow-50); border: 1px solid #FBE3A0; font-size: 14px; display: flex; gap: 8px; }
+  .note-b .i { color: var(--orange-ink); }
+  .photo { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border-radius: 12px; border: 1.5px dashed var(--line-2); color: var(--muted); font-weight: 700; font-size: 14px; background: var(--white); }
+  .acts { display: grid; gap: 10px; }
+  .acts .btn { width: 100%; }
+  .btn-outline { background: var(--white); color: var(--blue); box-shadow: inset 0 0 0 1.5px var(--blue); min-height: 48px; font-size: 16px; }
+  .m-side { display: grid; gap: 12px; align-content: start; }
+  .ip { padding: 12px; border-radius: 14px; background: var(--white); border: 1px solid var(--line); display: grid; gap: 6px; font-size: 13.5px; }
+  .ip .row2 { display: flex; justify-content: space-between; gap: 8px; }
+  .ip .row2 span:first-child { color: var(--muted); }
+  .ip .row2 b { color: var(--blue-ink); font-variant-numeric: tabular-nums; }
+  .ip h4 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .ip.perm { background: var(--bg-2); }
+  .ip.perm, .ip.aud { display: flex; gap: 8px; align-items: flex-start; }
+  .ip.perm .i, .ip.aud .i { color: var(--blue); width: 18px; height: 18px; flex: none; margin-top: 1px; }
+  .toast { display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--ok-50); border: 1px solid #BFE5CF; color: var(--ok); font-weight: 700; font-size: 14px; }
+  .bnav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: var(--white); border-top: 1px solid var(--line); padding: 6px; }
+  .bnav span { display: grid; justify-items: center; gap: 2px; font-size: 11.5px; font-weight: 700; color: var(--muted); padding: 4px; border-radius: 10px; }
+  .bnav span.on { color: var(--blue); background: var(--blue-50); }
+  .bnav .i { width: 20px; height: 20px; }
+
+  /* B responsive */
+  .resp { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 18px; align-items: end; }
+  .dv { display: grid; gap: 8px; justify-items: center; text-align: center; }
+  .dv .fr { width: 100%; background: #12304F; padding: 8px; border-radius: 18px; }
+  .dv .fr .in { background: var(--bg); border-radius: 11px; padding: 10px; display: grid; gap: 7px; }
+  .dv.ph .fr { max-width: 190px; border-radius: 24px; }
+  .dv.ph .fr .in { border-radius: 17px; min-height: 300px; grid-template-rows: auto auto auto auto auto 1fr auto; }
+  .wb { display: block; height: 9px; border-radius: 4px; background: var(--line-2); }
+  .wb.b { background: var(--blue); } .wb.l { background: var(--blue-100); }
+  .wbx { background: var(--white); border: 1px solid var(--line); border-radius: 7px; height: 30px; }
+  .wcta { background: var(--orange); border-radius: 8px; height: 26px; }
+  .wout { border: 1.5px solid var(--blue); border-radius: 8px; height: 20px; background: var(--white); }
+  .wr { display: grid; gap: 7px; }
+  .dv b { color: var(--blue-ink); display: inline-flex; gap: 6px; align-items: center; }
+  .dv p { font-size: 14px; color: var(--muted); max-width: 34ch; }
+
+  /* C components */
+  .kit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .kb { padding: 16px; border: 1px solid var(--line); border-radius: var(--r); display: grid; gap: 12px; align-content: start; }
+  .kb .rowx { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .chip.proc { background: var(--fresh-50); color: #00648F; border-color: #B5E6F8; }
+  .inp { display: grid; gap: 4px; }
+  .inp label { font-size: 14px; font-weight: 700; color: var(--blue-ink); }
+  .inp .bx { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 0 14px; border-radius: 12px; border: 1.5px solid var(--line-2); background: var(--white); font-size: 17px; }
+  .inp .bx .i { color: var(--muted); }
+  .inp .bx.err { border-color: var(--crit); background: var(--crit-50); }
+  .inp .msg { font-size: 14px; color: var(--crit); font-weight: 600; display: flex; gap: 6px; align-items: center; }
+  .inp .msg .i { width: 16px; height: 16px; }
+  .alrt { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 12px; font-weight: 700; font-size: 15px; border: 1px solid; }
+  .alrt.info { background: var(--info-50); color: var(--info); border-color: var(--blue-100); }
+  .alrt.warn { background: var(--warn-50); color: var(--warn); border-color: var(--warn-line); }
+  .alrt.crit { background: var(--crit-50); color: var(--crit); border-color: var(--crit-line); }
+  .qcard { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--white); }
+  .qcard .ic { grid-row: span 2; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--blue-50); color: var(--blue); }
+  .qcard b { color: var(--blue-ink); }
+  .qcard small { color: var(--muted); font-size: 13.5px; }
+  .qcard .chip { grid-row: span 2; }
+
+  /* D states */
+  .states { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .sc { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; display: grid; gap: 10px; align-content: start; background: var(--white); }
+  .sc .vis { height: 92px; border-radius: 12px; background: var(--bg); display: grid; place-items: center; padding: 10px; text-align: center; gap: 4px; }
+  .sc .vis .i { width: 30px; height: 30px; }
+  .sc p { font-size: 14.5px; }
+  .skel { width: 100%; display: grid; gap: 6px; }
+  .skel i { display: block; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--bg-2), #fff, var(--bg-2)); background-size: 200% 100%; animation: sh 1.4s infinite linear; }
+  @keyframes sh { to { background-position: -200% 0; } }
+
+  /* E, F, tokens */
+  .via { display: flex; flex-wrap: wrap; gap: 4px; }
+  .via .code { font-size: 11.5px; }
+  .kv td:first-child { width: 220px; font-weight: 700; color: var(--blue-ink); }
+  .aud-ev { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 14px; }
+  .aud-ev div { display: flex; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 14.5px; min-width: 0; }
+  .sw { display: inline-block; width: 16px; height: 16px; border-radius: 5px; vertical-align: -3px; margin-right: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+  .dd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .dd > div { border-radius: var(--r); padding: 14px; display: grid; gap: 8px; align-content: start; }
+  .dd .do { background: var(--ok-50); border: 1px solid #BFE5CF; }
+  .dd .dont { background: var(--crit-50); border: 1px solid var(--crit-line); }
+  .dd h3 { display: flex; gap: 8px; align-items: center; font-size: 16px; }
+  .dd .do h3 { color: var(--ok); } .dd .dont h3 { color: var(--crit); }
+  .dd li { font-size: 15px; padding: 4px 0; }
+  .dd .dont li { text-decoration: line-through; text-decoration-color: rgba(200, 40, 28, .45); color: var(--muted); }
+
+  /* Spec viewer */
+  .specs { display: grid; gap: 10px; }
+  .dhead { display: flex; align-items: center; gap: 10px; margin: 12px 0 2px; font-weight: 800; color: var(--blue-ink); font-size: 17px; }
+  details.spec { border: 1px solid var(--line); border-radius: var(--r); background: var(--white); min-width: 0; scroll-margin-top: 12px; }
+  details.spec.is-target { box-shadow: 0 0 0 3px var(--orange); }
+  details.spec > summary { list-style: none; display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 6px 12px; align-items: center; padding: 10px 14px; min-height: 60px; cursor: pointer; }
+  details.spec > summary::-webkit-details-marker { display: none; }
+  details.spec > summary .nm { font-weight: 800; color: var(--blue-ink); font-size: 16.5px; }
+  details.spec > summary .nm small { display: block; font-weight: 500; color: var(--muted); font-size: 13.5px; }
+  details.spec > summary .meta { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+  details.spec > summary .chev2 { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--blue-50); color: var(--blue); transition: transform .2s; }
+  details.spec[open] > summary .chev2 { transform: rotate(180deg); }
+  details.spec[open] > summary { border-bottom: 1px solid var(--line); }
+  .sb { padding: 14px; display: grid; gap: 12px; }
+  .ff24 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; margin: 0; }
+  .ff24 > div { display: grid; grid-template-columns: 34px 170px minmax(0, 1fr); gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); align-items: start; min-width: 0; }
+  .ff24 dt { font-weight: 700; color: var(--blue-ink); font-size: 14.5px; }
+  .ff24 dd { margin: 0; font-size: 14.5px; min-width: 0; overflow-wrap: anywhere; }
+  .ff24 .fn { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--bg-2); color: var(--muted); font-weight: 800; font-size: 12px; }
+  .ff24 ul { display: grid; gap: 3px; }
+  .ff24 ul li { padding-left: 14px; position: relative; }
+  .ff24 ul li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 5px; height: 5px; border-radius: 50%; background: var(--fresh); }
+  .ff24 .rsp div { display: flex; gap: 6px; align-items: flex-start; }
+  .ff24 .rsp .i { width: 16px; height: 16px; color: var(--blue); margin-top: 3px; }
+  .sb .acts2 { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tools { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  @media (max-width: 1239px) {
+    .top2 { grid-template-columns: minmax(0, 1fr); }
+    .std ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .m-body { grid-template-columns: minmax(0, 1fr); }
+    .m-side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .resp { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .resp .dv.pc { grid-column: 1 / -1; }
+    .states { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .aud-ev { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ff24 { grid-template-columns: minmax(0, 1fr); }
+    details.spec > summary { grid-template-columns: auto minmax(0, 1fr) auto; }
+    details.spec > summary .meta { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; }
+  }
+  @media (max-width: 699px) {
+    .std ol { grid-template-columns: minmax(0, 1fr); }
+    .mock { padding: 8px; border-radius: 22px; }
+    .m-body { padding: 12px; }
+    .m-side { grid-template-columns: minmax(0, 1fr); }
+    .flds { grid-template-columns: minmax(0, 1fr); }
+    .fd { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+    .fd small { grid-column: 1 / -1; }
+    .m-hd .mini-lang { display: none; }
+    .resp, .kit, .states, .aud-ev, .dd { grid-template-columns: minmax(0, 1fr); }
+    .resp .dv.pc { grid-column: auto; }
+    .ff24 > div { grid-template-columns: 30px minmax(0, 1fr); }
+    .ff24 dd { grid-column: 2; font-size: 15.5px; }
+    .ff24 dt { font-size: 15px; }
+    details.spec > summary { grid-template-columns: minmax(0, 1fr) auto; }
+    details.spec > summary .sid { grid-column: 1; justify-self: start; }
+    details.spec > summary .nm { grid-column: 1; grid-row: 2; }
+    details.spec > summary .chev2 { grid-column: 2; grid-row: 1 / span 2; }
+    details.spec > summary .meta { grid-row: 3; }
+    .kv td:first-child { width: auto; }
+    .kv thead { display: none; }
+    .kv tr { display: grid; gap: 4px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+    .kv td { border: 0; padding: 0; }
+    .stp span:not(.cur) { font-size: 0; gap: 0; }
+    .stp span.cur { font-size: 11px; }
+    .stp { grid-auto-columns: auto; justify-content: space-between; }
+  }
+</style>
+</head>
+<body data-root="../" data-phase="2" data-visual="6">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">06</span><span data-en="Phase 2 · NP-06 · NV-06">Fase 2 · NP-06 · NV-06</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Functional Screen Framework</h1>
+      <p class="sub" data-en="The standard structure every screen follows, the shared components and states, how permissions change a screen, and the full 24-field specification of every screen.">Struktur standar yang diikuti setiap layar, komponen dan state bersama, bagaimana izin mengubah layar, dan spesifikasi 24 field lengkap untuk setiap layar.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">One Standard, <b>Every Screen</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="tags" id="toc"></div>
+
+  <div class="top2">
+    <section class="panel std acc" data-acc="m" id="structure">
+      <div class="panel-h">
+        <span class="ico o"><i data-icon="list"></i></span>
+        <div class="ttl"><h2 data-en="Standard structure of every screen">Struktur Standar Setiap Layar</h2>
+          <p class="desc" data-en="14 parts. The numbers match the markers on the example.">14 bagian. Nomor sesuai penanda pada contoh.</p></div>
+      </div>
+      <ol class="acc-b" id="stdList"></ol>
+    </section>
+
+    <section class="panel" id="example">
+      <div class="sh"><span class="sec-k">A</span><div><h2 data-en="Example: Receive Laundry (OPS-RCV-001)">Contoh: Terima Cucian (OPS-RCV-001)</h2><p class="desc" data-en="Quick Action archetype, Operator on the Operational iPad.">Arsitipe Quick Action, Operator di Operational iPad.</p></div></div>
+      <div class="mock an rt"><span class="mk">10</span>
+        <div class="scr">
+          <div class="m-hd an"><span class="mk">1</span><span class="bk"><i data-icon="arrowl"></i></span><div><h3>Terima Cucian</h3><p>Hotel ABC • Order #RCV2024-00123</p></div><span class="mini-lang an rt"><span class="mk">13</span><span>ID</span><span>EN</span></span></div>
+          <div class="m-body">
+            <div class="m-st an"><span class="mk">2</span>
+              <div class="chips"><span class="chip info"><i data-icon="clock"></i>Menunggu Diterima</span><span class="chip warn"><i data-icon="hourglass"></i>SLA 5 jam 18 menit tersisa</span></div>
+              <div class="stp" id="stp"></div>
+            </div>
+            <div class="m-main">
+              <div class="an"><span class="mk">3</span>
+                <div class="flds">
+                  <div class="fd ed"><small>Berat total (kg) *</small><b>82.4<em>kg</em></b></div>
+                  <div class="fd"><small>Jumlah Bag *</small><b>8</b><span class="pf"><span data-en="from pickup">dari pickup</span></span></div>
+                  <div class="fd tx"><small>Jenis Cucian</small><b>Bed Linen</b><span class="pf"><span data-en="from pickup">dari pickup</span></span></div>
+                </div>
+              </div>
+              <div class="note-b"><i data-icon="message"></i><span><b data-en="Client note:">Catatan klien:</b> <span data-en="2 bags of linen with heavy stains, please separate.">2 bag linen noda berat, mohon dipisahkan.</span></span></div>
+              <div class="photo"><i data-icon="camera"></i><span data-en="Add photo (optional)">Tambah foto (opsional)</span></div>
+              <div class="toast an"><span class="mk">8</span><i data-icon="checkc"></i><span data-en="Laundry received. Next: Sorting.">Cucian berhasil diterima. Lanjut ke Sorting.</span></div>
+              <div class="acts an"><span class="mk">4</span>
+                <span class="btn btn-primary"><i data-icon="check"></i>Terima Cucian</span>
+                <span class="btn btn-outline an rt"><span class="mk">5</span><i data-icon="alert"></i>Ada Masalah</span>
+              </div>
+              <p class="note an" style="padding-left:18px"><span class="mk">12</span><span data-en="Same position on every Quick Action screen: main button at the bottom, secondary under it.">Posisi sama di setiap layar Quick Action: tombol utama di bawah, sekunder di bawahnya.</span></p>
+            </div>
+            <div class="m-side">
+              <div class="ip an"><span class="mk">6</span><h4 data-en="Pickup info">Info pickup</h4>
+                <div class="row2"><span data-en="Pickup weight">Berat saat pickup</span><b>81.0 kg</b></div>
+                <div class="row2"><span data-en="Difference">Selisih</span><b>+1.7%</b></div>
+                <div class="row2"><span>Driver</span><b>Komang</b></div>
+                <div class="row2"><span data-en="Picked up">Dijemput</span><b>07:42</b></div>
+              </div>
+              <div class="ip an"><span class="mk">14</span><h4 data-en="Business rule">Aturan bisnis</h4><span class="chip ok" style="justify-self:start"><i data-icon="checkc"></i><span data-en="Within 5%">Dalam batas 5%</span></span><span data-en="A difference above 5% needs supervisor approval.">Selisih di atas 5% butuh persetujuan supervisor.</span></div>
+              <div class="ip perm an"><span class="mk">9</span><i data-icon="lock"></i><span data-en="Weight correction above 5% only appears for Supervisor (ops.weight.override).">Koreksi berat di atas 5% hanya muncul untuk Supervisor (ops.weight.override).</span></div>
+              <div class="ip aud an"><span class="mk">11</span><i data-icon="history"></i><span data-en="Logged: ORD.RECEIVE · Made · 09:14 · 82.4 kg">Tercatat: ORD.RECEIVE · Made · 09:14 · 82.4 kg</span></div>
+            </div>
+          </div>
+          <div class="bnav an" id="bnav"><span class="mk">7</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" id="responsive">
+    <div class="sh"><span class="sec-k">B</span><div><h2 data-en="Responsive behaviour">Perilaku responsif</h2><p class="desc" data-en="Same screen, three layouts. Not a shrunk desktop.">Layar yang sama, tiga tata letak. Bukan desktop yang dikecilkan.</p></div></div>
+    <div class="resp" id="respV"></div>
+  </section>
+
+  <section class="panel" id="components">
+    <div class="sh"><span class="sec-k">C</span><div><h2 data-en="UI components">Komponen UI</h2><p class="desc" data-en="One kit for every screen.">Satu kit untuk semua layar.</p></div></div>
+    <div class="kit">
+      <div class="kb"><span class="label" data-en="Buttons">Tombol</span>
+        <div class="rowx"><span class="btn btn-primary"><i data-icon="check"></i><span data-en="Main Action">Aksi Utama</span></span><span class="btn btn-outline"><span data-en="Secondary Action">Aksi Sekunder</span></span><span class="btn btn-crit" style="min-height:48px;font-size:16px"><i data-icon="xc"></i><span data-en="Danger Action">Aksi Berbahaya</span></span></div>
+        <p class="note" data-en="Main 56 px, orange, one per screen. Secondary 48 px, outline. Danger red, always with confirmation.">Utama 56 px, oranye, satu per layar. Sekunder 48 px, outline. Berbahaya merah, selalu dengan konfirmasi.</p></div>
+      <div class="kb"><span class="label" data-en="Status chips">Chip status</span>
+        <div class="rowx">
+          <span class="chip info"><i data-icon="clock"></i><span data-en="Waiting">Menunggu</span></span>
+          <span class="chip proc"><i data-icon="refresh"></i><span data-en="In Process">Diproses</span></span>
+          <span class="chip ok"><i data-icon="checkc"></i><span data-en="Done">Selesai</span></span>
+          <span class="chip crit"><i data-icon="alert"></i><span data-en="Issue">Ada Masalah</span></span>
+          <span class="chip warn"><i data-icon="hourglass"></i>SLA Risk</span>
+          <span class="chip crit"><i data-icon="xc"></i><span data-en="Late">Terlambat</span></span>
+        </div>
+        <p class="note" data-en="Always icon + text. Colour is never the only signal.">Selalu ikon + teks. Warna tidak pernah jadi satu-satunya tanda.</p></div>
+      <div class="kb"><span class="label" data-en="Input, dropdown, search">Input, dropdown, pencarian</span>
+        <div class="inp"><label>Berat total (kg) *</label><div class="bx"><i data-icon="scale"></i>82.4</div></div>
+        <div class="inp"><label data-en="Laundry type">Jenis cucian</label><div class="bx" style="justify-content:space-between">Bed Linen<i data-icon="chevd"></i></div></div>
+        <div class="inp"><div class="bx"><i data-icon="search"></i><span style="color:var(--muted)" data-en="Search client or order…">Cari klien atau order…</span></div></div>
+        <div class="inp"><label>Jumlah bag *</label><div class="bx err"></div><span class="msg"><i data-icon="alert"></i><span data-en="Bag count must be more than 0.">Jumlah bag harus lebih dari 0.</span></span></div>
+      </div>
+      <div class="kb"><span class="label" data-en="Alerts &amp; cards">Alert &amp; kartu</span>
+        <div id="alrts" style="display:grid;gap:8px"></div>
+        <div class="qcard"><span class="ic"><i data-icon="hotel"></i></span><b>Hotel ABC</b><span class="chip warn"><i data-icon="hourglass"></i>5j 18m</span><small>82.4 kg · 8 bag · Bed Linen</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="states">
+    <div class="sh"><span class="sec-k">D</span><div><h2 data-en="Screen states">State layar</h2><p class="desc" data-en="Every screen defines these. The copy below is the shared default; each screen's own copy is in its spec.">Setiap layar mendefinisikan state ini. Teks di bawah adalah default bersama; teks khusus tiap layar ada di spesifikasinya.</p></div></div>
+    <div class="states" id="stateG"></div>
+  </section>
+
+  <section class="panel" id="permissions">
+    <div class="sh"><span class="sec-k">E</span><div><h2 data-en="Permission &amp; role behaviour">Perilaku izin &amp; peran</h2><p class="desc" data-en="Derived from the permission list: a role gets a component when it holds at least one of the permissions shown under it.">Diturunkan dari daftar izin: peran mendapat komponen jika memiliki minimal satu izin yang tertera di bawahnya.</p></div></div>
+    <div class="tblwrap hide-m"><table class="tbl" id="permT"></table></div>
+    <div class="mcards hide-d hide-t" id="permC"></div>
+    <p class="note" style="margin-top:10px" id="permNote"></p>
+  </section>
+
+  <section class="panel" id="metadata">
+    <div class="sh"><span class="sec-k">F</span><div><h2 data-en="Screen metadata template">Template metadata layar</h2><p class="desc" data-en="Every screen carries this header block. Example: OPS-RCV-001.">Setiap layar membawa blok ini. Contoh: OPS-RCV-001.</p></div></div>
+    <div class="tblwrap"><table class="tbl kv" id="meta"></table></div>
+  </section>
+
+  <section class="panel acc" data-acc="m" id="audit">
+    <div class="panel-h"><span class="ico"><i data-icon="history"></i></span><div class="ttl"><h2 data-en="Audit model">Model audit</h2><p class="desc" data-en="Important events are written to an append-only log. Nobody can edit or delete a log entry.">Event penting ditulis ke log yang hanya bisa ditambah. Tidak ada yang bisa mengubah atau menghapus log.</p></div></div>
+    <div class="acc-b" style="display:grid;gap:16px;grid-template-columns:minmax(0,1fr)">
+      <div class="aud-ev" id="audEv"></div>
+      <div><p class="label" style="margin-bottom:8px" data-en="Every entry records">Setiap catatan menyimpan</p><div class="tblwrap hide-m"><table class="tbl" id="audF"></table></div><div class="mcards hide-d hide-t" id="audC"></div></div>
+    </div>
+  </section>
+
+  <section class="panel acc" data-acc="m" id="tokens">
+    <div class="panel-h"><span class="ico"><i data-icon="ruler"></i></span><div class="ttl"><h2 data-en="Design tokens">Design token</h2><p class="desc" data-en="Values from assets/css/jfresh.css, per form factor.">Nilai dari assets/css/jfresh.css, per perangkat.</p></div></div>
+    <div class="acc-b"><div class="tblwrap hide-m"><table class="tbl" id="tok"></table></div><div class="mcards hide-d hide-t" id="tokC"></div></div>
+  </section>
+
+  <section class="panel acc" data-acc="m" id="copy">
+    <div class="panel-h"><span class="ico o"><i data-icon="message"></i></span><div class="ttl"><h2 data-en="Validation &amp; message copy">Teks validasi &amp; pesan</h2><p class="desc" data-en="Say what is wrong and how to fix it, in everyday words, right under the field.">Katakan apa yang salah dan cara memperbaikinya, dengan kata sehari-hari, tepat di bawah field.</p></div></div>
+    <div class="acc-b dd">
+      <div class="do"><h3><i data-icon="checkc"></i><span data-en="Write">Tulis</span></h3><ul>
+        <li>Berat wajib diisi.</li><li>Jumlah bag harus lebih dari 0.</li><li>Pilih alasan.</li><li>Cucian berhasil diterima. Lanjut ke Sorting.</li><li>Koneksi terputus. Data akan dikirim saat online kembali.</li><li>Ada Masalah · Cocokkan Data · Siap Dikirim</li></ul></div>
+      <div class="dont"><h3><i data-icon="xc"></i><span data-en="Never write">Jangan tulis</span></h3><ul>
+        <li>weight_required_error</li><li>Invalid value for field qty_bag</li><li>Field reason is mandatory (ERR-422)</li><li>Transaction posted to GL successfully</li><li>HTTP 503 Service Unavailable</li><li>Create Non-Conformance Report · Reconciliation Journal · Dispatch Order</li></ul></div>
+    </div>
+  </section>
+
+  <section class="panel acc" data-acc="m" id="language">
+    <div class="panel-h"><span class="ico"><i data-icon="globe"></i></span><div class="ttl"><h2 data-en="Language">Bahasa</h2><p class="desc" data-en="Bahasa Indonesia is the default. English is one tap away on every screen.">Bahasa Indonesia adalah default. English tersedia dengan satu tap di setiap layar.</p></div></div>
+    <ul class="acc-b checks">
+      <li><i data-icon="check"></i><span data-en="Every label is stored as a pair [Indonesian, English] in one configuration file. No hard-coded text in screens.">Setiap label disimpan sebagai pasangan [Indonesia, English] di satu file konfigurasi. Tidak ada teks yang ditulis langsung di layar.</span></li>
+      <li><i data-icon="check"></i><span data-en="The ID | EN switch is in the top bar and is remembered per device.">Tombol ID | EN ada di top bar dan diingat per perangkat.</span></li>
+      <li><i data-icon="check"></i><span data-en="Operational words the team already uses: Terima Cucian, Ada Masalah, Siap Dikirim. No ERP terms on frontline screens.">Kata operasional yang sudah dipakai tim: Terima Cucian, Ada Masalah, Siap Dikirim. Tanpa istilah ERP di layar frontline.</span></li>
+      <li><i data-icon="check"></i><span data-en="Codes (Screen ID, permission keys, audit events) stay the same in both languages.">Kode (Screen ID, kunci izin, event audit) tetap sama di kedua bahasa.</span></li>
+    </ul>
+  </section>
+
+  <section class="panel" id="specs">
+    <div class="panel-h"><span class="ico o"><i data-icon="clipboard"></i></span><div class="ttl"><h2 data-en="Screen specifications">Spesifikasi layar</h2><p class="desc" id="specDesc"></p></div></div>
+    <div class="filters">
+      <label class="fld grow"><span data-en="Search">Cari</span><input id="q" type="search" data-ph-id="ID atau nama layar…" data-ph-en="Screen ID or name…" placeholder="ID atau nama layar…"></label>
+      <label class="fld"><span data-en="Role">Peran</span><select id="fRole"></select></label>
+      <label class="fld"><span>Domain</span><select id="fDom"></select></label>
+      <label class="fld"><span data-en="Archetype">Arsitipe</span><select id="fArch"></select></label>
+      <div class="tools"><button class="btn-reset" type="button" id="openAll" data-en="Open all">Buka semua</button><button class="btn-reset" type="button" id="closeAll" data-en="Close all">Tutup semua</button></div>
+    </div>
+    <p class="fcount" id="count" style="margin-top:12px"></p>
+    <div class="specs" id="specList"></div>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script src="phase2.js"></script>
+<script>
+(function () {
+  var C = P2.C, t = P2.t, ic = P2.ic, esc = P2.esc;
+
+  // TOC
+  var TOC = [['structure', ['Struktur', 'Structure']], ['example', ['A Contoh', 'A Example']], ['responsive', ['B Responsif', 'B Responsive']], ['components', ['C Komponen', 'C Components']],
+    ['states', ['D State', 'D States']], ['permissions', ['E Izin', 'E Permissions']], ['metadata', ['F Metadata', 'F Metadata']], ['audit', ['Audit', 'Audit']], ['tokens', ['Token', 'Tokens']],
+    ['copy', ['Teks validasi', 'Validation copy']], ['language', ['Bahasa', 'Language']], ['specs', ['Spesifikasi ' + C.SCREENS.length + ' layar', C.SCREENS.length + ' screen specs']]];
+  P2.mount('#toc', TOC.map(function (x, i) { return '<a class="tag' + (i === TOC.length - 1 ? ' o' : '') + '" style="text-decoration:none;min-height:44px" href="#' + x[0] + '">' + t(x[1]) + '</a>'; }).join(''));
+
+  // 14-part standard structure
+  var STD = [
+    [['Header', 'Header'], ['Judul layar + konteks (klien • nomor order).', 'Screen title + context (client • order number).']],
+    [['Area Status', 'Status Area'], ['Status saat ini, SLA dan progres tahapan.', 'Current status, SLA and stage progress.']],
+    [['Konten Utama', 'Main Content'], ['Hanya data yang dibutuhkan untuk tugas ini.', 'Only the data this task needs.']],
+    [['Aksi Utama', 'Primary Action'], ['Satu tombol oranye besar.', 'One large orange button.']],
+    [['Aksi Sekunder', 'Secondary Action'], ['Outline, tidak bersaing dengan aksi utama.', 'Outline, never competes with the main action.']],
+    [['Panel Informasi', 'Information Panel'], ['Konteks pendukung: data pickup, catatan.', 'Supporting context: pickup data, notes.']],
+    [['Navigasi', 'Navigation'], ['Kembali yang aman; menu sesuai peran.', 'Safe back; menu by role.']],
+    [['State & Feedback', 'State & Feedback'], ['Memuat, kosong, berhasil, peringatan, error.', 'Loading, empty, success, warning, error.']],
+    [['Izin', 'Permission'], ['Yang tidak diizinkan disembunyikan.', 'What is not permitted is hidden.']],
+    [['Responsif', 'Responsive'], ['PC, iPad dan mobile punya tata letak sendiri.', 'PC, iPad and mobile each get their own layout.']],
+    [['Audit & Log', 'Audit & Log'], ['Siapa, kapan, nilai lama dan baru.', 'Who, when, old and new value.']],
+    [['Konsistensi', 'Consistency'], ['Komponen dan posisi sama di setiap layar.', 'Same components and positions on every screen.']],
+    [['Bahasa', 'Language'], ['ID default, EN tersedia, kata sehari-hari.', 'ID default, EN available, everyday words.']],
+    [['Aturan Bisnis', 'Business Rule'], ['Ditampilkan saat relevan, mis. selisih berat > 5%.', 'Shown when relevant, e.g. weight difference > 5%.']]
+  ];
+  P2.mount('#stdList', STD.map(function (s, i) { return '<li><span class="mk">' + (i + 1) + '</span><b>' + t(s[0]) + '</b><span class="d">' + t(s[1]) + '</span></li>'; }).join(''));
+
+  // Example stepper + bottom nav
+  var cur = 1;
+  P2.mount('#stp', C.STAGES.map(function (s, i) { return '<span class="' + (i < cur ? 'dn' : i === cur ? 'cur' : '') + '"><i>' + (i < cur ? ic('check') : i + 1) + '</i>' + t(s.l) + '</span>'; }).join(''));
+  document.getElementById('bnav').insertAdjacentHTML('beforeend', C.ROLES.operator.mnav.map(function (n, i) { return '<span' + (i === 1 ? ' class="on"' : '') + '>' + ic(n.i) + t(n.l) + '</span>'; }).join(''));
+
+  // B responsive
+  var R = C.ARCH.T04.responsive;
+  var fields3 = '<div class="wr" style="grid-template-columns:repeat(3,1fr)"><span class="wbx"></span><span class="wbx"></span><span class="wbx"></span></div>';
+  P2.mount('#respV',
+    '<div class="dv pc"><div class="fr"><div class="in" style="grid-template-columns:1.6fr 1fr;align-items:start"><div class="wr"><span class="wb b" style="width:40%"></span><span class="wb l" style="width:60%"></span>' + fields3 + '<span class="wbx" style="height:22px"></span><span class="wcta" style="width:60%;justify-self:center;height:30px"></span></div><div class="wr"><span class="wbx" style="height:58px"></span><span class="wbx" style="height:40px"></span></div></div></div><b>' + ic('monitor') + 'PC</b><p>' + t(R.d) + '</p></div>' +
+    '<div class="dv"><div class="fr"><div class="in"><span class="wb b" style="width:50%"></span><span class="wb l" style="width:70%"></span>' + fields3 + '<span class="wbx" style="height:22px"></span><span class="wcta"></span><span class="wout"></span></div></div><b>' + ic('tablet') + 'iPad</b><p>' + t(R.t) + '</p></div>' +
+    '<div class="dv ph"><div class="fr"><div class="in"><span class="wb b" style="width:70%"></span><span class="wb l"></span><span class="wbx"></span><span class="wbx"></span><span class="wbx"></span><span></span><span class="wr"><span class="wcta"></span><span class="wout"></span></span></div></div><b>' + ic('phone') + 'Mobile</b><p>' + t(R.m) + '</p></div>');
+
+  // C alerts
+  P2.mount('#alrts', Object.keys(C.ALERTS).map(function (k) { var a = C.ALERTS[k]; return '<div class="alrt ' + k + '">' + ic(a.icon) + t(a.ex) + '</div>'; }).join(''));
+
+  // D states
+  var SV = {
+    default: '<div class="skel" style="animation:none"><i style="background:var(--blue-100);animation:none"></i><i style="background:var(--line);animation:none;width:80%"></i><i style="background:var(--line);animation:none;width:60%"></i></div>',
+    loading: '<div class="skel"><i></i><i style="width:80%"></i><i style="width:60%"></i></div>',
+    empty: '<span style="color:var(--faint)">' + ic('package') + '</span>',
+    success: '<span style="color:var(--ok)">' + ic('checkc') + '</span>',
+    warning: '<span style="color:var(--warn)">' + ic('hourglass') + '</span>',
+    error: '<span style="color:var(--crit)">' + ic('alert') + '</span>',
+    noperm: '<span style="color:var(--muted)">' + ic('lock') + '</span>',
+    offline: '<span style="color:var(--muted)">' + ic('wifioff') + '</span>'
+  };
+  var SC = { default: 'info', loading: 'mute', empty: 'mute', success: 'ok', warning: 'warn', error: 'crit', noperm: 'mute', offline: 'mute' };
+  P2.mount('#stateG', Object.keys(C.STATES).map(function (k) { var s = C.STATES[k]; return '<div class="sc" id="state-' + k + '"><span class="chip ' + SC[k] + '" style="justify-self:start">' + t(s.t) + '</span><div class="vis">' + SV[k] + '</div><p>' + t(s.ex) + '</p></div>'; }).join(''));
+
+  // E permission & role behaviour
+  function uniq(a) { return a.filter(function (x, i) { return x && a.indexOf(x) === i; }); }
+  var create = uniq(C.SCREENS.filter(function (s) { return s.a === 'T04' || s.a === 'T06'; }).map(function (s) { return s.pri && s.pri[1]; }));
+  var approve = Object.keys(C.PERMS).filter(function (p) { return /\.approve$/.test(p) || p === 'qlt.review'; });
+  var COMP = [
+    [['Lihat Data', 'View Data'], ['apa pun selain beranda', 'anything beyond home'], null],
+    [['Buat Transaksi', 'Create Transaction'], null, create],
+    [['Edit Transaksi', 'Edit Transaction'], null, ['ops.weight.override', 'fin.bill', 'fin.invoice', 'com.client.edit', 'com.property', 'com.contract.edit', 'sys.master']],
+    [['Approval', 'Approval'], null, approve],
+    [['Hapus / Batalkan', 'Delete / Cancel'], null, ['fin.invoice.fix.approve', 'fin.cn.approve', 'sys.master']],
+    [['Lihat Harga', 'View Prices'], null, ['com.rate.view', 'fin.invoice', 'clt.invoice']],
+    [['Lihat Laporan', 'View Reports'], null, ['rpt.ops', 'rpt.fin', 'rpt.exec']],
+    [['Akses Settings', 'Settings Access'], null, ['sys.settings', 'sys.users', 'sys.roles', 'sys.master']]
+  ];
+  function has(k, c) {
+    if (!c[2]) return C.SCREENS.some(function (s) { return s.a !== 'T01' && C.can(k, s.p); });
+    return c[2].some(function (p) { return C.can(k, p); });
+  }
+  var h = '<thead><tr><th data-en="Component">Komponen</th>' + C.ROLE_ORDER.map(function (k) { return '<th class="c">' + P2.rshort(k) + '</th>'; }).join('') + '</tr></thead><tbody>', mc = '';
+  COMP.forEach(function (c) {
+    var via = c[2] ? '<span class="via">' + c[2].map(function (p) { return '<span class="code">' + p + '</span>'; }).join('') + '</span>' : '<span class="sub">' + t(c[1]) + '</span>';
+    var ok = C.ROLE_ORDER.filter(function (k) { return has(k, c); });
+    h += '<tr><td><span class="nm">' + t(c[0]) + '</span>' + via + '</td>' + C.ROLE_ORDER.map(function (k) { return '<td class="c">' + P2.yn(ok.indexOf(k) !== -1) + '</td>'; }).join('') + '</tr>';
+    mc += '<div class="mcard"><div class="top"><b>' + t(c[0]) + '</b></div>' + (ok.length ? P2.rcs(ok) : '<span class="note">—</span>') + via + '</div>';
+  });
+  P2.mount('#permT', h + '</tbody>');
+  P2.mount('#permC', mc);
+  P2.mount('#permNote', t(['Klien melihat harga hanya di invoice miliknya (clt.invoice). Pembatalan dan penghapusan dokumen selalu lewat persetujuan, sehingga diturunkan dari izin persetujuan. Tanpa izin: komponen tidak dirender.', 'Clients only see prices on their own invoices (clt.invoice). Cancelling or deleting documents always goes through approval, so it is derived from approval permissions. Without permission: the component is not rendered.']));
+
+  // F metadata for OPS-RCV-001
+  var fw = C.framework('OPS-RCV-001'), s0 = C.screen('OPS-RCV-001'), d0 = P2.dom(s0.dom);
+  var META = [
+    [['Screen ID', 'Screen ID'], P2.sid(fw.id, true)], [['Nama layar', 'Screen name'], P2.both(fw.n)], [['Arsitipe', 'Archetype'], P2.arch(fw.a)],
+    [['Domain sitemap', 'Sitemap domain'], d0.n + '. ' + t(d0.t)], [['Level IA', 'IA level'], P2.lvl(fw.lvl)], [['Peran', 'Roles'], P2.rcs(fw.roles, true)],
+    [['Izin lihat', 'View permission'], '<span class="code">' + s0.p + '</span>'], [['Izin aksi utama', 'Primary action permission'], '<span class="code">' + s0.pri[1] + '</span>'],
+    [['Alur', 'Flow'], C.flowFor(s0.id).map(P2.flowChip).join(' ')], [['Referensi NB', 'NB refs'], '<span class="minis">' + fw.nb.map(function (c) { return P2.nb(c, true); }).join('') + '</span>'],
+    [['Referensi NV', 'NV refs'], '<span class="minis">' + fw.nv.map(function (c) { return P2.nv(c); }).join('') + '</span>'], [['Referensi Fase 1', 'Phase 1 refs'], '<span class="minis">' + fw.bf.map(function (c) { return P2.bf(c, true); }).join('') + '</span>'],
+    [['Event audit', 'Audit events'], fw.aud.map(function (a) { return '<span class="code">' + a.k + '</span> ' + t(a.l); }).join(' · ')], [['Versi', 'Version'], esc(C.version + ' · ' + C.date)]
+  ];
+  P2.mount('#meta', '<thead><tr><th data-en="Key">Kunci</th><th data-en="Value (OPS-RCV-001)">Nilai (OPS-RCV-001)</th></tr></thead><tbody>' + META.map(function (m) { return '<tr><td>' + t(m[0]) + '</td><td>' + m[1] + '</td></tr>'; }).join('') + '</tbody>');
+
+  // Audit
+  P2.mount('#audEv', Object.keys(C.AUDIT).map(function (k) { return '<div><span class="code">' + k + '</span>' + t(C.AUDIT[k]) + '</div>'; }).join(''));
+  var ex = ['Made (Operator)', '2026-10-06 09:14:32', 'ORD.RECEIVE', '#RCV2024-00123', 'Menunggu Diterima', 'Diterima · 82.4 kg · 8 bag'];
+  P2.mount('#audC', '<div class="mcard"><dl>' + C.AUDIT_FIELDS.map(function (f, i) { return '<dt>' + t(f) + '</dt><dd>' + esc(ex[i]) + '</dd>'; }).join('') + '</dl></div>');
+  P2.mount('#audF', '<thead><tr>' + C.AUDIT_FIELDS.map(function (f) { return '<th>' + t(f) + '</th>'; }).join('') + '</tr></thead><tbody><tr>' + ex.map(function (v) { return '<td>' + esc(v) + '</td>'; }).join('') + '</tr></tbody>');
+
+  // Tokens (§25) — values mirror assets/css/jfresh.css
+  var TK = [
+    [['Breakpoint', 'Breakpoint'], '≥ 1240 px', '700–1239 px', '< 700 px', '@media'],
+    [['Judul halaman', 'Page title'], '34 px', '28 px', '24 px', '--fs-title'],
+    [['Judul section', 'Section title'], '22 px', '20 px', '19 px', '--fs-h2'],
+    [['Sub-judul', 'Subheading'], '17 px', '17 px', '17 px', '--fs-h3'],
+    [['Teks isi', 'Body text'], '16 px', '17 px', '16 px (min.)', '--fs-body'],
+    [['Teks kecil', 'Small text'], '14 px', '14 px', '14 px', '--fs-small'],
+    [['Angka KPI', 'KPI number'], '34 px', '30 px', '28 px', '--fs-kpi'],
+    [['Jarak tepi', 'Page gutter'], '32 px', '24 px', '16 px', '--gutter'],
+    [['Jarak antar kartu', 'Card gap'], '22 px', '18 px', '14 px', '.grid'],
+    [['Padding kartu', 'Card padding'], '22 px', '22 px', '22 px', '.panel'],
+    [['Radius', 'Radius'], '22 / 16 / 12 px', '22 / 16 / 12 px', '18 / 16 / 12 px', '--r-lg / --r / --r-sm'],
+    [['Ukuran ikon', 'Icon size'], '20 px · 24 px panel · 28 px besar', '20 / 24 / 28 px', '20 / 24 / 28 px', '.i · .i-lg'],
+    [['Tinggi tombol', 'Button height'], ['56 px utama · 48 px sekunder', '56 px primary · 48 px secondary'], ['56 / 48 px', '56 / 48 px'], ['56 / 48 px, penuh lebar', '56 / 48 px, full width'], '.btn · --tap'],
+    [['Area sentuh', 'Touch target'], '≥ 44 px (48)', '≥ 44 px (48)', '≥ 44 px (48)', '--tap'],
+    [['Chip status', 'Status chip'], '13.5 px · 4×10 px · pill', '13.5 px', '13.5 px', '.chip'],
+    [['Kepadatan tabel', 'Table density'], '9×12 px sel · 14.5 px', ['Tabel ringkas 4–5 kolom', 'Compact 4–5 columns'], ['Tabel → kartu', 'Table → cards'], '.tbl · .mcard'],
+    [['Warna', 'Colour'], '<span class="sw" style="background:#0754A6"></span>#0754A6 <span class="sw" style="background:#00A8E8"></span>#00A8E8', '<span class="sw" style="background:#F7931E"></span>#F7931E CTA', ['<span class="sw" style="background:#138A4B"></span><span class="sw" style="background:#B86A00"></span><span class="sw" style="background:#C8281C"></span>hanya status', '<span class="sw" style="background:#138A4B"></span><span class="sw" style="background:#B86A00"></span><span class="sw" style="background:#C8281C"></span>status only'], '--blue · --fresh · --orange']
+  ];
+  function cell(v) { return Array.isArray(v) ? '<span data-en="' + esc(v[1]) + '">' + v[0] + '</span>' : v; }
+  P2.mount('#tok', '<thead><tr><th>Token</th><th>' + ic('monitor') + ' PC</th><th>' + ic('tablet') + ' iPad</th><th>' + ic('phone') + ' Mobile</th><th>CSS</th></tr></thead><tbody>' +
+    TK.map(function (r) { return '<tr><td class="nm">' + t(r[0]) + '</td><td>' + cell(r[1]) + '</td><td>' + cell(r[2]) + '</td><td>' + cell(r[3]) + '</td><td><span class="code">' + esc(r[4]) + '</span></td></tr>'; }).join('') + '</tbody>');
+
+  P2.mount('#tokC', TK.map(function (r) { return '<div class="mcard"><div class="top"><b>' + t(r[0]) + '</b><span class="code">' + esc(r[4]) + '</span></div><dl><dt>' + ic('monitor') + '</dt><dd>' + cell(r[1]) + '</dd><dt>' + ic('tablet') + '</dt><dd>' + cell(r[2]) + '</dd><dt>' + ic('phone') + '</dt><dd>' + cell(r[3]) + '</dd></dl></div>'; }).join(''));
+
+  // ---------- Spec viewer ----------
+  var FF = C.FRAMEWORK_FIELDS;
+  P2.mount('#specDesc', t(['Semua ' + C.SCREENS.length + ' layar dengan ' + FF.length + ' field framework. Tautan #SCREEN-ID membuka kartunya langsung.', 'All ' + C.SCREENS.length + ' screens with the ' + FF.length + ' framework fields. A #SCREEN-ID link opens its card directly.']));
+  function dash(p) { return !p || (Array.isArray(p) && p[0] === '—') ? '<span class="note">—</span>' : t(p); }
+  function list(a, f) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + (f ? f(x) : t(x)) + '</li>'; }).join('') + '</ul>' : '<span class="note">—</span>'; }
+  function val(k, fw) {
+    switch (k) {
+      case 'id': return P2.sid(fw.id, true) + ' ' + P2.arch(fw.a) + ' ' + P2.lvl(fw.lvl);
+      case 'roles': return P2.rcs(fw.roles, true);
+      case 'pri': return fw.pri ? '<span class="chip appr">' + t(fw.pri) + '</span>' : '<span class="note">—</span>';
+      case 'sec': case 'f': case 'v': case 'r': case 'perm': return list(fw[k]);
+      case 'aud': return list(fw.aud, function (a) { return '<span class="code">' + a.k + '</span> ' + t(a.l); });
+      case 'resp': return '<div class="rsp"><div>' + ic('monitor') + '<span>' + t(fw.resp.d) + '</span></div><div>' + ic('tablet') + '<span>' + t(fw.resp.t) + '</span></div><div>' + ic('phone') + '<span>' + t(fw.resp.m) + '</span></div></div>';
+      case 'lang': return list(fw.lang, P2.both);
+      case 'map': return '<span class="minis">' + fw.nb.map(function (c) { return P2.nb(c, true); }).join('') + fw.nv.map(function (c) { return P2.nv(c); }).join('') + fw.bf.map(function (c) { return P2.bf(c); }).join('') +
+        C.flowFor(fw.id).map(function (f) { return '<span class="mini fl">' + f.code + '</span>'; }).join('') + '</span>';
+      default: return dash(fw[k]);
+    }
+  }
+  document.getElementById('fRole').innerHTML = P2.allOpt(['Semua peran', 'All roles']) + P2.options(P2.roleOptions());
+  document.getElementById('fDom').innerHTML = P2.allOpt(['Semua domain', 'All domains']) + P2.options(P2.domOptions());
+  document.getElementById('fArch').innerHTML = P2.allOpt(['Semua arsitipe', 'All archetypes']) + P2.options(P2.archOptions());
+  var F = { q: '', role: '', dom: '', arch: '' };
+  function render() {
+    var q = F.q.trim().toLowerCase(), n = 0, out = '';
+    C.SITEMAP.forEach(function (d) {
+      var ss = C.SCREENS.filter(function (s) { return s.dom === d.k && (!q || P2.hay(s).indexOf(q) !== -1) && (!F.role || C.can(F.role, s.p)) && (!F.dom || s.dom === F.dom) && (!F.arch || s.a === F.arch); });
+      if (!ss.length) return;
+      out += '<div class="dhead"><span class="nb-badge">' + d.n + '</span>' + t(d.t) + '<span class="mini">' + ss.length + '</span></div>';
+      ss.forEach(function (s) {
+        n++;
+        var fw = C.framework(s.id);
+        out += '<details class="spec" id="' + s.id + '"><summary>' + P2.sid(s.id, true) + '<span class="nm">' + t(s.n) + '<small>' + t(s.pur) + '</small></span><span class="meta">' + P2.arch(s.a, true) + P2.lvl(s.lvl) + P2.rcs(fw.roles) + '</span><span class="chev2">' + ic('chevd') + '</span></summary>' +
+          '<div class="sb"><dl class="ff24">' + FF.map(function (f, i) { return '<div><span class="fn">' + (i + 1) + '</span><dt>' + t(f[1]) + '</dt><dd>' + val(f[0], fw) + '</dd></div>'; }).join('') + '</dl>' +
+          '<div class="acts2"><a class="applink o" href="' + P2.screenApp(s) + '">' + ic('phone') + '<span data-en="View in app">Lihat di aplikasi</span></a><a class="applink" href="traceability.html#tr-' + s.id + '">' + ic('link') + 'Traceability</a></div></div></details>';
+      });
+    });
+    if (!n) out = '<div class="empty-res" data-en="No screens match this filter.">Tidak ada layar yang cocok dengan filter ini.</div>';
+    P2.mount('#specList', out);
+    P2.mount('#count', t([n + ' dari ' + C.SCREENS.length + ' layar', n + ' of ' + C.SCREENS.length + ' screens']));
+  }
+  function bind(id, key, ev) { document.getElementById(id).addEventListener(ev || 'change', function () { F[key] = this.value; render(); }); }
+  bind('q', 'q', 'input'); bind('fRole', 'role'); bind('fDom', 'dom'); bind('fArch', 'arch');
+  function setAll(o) { var d = document.querySelectorAll('details.spec'); for (var i = 0; i < d.length; i++) d[i].open = o; }
+  document.getElementById('openAll').addEventListener('click', function () { setAll(true); });
+  document.getElementById('closeAll').addEventListener('click', function () { setAll(false); });
+  render();
+  P2.attrs();
+  P2.hashOpen(function (el, id) {
+    if (C.screen(id) && !el) {
+      F = { q: '', role: '', dom: '', arch: '' };
+      ['q', 'fRole', 'fDom', 'fArch'].forEach(function (x) { document.getElementById(x).value = ''; });
+      render(); el = document.getElementById(id);
+    }
+    if (!el) return;
+    var acc = el.closest('.acc'); if (acc) acc.classList.add('is-open');
+    var prev = document.querySelectorAll('.is-target'); for (var i = 0; i < prev.length; i++) prev[i].classList.remove('is-target');
+  });
+})();
+</script>
+</body>
+</html>

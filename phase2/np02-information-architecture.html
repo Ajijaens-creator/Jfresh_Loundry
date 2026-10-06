@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JFRESH OS — NP-02 Information Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/jfresh.css">
+<link rel="stylesheet" href="phase2.css">
+<style>
+  /* Pyramid: CSS trapezoids on PC / iPad, stacked cards on mobile */
+  .pyr { display: grid; grid-template-columns: minmax(0, 1fr) 290px 92px; gap: 10px 22px; align-items: stretch; }
+  .lv-bar { --w: 100%; --s: 0%; grid-column: 1; justify-self: center; width: var(--w); min-height: 128px; clip-path: polygon(var(--s) 0, calc(100% - var(--s)) 0, 100% 100%, 0 100%);
+    padding: 16px calc(var(--s) + 18px) 18px; display: grid; align-content: center; justify-items: center; gap: 8px; text-align: center; color: var(--white); }
+  .lv-bar .lvk { font-size: 12.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; opacity: .9; }
+  .lv-bar h3 { color: inherit; font-size: 21px; }
+  .lv-bar .q { font-size: 14.5px; opacity: .92; }
+  .lv-bar .ex { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .lv-bar .ex span { padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .3); }
+  .lv-1 { --w: 58%; --s: 12.1%; background: linear-gradient(180deg, var(--orange-2), var(--orange)); color: #3A1D00; }
+  .lv-1 .ex span { background: rgba(255, 255, 255, .55); border-color: rgba(255, 255, 255, .7); }
+  .lv-2 { --w: 72%; --s: 9.7%; background: linear-gradient(180deg, #1C93D8, #0B80C8); }
+  .lv-3 { --w: 86%; --s: 8.1%; background: linear-gradient(180deg, #0A6BC4, #0A5DB8); }
+  .lv-4 { --w: 100%; --s: 7%; background: linear-gradient(180deg, #0754A6, #0B3D78); }
+  .lv-note { grid-column: 2; display: grid; align-content: center; gap: 6px; padding: 12px 16px; border-radius: var(--r); border: 1px solid var(--line); background: var(--white); }
+  .lv-note b { color: var(--blue-ink); }
+  .lv-note .note { font-size: 14px; }
+  .lv-note .cnt { display: flex; flex-wrap: wrap; gap: 6px; }
+  .freq { grid-column: 3; grid-row: 1 / span 4; display: grid; grid-template-rows: auto 1fr auto; justify-items: center; gap: 8px; text-align: center; font-size: 13px; font-weight: 800; color: var(--blue-ink); }
+  .freq .ar { width: 14px; border-radius: 999px; background: linear-gradient(180deg, var(--orange), var(--blue)); position: relative; }
+  .freq .ar::after { content: ""; position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%); border: 12px solid transparent; border-top: 14px solid var(--blue); border-bottom: 0; }
+  .freq .tp { color: var(--orange-ink); }
+  .freq-h { display: none; }
+
+  .lvls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .lvc { padding: 16px; }
+  .lvc .panel-h { margin-bottom: 10px; }
+  .lvc .sids { display: flex; flex-wrap: wrap; gap: 5px; }
+  .lvc .arcs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+  .lvbadge { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; font-weight: 800; color: var(--white); flex: none; }
+
+  .reach { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .reach .side { border-radius: var(--r); border: 1px solid var(--line); padding: 16px; display: grid; gap: 10px; align-content: start; }
+  .reach .side.o { background: linear-gradient(180deg, var(--orange-50), var(--white) 80%); border-color: var(--orange-100); }
+  .reach .taps { font-size: 28px; font-weight: 800; color: var(--blue-ink); font-variant-numeric: tabular-nums; }
+  .reach .taps small { font-size: 14px; color: var(--muted); font-weight: 700; margin-left: 6px; }
+
+  .rl-tbl td.c { width: 92px; }
+  .rl-tbl .cnt { display: block; font-size: 12.5px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .rl-tbl .ext .yn { background: var(--bg-2); color: var(--muted); box-shadow: inset 0 0 0 1.5px var(--line); }
+
+  .alerts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .al { border-radius: var(--r); padding: 16px; border: 1px solid; display: grid; gap: 8px; align-content: start; }
+  .al .hd { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
+  .al .ex { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--white); font-weight: 700; }
+  .al.info { background: var(--info-50); border-color: var(--blue-100); color: var(--info); }
+  .al.warn { background: var(--warn-50); border-color: var(--warn-line); color: var(--warn); }
+  .al.crit { background: var(--crit-50); border-color: var(--crit-line); color: var(--crit); }
+  .al p { color: var(--ink); font-size: 15px; }
+
+  @media (max-width: 1239px) {
+    .pyr { grid-template-columns: minmax(0, 1fr) 230px; }
+    .freq { display: none; }
+    .freq-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 800; color: var(--blue-ink); }
+    .freq-h .tp { color: var(--orange-ink); }
+    .freq-h .ln { flex: 1; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--orange), var(--blue)); }
+    .lv-bar h3 { font-size: 19px; }
+    .lvls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .alerts { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 699px) {
+    .pyr { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .pyr > * { grid-row: auto !important; }
+    .lv-bar { --w: 100%; clip-path: none; border-radius: var(--r) var(--r) 0 0; padding: 16px; min-height: 0; justify-items: start; text-align: left; }
+    .lv-bar .ex { justify-content: flex-start; }
+    .lv-note { grid-column: 1; border-radius: 0 0 var(--r) var(--r); border-top: 0; margin-bottom: 12px; }
+    .lvls, .reach { grid-template-columns: minmax(0, 1fr); }
+    .rl-tbl th, .rl-tbl td { padding: 8px 6px; }
+    .rl-tbl td.c { width: 52px; }
+    .rl-tbl .rc { white-space: normal; }
+  }
+</style>
+</head>
+<body data-root="../" data-phase="2" data-visual="2">
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="vbadge">02</span><span data-en="Phase 2 · NP-02 · NV-02">Fase 2 · NP-02 · NV-02</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1>Information Architecture</h1>
+      <p class="sub" data-en="Information is ordered by how often people need it. What needs attention right now sits on top; configuration sits at the bottom, only for management.">Informasi diurutkan berdasarkan seberapa sering dibutuhkan. Yang perlu perhatian sekarang ada di atas; konfigurasi ada di bawah, hanya untuk manajemen.</p>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Right Information, <b>Right Time</b></div>
+      <div class="values"><span data-en="Clean">Bersih</span><span data-en="Consistent">Konsisten</span><span data-en="Trusted">Terpercaya</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section class="panel">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="target"></i></span>
+      <div class="ttl"><h2 data-en="Four information levels">Empat level informasi</h2>
+        <p class="desc" data-en="Level 1 is the most frequently accessed, Level 4 the least.">Level 1 paling sering diakses, Level 4 paling jarang.</p></div>
+    </div>
+    <div class="freq-h"><span class="tp" data-en="Most frequently accessed">Paling Sering Diakses</span><span class="ln"></span><span data-en="Less frequently accessed">Lebih Jarang Diakses</span></div>
+    <div class="pyr" id="pyr" style="margin-top:12px"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="pointer"></i></span>
+      <div class="ttl"><h2 data-en="Frequent actions are easier to reach than admin actions">Aksi yang sering dipakai lebih mudah dijangkau daripada aksi admin</h2>
+        <p class="desc" data-en="The number of taps follows how often an action is used.">Jumlah tap mengikuti seberapa sering aksi dipakai.</p></div>
+    </div>
+    <div class="reach">
+      <div class="side o">
+        <span class="label" data-en="Daily · Operator">Harian · Operator</span>
+        <div class="chain"><span class="lk"><i data-icon="home"></i><span data-en="Home">Beranda</span></span><span class="arr"><i data-icon="arrow"></i></span><span class="lk o"><i data-icon="basket"></i>Terima Cucian</span></div>
+        <div class="taps num">1 <small data-en="tap from home: the big orange button">tap dari beranda: tombol oranye besar</small></div>
+      </div>
+      <div class="side">
+        <span class="label" data-en="Rare · Owner only">Jarang · Hanya Owner</span>
+        <div class="chain"><span class="lk"><i data-icon="menu"></i>Menu</span><span class="arr"><i data-icon="arrow"></i></span><span class="lk"><i data-icon="cog"></i><span data-en="System">Sistem</span></span><span class="arr"><i data-icon="arrow"></i></span><span class="lk"><i data-icon="cog"></i><span data-en="Settings">Pengaturan</span></span></div>
+        <div class="taps num">3 <small data-en="taps, and hidden from every other role">tap, dan disembunyikan dari peran lain</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel acc" data-acc="m">
+    <div class="panel-h">
+      <span class="ico"><i data-icon="users"></i></span>
+      <div class="ttl"><h2 data-en="Which levels each role lives in">Level tempat setiap peran bekerja</h2>
+        <p class="desc" data-en="Check = the role's home lives in that level. The number is how many screens of that level its permissions open. Frontline works in Levels 1–2, with Level 3 only for its own history.">Centang = peran bekerja di level itu. Angka = jumlah layar level itu yang dibuka oleh izinnya. Frontline bekerja di Level 1–2, Level 3 hanya untuk riwayatnya sendiri.</p></div>
+    </div>
+    <div class="acc-b">
+      <div class="tblwrap"><table class="tbl rl-tbl" id="rl"></table></div>
+      <div class="legend-r" style="margin-top:10px"><span><span class="yn y"><svg class="i"><use href="#i-check"/></svg></span><span data-en="Lives in this level">Bekerja di level ini</span></span><span class="ext"><span class="yn" style="background:var(--bg-2);color:var(--muted)"><svg class="i"><use href="#i-eye"/></svg></span><span data-en="Can open some screens here (drill-down)">Bisa membuka beberapa layar (drill-down)</span></span><span><span class="yn n"><svg class="i"><use href="#i-minus"/></svg></span><span data-en="No access">Tanpa akses</span></span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="panel-h">
+      <span class="ico"><i data-icon="layers"></i></span>
+      <div class="ttl"><h2 data-en="Screens per level">Layar per level</h2>
+        <p class="desc" data-en="Each of the screens in the register carries its information level.">Setiap layar di register membawa level informasinya.</p></div>
+    </div>
+    <div class="lvls" id="lvls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-h">
+      <span class="ico o"><i data-icon="bell"></i></span>
+      <div class="ttl"><h2 data-en="Alert priority">Prioritas alert</h2>
+        <p class="desc" data-en="Three levels only, always icon + text.">Hanya tiga level, selalu ikon + teks.</p></div>
+    </div>
+    <div class="alerts" id="alerts"></div>
+    <div class="callout" style="margin-top:14px"><i data-icon="alert"></i><p><b data-en="Do not overuse red.">Jangan berlebihan memakai merah.</b> <span data-en="Red is only for late, failed or something that needs action now. If everything is red, nothing is urgent. Most numbers stay blue; amber warns before it becomes red.">Merah hanya untuk terlambat, gagal, atau yang butuh tindakan sekarang. Jika semua merah, tidak ada yang terasa mendesak. Sebagian besar angka tetap biru; amber memberi peringatan sebelum menjadi merah.</span></p></div>
+  </section>
+
+</main>
+
+<script src="../assets/js/icons.js"></script>
+<script src="../assets/js/jfos-config.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script src="phase2.js"></script>
+<script>
+(function () {
+  var C = P2.C, t = P2.t, ic = P2.ic;
+  var COL = ['var(--orange)', '#0B80C8', '#0A5DB8', '#0B3D78'];
+  function scr(n) { return C.SCREENS.filter(function (s) { return s.lvl === n; }); }
+  function rolesAt(n) { return C.ROLE_ORDER.filter(function (k) { return C.ROLES[k].levels.indexOf(n) !== -1; }); }
+
+  // Pyramid
+  var h = '<div class="freq"><span class="tp" data-en="Most frequently accessed">Paling Sering Diakses</span><span class="ar"></span><span data-en="Less frequently accessed">Lebih Jarang Diakses</span></div>';
+  C.LEVELS.forEach(function (L) {
+    h += '<div class="lv-bar lv-' + L.n + '" style="grid-row:' + L.n + '"><span class="lvk">Level ' + L.n + '</span><h3>' + t(L.t) + '</h3><span class="q">' + t(L.q) + '</span>' +
+      '<span class="ex">' + L.ex.map(function (e) { return '<span>' + t(e) + '</span>'; }).join('') + '</span></div>' +
+      '<div class="lv-note" style="grid-row:' + L.n + '"><b>' + t(L.who) + '</b><span class="cnt"><span class="mini">' + scr(L.n).length + ' ' + t(['layar', 'screens']) + '</span></span>' +
+      '<span class="rcs">' + rolesAt(L.n).map(function (k) { return P2.rc(k); }).join('') + '</span></div>';
+  });
+  P2.mount('#pyr', h);
+
+  // Role x level
+  h = '<thead><tr><th data-en="Role">Peran</th>' + C.LEVELS.map(function (L) { return '<th class="c">L' + L.n + '<span class="sub hide-m">' + t(L.t) + '</span></th>'; }).join('') + '<th class="hide-m" data-en="Home question">Pertanyaan beranda</th></tr></thead><tbody>';
+  C.ROLE_ORDER.forEach(function (k) {
+    var r = C.ROLES[k];
+    h += '<tr><td>' + P2.rc(k) + '</td>';
+    C.LEVELS.forEach(function (L) {
+      var n = C.SCREENS.filter(function (s) { return s.lvl === L.n && C.can(k, s.p); }).length;
+      var lives = r.levels.indexOf(L.n) !== -1;
+      var cell = lives ? P2.yes() : (n ? '<span class="ext"><span class="yn">' + ic('eye') + '<span class="sr" data-en="Drill-down only">Hanya drill-down</span></span></span>' : P2.no());
+      h += '<td class="c">' + cell + (n ? '<span class="cnt num">' + n + '</span>' : '') + '</td>';
+    });
+    h += '<td class="hide-m">“' + t(r.q) + '”</td></tr>';
+  });
+  P2.mount('#rl', h + '</tbody>');
+
+  // Screens per level
+  h = '';
+  C.LEVELS.forEach(function (L, i) {
+    var list = scr(L.n), arcs = {};
+    list.forEach(function (s) { arcs[s.a] = (arcs[s.a] || 0) + 1; });
+    h += '<section class="panel lvc acc" data-acc="tm"><div class="panel-h"><span class="lvbadge" style="background:' + COL[i] + (i === 0 ? ';color:#3A1D00' : '') + '">L' + L.n + '</span>' +
+      '<div class="ttl"><h2 style="font-size:18px">' + t(L.t) + '</h2><p class="desc">' + list.length + ' ' + t(['layar', 'screens']) + '</p></div></div>' +
+      '<div class="acc-b"><div class="arcs">' + Object.keys(arcs).sort().map(function (a) { return '<span class="mini">' + ic(C.ARCH[a].i) + a + ' × ' + arcs[a] + '</span>'; }).join('') + '</div>' +
+      '<div class="sids">' + list.map(function (s) { return P2.sid(s.id); }).join('') + '</div></div></section>';
+  });
+  P2.mount('#lvls', h);
+
+  // Alerts
+  var USE = {
+    info: ['Jumlah pekerjaan, informasi umum. Warna default.', 'Work counts, general information. The default colour.'],
+    warn: ['Akan bermasalah jika dibiarkan: SLA hampir habis, stok menipis.', 'Will become a problem if ignored: SLA almost up, stock running low.'],
+    crit: ['Sudah bermasalah, butuh tindakan sekarang: terlambat, gagal, hilang.', 'Already a problem, act now: late, failed, lost.']
+  };
+  h = '';
+  Object.keys(C.ALERTS).forEach(function (k) {
+    var a = C.ALERTS[k];
+    h += '<div class="al ' + k + '"><span class="hd">' + ic(a.icon) + t(a.t) + '<span class="mini" style="margin-left:auto">' + P2.esc(a.color) + '</span></span><span class="ex">' + ic(a.icon) + t(a.ex) + '</span><p>' + t(USE[k]) + '</p></div>';
+  });
+  P2.mount('#alerts', h);
+})();
+</script>
+</body>
+</html>
