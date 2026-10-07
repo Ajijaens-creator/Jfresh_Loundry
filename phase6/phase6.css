@@ -1,0 +1,6 @@
+/* JFRESH OS — Phase 6 documentation pages (layout only). Builds on phase3.css, phase4.css and phase5.css. */
+.p6-tree { display: grid; gap: var(--jf-space-2); margin: 0; padding: 0; list-style: none; }
+.p6-tree li { display: flex; align-items: center; gap: var(--jf-space-2); padding: var(--jf-space-2) var(--jf-space-3); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); font-weight: var(--jf-weight-semibold); color: var(--jf-text-strong); min-width: 0; }
+.p6-tree li .i { width: 18px; height: 18px; color: var(--jf-brand-deep); flex: none; }
+.p6-tree li small { margin-left: auto; color: var(--jf-text-muted); font-weight: var(--jf-weight-regular); }
+@media (max-width: 699px) { .p6-tree li { flex-wrap: wrap; } .p6-tree li small { margin-left: 0; width: 100%; } }
