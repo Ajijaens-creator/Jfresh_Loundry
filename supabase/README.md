@@ -22,7 +22,7 @@ Rules:
 |---|---|
 | `plants`, `clients`, `employees` | Organisation scope. Employee and login account are separate. |
 | `profiles` | One row per login account (linked to Supabase Auth): status, lock, language, plant scope, full access. |
-| `roles`, `permissions`, `role_permissions` | The 19 roles and 291 permissions of Phases 4–11. |
+| `roles`, `permissions`, `role_permissions` | The 23 roles and 335 permissions of Phases 4–12. |
 | `user_roles`, `user_plants`, `user_permission_denies` | Who has which role (one default), which plants, and per-user exceptions. |
 | `audit_log` | Append-only security trail, written only through `log_event()`. |
 

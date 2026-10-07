@@ -19,6 +19,10 @@ const DL = require(R + 'jfos-dlv.js'); DL.install(C, X, P, CM, LG, PR);
 const F = require(R + 'jfos-fin.js'); F.install(C, X, P, CM, LG, PR, DL);
 const CLP = require(R + 'jfos-clp.js'); CLP.install(C, X, P, CM, LG, PR, DL, F);
 const S = require(R + 'jfos-sys.js'); S.install(C, X, P, CM, LG, PR, DL, F, CLP);
+global.JFCLP = CLP; global.JFSYS = S;
+const H = require(R + 'jfos-help.js'); H.install(C, X, P, CM, LG, PR, DL, F, CLP, S); global.JFHELP = H;
+const I = require(R + 'jfos-imp.js'); I.install(C, X, P, CM, LG, PR, DL, F, CLP, S); global.JFIMP = I;
+const G = require(R + 'jfos-go.js'); G.install(C, X, P, CM, LG, PR, DL, F, CLP, S, I); global.JFGO = G;
 
 const out = process.argv[2] || path.join(__dirname, '../supabase/migrations/20261007160100_access_reference_data.sql');
 const q = v => v == null ? 'null' : "'" + String(v).replace(/'/g, "''") + "'";
