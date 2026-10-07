@@ -131,7 +131,7 @@ Code:
 
 ## Phase 10 — Business Support, Finance, Costing & Scale-Up Intelligence (NP 1.0)
 
-Sign in as `aji` (owner / CEO: CFO dashboard, ratios, decisions, scenarios), `budi` (finance: accounting, cash, AR, AP, costing, budget, close), `rai` (supply / purchasing, iPad), `komang` (asset admin, iPad) or `dewi` (operations manager: HPP, consumption, inventory). Password `jfresh123`.
+Sign in as `aji` (owner / CEO: CFO dashboard, ratios, decisions, scenarios), `budi` (finance: accounting, cash, AR, AP, costing, budget, close), `rai` (supply / purchasing, iPad), `komang` (asset admin, iPad), `gita` (second finance user, approves budi's large cash-outs) or `dewi` (operations manager: HPP, consumption, inventory). Password `jfresh123`.
 
 Core rule: enter once, use everywhere, trace every number, explain every decision.
 

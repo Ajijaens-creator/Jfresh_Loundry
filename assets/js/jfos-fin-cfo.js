@@ -867,6 +867,12 @@
       demo: { u: 'komang', d: L('Asset Admin · register & penyusutan', 'Asset Admin · register & depreciation') }
     }
   };
+  // A second finance user, so a large cash-out made by one finance user can be approved by another (maker-checker).
+  M.EXTRA_USERS = [{
+    emp: { id: 'EMP-112', n: 'Gita Pratiwi', short: 'Gita', dept: L('Finance', 'Finance'), status: 'active' },
+    user: { id: 'USR-112', u: 'gita', email: 'gita@jfreshlaundry.app', emp: 'EMP-112', status: 'active', roles: [{ k: 'finance', def: true }], plants: ['*'], lang: 'id', deny: ['fin.invoice.fix.approve'] },
+    demo: { u: 'gita', d: L('Finance · penyetuju kedua', 'Finance · second approver') }
+  }];
   var PLACEHOLDER = ['FIN-BIL-001', 'FIN-INV-001', 'FIN-PAY-002', 'FIN-AR-001', 'FIN-CN-001', 'INV-STK-001'];
   /* install(): joins the Phase 10 permissions, screens, menus and the two new roles to the shared config and access
      roles, replaces the Phase 2 finance and stock placeholders in the menus, feeds Phase 5. Safe to call more than once. */
@@ -885,6 +891,7 @@
         if (!X.DEMO.some(function (x) { return x.u === d.demo.u; })) X.DEMO.push(d.demo);
       }
     });
+    if (X) M.EXTRA_USERS.forEach(function (d) { if (!X.employee(d.emp.id)) X.EMPLOYEES.push(d.emp); if (!X.USERS.some(function (u) { return u.u === d.user.u; })) X.USERS.push(Object.assign({}, d.user)); if (!X.DEMO.some(function (x) { return x.u === d.demo.u; })) X.DEMO.push(d.demo); });
     Object.keys(M.ROLE_PERMS).forEach(function (r) { var rl = C.ROLES[r], xr = X && X.ROLES[r]; if (rl) addP(rl.perms, M.ROLE_PERMS[r]); if (xr && xr.perms) addP(xr.perms, M.ROLE_PERMS[r]); });
     function strip(list) { return list.filter(function (n) { return PLACEHOLDER.indexOf(n.s) < 0; }).map(function (n) { return n.sub ? Object.assign({}, n, { sub: n.sub.map(function (x) { return x.s === 'INV-STK-001' ? Object.assign({}, x, { s: 'INV-001' }) : x; }) }) : n; }); }
     var fin = C.ROLES.finance;

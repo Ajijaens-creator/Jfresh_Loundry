@@ -17,7 +17,7 @@
   // A test user carries the merged permissions of its role, as the app builds them after every install().
   function ctx(role, emp, uid) { return function (F, C) { return { uid: uid || 'T-' + (emp || role), name: 'Tester ' + role, roleKey: role, perms: (C.ROLES[role] ? C.ROLES[role].perms : F.ROLE_PERMS[role] || []).slice(), employee: emp ? { id: emp } : null }; }; }
   var fin = ctx('finance', 'EMP-030'), own = ctx('owner', 'EMP-050'), sup = ctx('supply', 'EMP-110'), ast = ctx('assetadm', 'EMP-111'), ops = ctx('opsmgr', 'EMP-010'), sal = ctx('sales', 'EMP-040'), drv = ctx('driver', 'EMP-002');
-  var fin2 = function (F, C) { var c = fin(F, C); c.employee = { id: 'EMP-079' }; c.uid = 'T-EMP-079'; return c; };
+  var fin2 = function (F, C) { var c = fin(F, C); c.employee = { id: 'EMP-112' }; c.uid = 'T-EMP-112'; return c; };
   var JT = 1e6;
 
   /* ---- NP-01 accounting foundation ---- */
@@ -287,7 +287,7 @@
     eq(F.SCREENS.length, 62); ok(C.screen('CFO-001') && C.screen('ACC-001'), 'screens registered'); eq(C.screen('FIN-001').id, 'FIN-001', 'Phase 5 FIN-001 untouched');
     function walk(l, out) { l.forEach(function (n) { if (n.sub) walk(n.sub, out); else if (n.s) out.push(n.s); }); return out; }
     ['finance', 'owner', 'opsmgr'].forEach(function (r) { var s = walk(C.ROLES[r].nav, []); ok(s.indexOf('FIN-BIL-001') < 0 && s.indexOf('INV-STK-001') < 0, r + ' placeholders replaced'); s.forEach(function (id) { ok(C.screen(id), r + ' ' + id + ' exists'); }); });
-    ok(C.ROLES.supply && C.ROLES.assetadm, 'new roles'); ok(X.USERS.some(function (u) { return u.u === 'rai'; }) && X.USERS.some(function (u) { return u.u === 'komang'; }), 'demo users');
+    ok(C.ROLES.supply && C.ROLES.assetadm, 'new roles'); ok(X.USERS.some(function (u) { return u.u === 'rai'; }) && X.USERS.some(function (u) { return u.u === 'komang'; }), 'demo users'); ok(X.USERS.some(function (u) { return u.u === 'gita' && u.roles[0].k === 'finance'; }), 'second finance approver');
     var n = X.notifsFor ? X.notifsFor(own(F, C)) : []; ok(!X.notifsFor || n.some(function (x) { return x.p10; }), 'Phase 10 alerts in the bell');
   });
   add('INTEGRATION', 'FIN-T43', ['Fase 9 → Fase 10: Billing Ready baru masuk sekali dengan jurnal akrual', 'Phase 9 → Phase 10: new Billing Ready enters once with its accrual journal'], function (F) {
