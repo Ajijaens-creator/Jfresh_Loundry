@@ -1,0 +1,3 @@
+/* JFRESH OS — Phase 7 documentation pages (layout only). Builds on phase3.css, phase4.css, phase5.css and phase6.css. */
+.p7-feel { display: flex; flex-wrap: wrap; gap: var(--jf-space-2); margin: var(--jf-space-2) 0 0; padding: 0; list-style: none; }
+.p7-feel li { padding: var(--jf-space-2) var(--jf-space-3); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); font-weight: var(--jf-weight-semibold); color: var(--jf-brand-deep); }

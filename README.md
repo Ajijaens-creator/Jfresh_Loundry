@@ -129,6 +129,26 @@ Code:
 - `assets/js/jfos-comm-docs.js` — data for the Phase 6 pages.
 - `assets/brand/phase6/` — reference visuals NV-01 to NV-09.
 
+## Phase 7 — Order, Pickup, Delivery & Live Logistics (NP 1.0)
+
+Sign in as `ketut` (driver, phone-first), `saras` (supervisor / dispatcher), `made` (plant receiving operator) or `aji` (owner; the live map asks for a reason first). The clients `sari.grandvista` and `nia.hotelabc` request pickups and track only the driver heading to their own property. Password `jfresh123`.
+
+| Page | File |
+|---|---|
+| 27 screens (ORDER-001…003, SCHEDULE-001/002, DISPATCH-001, ROUTE-001/002, DRIVER-001, VEHICLE-001, DRIVER-MOB-001…003, MANIFEST-001, BAG-001, EVIDENCE-001, POD-001, ISSUE-001/002, ARRIVAL-001, HANDOVER-001, TRACK-001…003, CHAT-001, TIMELINE-001, LOG-KPI-001) | `app/index.html` |
+| Phase 7 overview (execution model, NP-01 to NP-10, location privacy, demo accounts, §92 rules, §91 Definition of Done, visuals) | `phase7/index.html` |
+| Screen specifications (§85 fields per screen) | `phase7/screens.html` |
+| Test cases run in the browser + responsive checklist | `phase7/tests.html` |
+
+Code:
+
+- `assets/js/jfos-logi.js` — `JFLOG`, the one logistics engine: orders with duplicate check, recurring schedules and auto orders, dispatch lanes and capacity checks, routes, drivers and vehicles, the driver status flow (no jumps), pickup without item count, manifests and bags with scan codes and versions, evidence and POD (never edited, amended with a reason), issues and supervisor decisions, plant arrival and two-sided handover with reconciliation, location only during active trips, ETA with freshness, client tracking scope, the owner reason gate and 30-day access log, task chat, the route timeline and the 12 logistics KPIs that feed the Phase 5 Personal Score. Clients, properties and SLA come from the Phase 6 engine. `install()` joins its permissions, screens, menus and notifications to the shared config.
+- `assets/js/jfos-logi-data.js` — sample day (2026-10-06): drivers, vehicles, routes, trips, orders, manifests and simulated positions (no server or GPS yet).
+- `app/screens-logi.js`, `app/screens-logi2.js`, `app/screens-logi3.js`, `app/logi.css` — the screens.
+- `assets/js/jfos-logi-tests.js` — 44 test cases. Run `node tools/test-logi.js`.
+- `assets/js/jfos-logi-docs.js` — data for the Phase 7 pages.
+- `assets/brand/phase7/` — reference visuals NV-01 to NV-10.
+
 ## Three form factors
 
 Each page changes its layout, not just its size:
