@@ -129,6 +129,26 @@ Code:
 - `assets/js/jfos-comm-docs.js` — data for the Phase 6 pages.
 - `assets/brand/phase6/` — reference visuals NV-01 to NV-09.
 
+## Phase 8 — Laundry Production (NP 1.0)
+
+Sign in as `putu` (Team 1 · receiving & preparation), `arta` (Team 2 · washing & drying), `luh` (Team 3 · finishing, QC & packing), `oka` (maintenance), `saras` (production supervisor) or `aji` (owner, read only). The driver `ketut` gets "Ambil di Plant" to accept ready packages. Password `jfresh123`.
+
+| Page | File |
+|---|---|
+| Team homes HOM-T1/T2/T3-001, receiving, weighing, differences, sorting, batch builder, handovers 1–4, washing, drying, finishing, QC, rewash, packing, ready to deliver, issues, history, Command Center, capacity, machines, production issues, batch trace, KPI, CHK-001…005 and MNT-001…006 | `app/index.html` |
+| Phase 8 overview (execution model, team workspaces, NP-01 to NP-12, demo accounts, §92 rules, §91 Definition of Done, visuals) | `phase8/index.html` |
+| Screen specifications (§86 fields per screen) | `phase8/screens.html` |
+| Test cases run in the browser + responsive checklist | `phase8/tests.html` |
+
+Code:
+
+- `assets/js/jfos-prod.js` — `JFPROD`, the one production engine: receiving from Phase 7 manifests, weighing with scale or audited manual override, differences, sorting with tolerance, batch recommendations with capacity validation, two-sided handovers, washing and drying with machine timers, finishing, QC with rework routed to the cause stage, packing with reconciliation and labels, ready to deliver and the driver handover, issues, the live Command Center with bottleneck detection, full batch trace, production KPI feeding Ambidex, the versioned daily checklist engine with approval, and preventive maintenance with SOP checklists, work orders and downtime. `install()` joins its permissions, screens, menus and roles to the shared config.
+- `assets/js/jfos-prod-data.js` — sample day (2026-10-06): batches, machines, staff, checklist templates and instances, maintenance plans and work orders (no server or scale yet).
+- `app/screens-prod.js`, `app/screens-prod2.js`, `app/screens-prod3.js`, `app/prod.css` — the screens (iPad first, offline banner "Tidak ada koneksi").
+- `assets/js/jfos-prod-tests.js` — 60 test cases. Run `node tools/test-prod.js`.
+- `assets/js/jfos-prod-docs.js` — data for the Phase 8 pages.
+- `assets/brand/phase8/` — the 9 reference visuals sent for Phase 8.
+
 ## Phase 7 — Order, Pickup, Delivery & Live Logistics (NP 1.0)
 
 Sign in as `ketut` (driver, phone-first), `saras` (supervisor / dispatcher), `made` (plant receiving operator) or `aji` (owner; the live map asks for a reason first). The clients `sari.grandvista` and `nia.hotelabc` request pickups and track only the driver heading to their own property. Password `jfresh123`.

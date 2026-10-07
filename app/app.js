@@ -186,6 +186,7 @@
     if (!rec) return null;
     var o = DB.order(rec); if (o) return o;
     var i = DB.issue && DB.issue(rec); if (i) return DB.order(i.ord) || null;
+    if (window.JFPROD) { var pr = window.JFPROD.recordOf(rec); if (pr) return pr; }
     if (window.JFLOG) { var lr = window.JFLOG.recordOf(rec); if (lr) return lr; }
     if (window.JFCOMM) return window.JFCOMM.recordOf(rec);
     return null;

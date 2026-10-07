@@ -1,0 +1,5 @@
+/* JFRESH OS — Phase 8 documentation pages (layout only). Builds on phase3–phase7 css. */
+.p8-teams { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--jf-space-3); }
+.p8-teams > div { padding: var(--jf-space-4); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); min-width: 0; }
+.p8-teams b { display: block; color: var(--jf-brand-deep); margin-bottom: var(--jf-space-2); }
+.p8-teams p { margin: 0; color: var(--jf-text-muted, inherit); }
