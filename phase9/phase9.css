@@ -1,0 +1,7 @@
+/* JFRESH OS — Phase 9 documentation pages (layout only). Builds on phase3–phase8 css. */
+.p9-gates { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--jf-space-3); }
+.p9-gates > div { padding: var(--jf-space-4); border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); background: var(--jf-surface-card); min-width: 0; }
+.p9-gates b { display: block; color: var(--jf-brand-deep); margin-bottom: var(--jf-space-2); }
+.p9-gates p { margin: 0; color: var(--jf-text-muted, inherit); }
+.p9-sheet { display: block; border: 1px solid var(--jf-border); border-radius: var(--jf-radius-card); overflow: hidden; }
+.p9-sheet img { display: block; width: 100%; height: auto; }

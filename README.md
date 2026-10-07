@@ -129,6 +129,28 @@ Code:
 - `assets/js/jfos-comm-docs.js` — data for the Phase 6 pages.
 - `assets/brand/phase6/` — reference visuals NV-01 to NV-09.
 
+## Phase 9 — Delivery, Client Completion & Service Closure (NP 1.0)
+
+Sign in as `ketut` (driver, phone-first), `nyoman.kayana` (Kayana client, phone), `saras` (supervisor, iPad), `dewi` (operations manager), `budi` (finance), `aji` (owner, read only) or `ayu` (sales). Team 3 `luh` sees the ready queue and receives returns. Password `jfresh123`.
+
+Core rule: Ready ≠ Delivered ≠ Completed ≠ Billing Ready. Each gate is enforced in the engine.
+
+| Page | File |
+|---|---|
+| REL-001/002 release, DISP-001/002 dispatch, CLIENT-DEL-001, DRV-HO-001 handover, DLV-POD-001/002, REC-001, DLV-ISSUE-001, RETURN-001, REDEL-001, COMP-001, DLV-TIMELINE-001, BILL-001/002, DLV-KPI-001, FEEDBACK-001 | `app/index.html` |
+| Phase 9 overview (closure model, three gates, NP-01 to NP-10, demo accounts, §84 rules, §83 Definition of Done, visuals) | `phase9/index.html` |
+| Screen specifications (§77 fields per screen) | `phase9/screens.html` |
+| Test cases run in the browser + responsive checklist | `phase9/tests.html` |
+
+Code:
+
+- `assets/js/jfos-dlv.js` — `JFDLV`, the one delivery-closure engine: release with 12 checks and controlled override, delivery tasks linked to Phase 7 orders (driver, vehicle, route, ETA, chat and tracking stay in the Phase 7 engine; the trip start is gated on release), handover, POD with immutable amendments, reconciliation with partial acceptance, issues, returns and redelivery chains, Service Completion with frozen versioned data and final SLA, billing validation with the historical rate snapshot and the Finance outbox, client feedback, delivery KPI feeding Phase 5 Ambidex and Phase 6 Client Health. `install()` joins its permissions, screens, menus and roles to the shared config.
+- `assets/js/jfos-dlv-data.js` — sample day (2026-10-06): releases, deliveries, PODs, issues, returns, completions, feedback and KPI history.
+- `app/screens-dlv.js`, `app/screens-dlv2.js`, `app/screens-dlv3.js`, `app/dlv.css` — the screens (mobile for driver and client, iPad for supervisor, desktop for manager, finance and owner) and the printable Delivery Note, POD, Return Note, Redelivery Note and Completion Summary.
+- `assets/js/jfos-dlv-tests.js` — 34 test cases. Run `node tools/test-dlv.js`.
+- `assets/js/jfos-dlv-docs.js` — data for the Phase 9 pages.
+- `assets/brand/phase9/` — the NV-01 to NV-10 reference sheet sent for Phase 9.
+
 ## Phase 8 — Laundry Production (NP 1.0)
 
 Sign in as `putu` (Team 1 · receiving & preparation), `arta` (Team 2 · washing & drying), `luh` (Team 3 · finishing, QC & packing), `oka` (maintenance), `saras` (production supervisor) or `aji` (owner, read only). The driver `ketut` gets "Ambil di Plant" to accept ready packages. Password `jfresh123`.
