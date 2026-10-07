@@ -1,0 +1,73 @@
+/* ==========================================================================
+   JFRESH OS — Phase 10 screens (Business Support, Finance, Costing & Scale-Up
+   Intelligence). Desktop first for the CFO and finance team, iPad for
+   approvals, inventory, purchasing and assets, mobile for alerts only.
+   Built on the Phase 3 tokens and the Phase 5–9 components.
+   Approved palette only: deep blue, fresh blue, orange accent; status
+   green / amber / red / blue.
+   Breakpoints: mobile < 700 · iPad 700–1239 · PC ≥ 1240.
+   ========================================================================== */
+
+/* ---------- Layout ---------- */
+.g2-10 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.g3-10 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.g21-10 { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.g2-10 > .card, .g3-10 > .card, .g21-10 > .card, .col10 > .card { margin: 0; }
+.col10 { display: grid; gap: 16px; align-content: start; }
+@media (max-width: 1239px) { .g3-10 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .g21-10 { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 699px) { .g2-10, .g3-10 { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Data freshness ---------- */
+.ph10-f { display: block; margin-top: 6px; }
+.fr10 { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 999px; background: var(--blue-50); color: var(--blue-ink); font-size: 12.5px; font-weight: 600; max-width: 100%; }
+.fr10 .i { width: 14px; height: 14px; flex: none; color: var(--blue-2, #00A8EB); }
+.fr10 > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fr10-ledger { background: var(--bg-2); }
+.fr10-snapshot { background: var(--warn-50); color: #6B3E00; }
+.fr10-snapshot .i { color: var(--warn); }
+
+/* ---------- KPI tiles ---------- */
+.kp10 { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.kp10-i { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 14px 16px; border-radius: var(--r-lg); background: var(--white); border: 1px solid var(--line); color: var(--ink); box-shadow: 0 1px 2px rgba(11,61,120,.04); text-decoration: none; }
+a.kp10-i:hover { border-color: var(--blue-100); box-shadow: 0 4px 14px rgba(11,61,120,.08); }
+.kp10-k { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--muted); min-width: 0; }
+.kp10-k > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kp10-k .i { width: 16px; height: 16px; color: var(--blue); flex: none; }
+.kp10-v { font-size: 22px; font-weight: 700; color: var(--blue-ink); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.kp10-s { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.kp10-ok { box-shadow: inset 0 3px 0 var(--ok); } .kp10-ok .kp10-k .i { color: var(--ok); }
+.kp10-warn { box-shadow: inset 0 3px 0 var(--warn); } .kp10-warn .kp10-k .i { color: var(--warn); }
+.kp10-crit { box-shadow: inset 0 3px 0 var(--crit); } .kp10-crit .kp10-v { color: var(--crit); } .kp10-crit .kp10-k .i { color: var(--crit); }
+.kp10-appr { box-shadow: inset 0 3px 0 var(--orange); } .kp10-appr .kp10-k .i { color: var(--orange); }
+.kp10-info { box-shadow: inset 0 3px 0 var(--blue-2, #00A8EB); }
+@media (max-width: 699px) { .kp10 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .kp10-v { font-size: 18px; } .kp10-i { padding: 12px; } }
+
+/* ---------- Money table ---------- */
+.mt10 th { font-weight: 600; color: var(--ink); }
+.mt10 th small { display: block; }
+.mt10 tr.mt10-tot th, .mt10 tr.mt10-tot td { font-weight: 800; color: var(--blue-ink); border-top: 2px solid var(--line); }
+.mt10 tr.mt10-sub th { padding-left: 22px; color: var(--muted); font-weight: 500; }
+.mt10 tr.mt10-hd th { font-weight: 800; color: var(--blue-ink); background: var(--bg-2); }
+.mt10 tr.mt10-neg td { color: var(--crit); }
+
+/* ---------- SIGNAL / WHY / IMPACT / RECOMMENDATION / ACTION ---------- */
+.sw10 { padding: 16px 18px; }
+.sw10-h { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.sw10-h h3 { flex: 1; margin: 0; font-size: 16px; color: var(--blue-ink); }
+.sw10-h > .i { width: 20px; height: 20px; color: var(--orange); }
+.sw10 dl { margin: 0; display: grid; gap: 8px; }
+.sw10-r { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.sw10-r dt { font-size: 11.5px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+.sw10-r dd { margin: 0; color: var(--ink); font-size: 14.5px; }
+.sw10-r dd ul { margin: 0; padding-left: 18px; }
+.sw10-sig dt { color: var(--blue); } .sw10-rec dd b { color: var(--blue-ink); }
+.sw10-t-crit { box-shadow: inset 4px 0 0 var(--crit); } .sw10-t-warn { box-shadow: inset 4px 0 0 var(--warn); } .sw10-t-ok { box-shadow: inset 4px 0 0 var(--ok); } .sw10-t-info { box-shadow: inset 4px 0 0 var(--blue-2, #00A8EB); }
+@media (max-width: 699px) { .sw10-r { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+
+/* ---------- Bars ---------- */
+.br10, .pg10 { position: relative; display: block; min-width: 60px; height: 8px; border-radius: 999px; background: var(--bg-2); overflow: hidden; }
+.br10 i, .pg10 i { display: block; height: 100%; border-radius: inherit; background: var(--tone, var(--blue)); }
+.pg10 em { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); }
+
+/* ---------- Device hint ---------- */
+.dk10 .note5 { margin: 0; }

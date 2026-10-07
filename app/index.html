@@ -19,6 +19,11 @@
 <link rel="stylesheet" href="logi.css">
 <link rel="stylesheet" href="prod.css">
 <link rel="stylesheet" href="dlv.css">
+<link rel="stylesheet" href="fin.css">
+<link rel="stylesheet" href="fin-acc.css">
+<link rel="stylesheet" href="fin-ap.css">
+<link rel="stylesheet" href="fin-sup.css">
+<link rel="stylesheet" href="fin-cfo.css">
 </head>
 <body class="app">
 <div id="app" aria-live="off"></div>
@@ -42,6 +47,12 @@
 <script src="../assets/js/jfos-dlv-data.js"></script>
 <script src="../assets/js/jfos-dlv.js"></script>
 <script>JFDLV.install(JFOS, JFACCESS, JFPERF, JFCOMM, JFLOG, JFPROD);</script>
+<script src="../assets/js/jfos-fin-data.js"></script>
+<script src="../assets/js/jfos-fin.js"></script>
+<script src="../assets/js/jfos-fin-cost.js"></script>
+<script src="../assets/js/jfos-fin-sup.js"></script>
+<script src="../assets/js/jfos-fin-cfo.js"></script>
+<script>JFFIN.install(JFOS, JFACCESS, JFPERF, JFCOMM, JFLOG, JFPROD, JFDLV);</script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 <script src="screens-ops.js"></script>
@@ -62,6 +73,11 @@
 <script src="screens-dlv.js"></script>
 <script src="screens-dlv2.js"></script>
 <script src="screens-dlv3.js"></script>
+<script src="screens-fin.js"></script>
+<script src="screens-fin-acc.js"></script>
+<script src="screens-fin-ap.js"></script>
+<script src="screens-fin-sup.js"></script>
+<script src="screens-fin-cfo.js"></script>
 <script>JFAPP.start();</script>
 </body>
 </html>

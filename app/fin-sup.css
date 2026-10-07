@@ -1,0 +1,170 @@
+/* ==========================================================================
+   JFRESH OS — Phase 10 screens-fin-sup.js: pricing (desktop first),
+   inventory, purchasing and suppliers (iPad first, big targets 820–1180),
+   phone = alerts & approvals. Prefix su10-. Approved palette tokens only.
+   ========================================================================== */
+
+/* ---------- Small text helpers ---------- */
+.su10-neg { color: var(--crit); }
+.su10-up { color: var(--ok); }
+.su10-ar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.su10-bb { display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.su10-pv { margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--bg-2); color: var(--ink); font-size: 14.5px; line-height: 1.5; }
+.su10-pv:empty { display: none; }
+.su10-ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.su10-ul li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.su10-ul li:last-child { border-bottom: 0; }
+.su10-rt { display: inline-flex; align-items: center; gap: 4px; color: var(--blue-ink); }
+.su10-rt .i { width: 15px; height: 15px; color: var(--orange); }
+
+/* ---------- Formula strip (markup vs gross margin) ---------- */
+.su10-fx { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 0 0 16px; padding: 10px 14px; border: 1px dashed var(--blue-100); border-radius: var(--r-lg); background: var(--blue-50); color: var(--blue-ink); font-size: 14px; }
+.su10-fx > .i { width: 18px; height: 18px; color: var(--blue); }
+.su10-fx b { font-weight: 700; }
+.su10-fx > span:last-child:not(:nth-child(2)):not(:nth-child(3)) { color: var(--muted); font-weight: 600; }
+
+/* ---------- Bars with value ---------- */
+.su10-bc { display: grid; grid-template-columns: minmax(60px, 1fr) auto; gap: 8px; align-items: center; }
+
+/* ---------- Version history / logs ---------- */
+.su10-det summary { cursor: pointer; font-weight: 700; color: var(--blue); margin-top: 12px; }
+.su10-log { list-style: none; margin: 8px 0 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); display: grid; gap: 10px; }
+.su10-log li { position: relative; display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.su10-log li::before { content: ''; position: absolute; left: -20px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--white); border: 2px solid var(--blue); }
+.su10-log b { color: var(--blue-ink); font-size: 13px; letter-spacing: .02em; }
+.su10-log span { color: var(--muted); }
+.su10-log em { font-style: normal; color: var(--ink); }
+
+/* ---------- Recommended price boxes ---------- */
+.su10-rbs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
+.su10-rb { display: flex; flex-direction: column; gap: 6px; padding: 14px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--white); min-width: 0; }
+.su10-rb.on { border-color: var(--ok); box-shadow: inset 0 3px 0 var(--ok); }
+.su10-rb-k { font-weight: 700; color: var(--blue-ink); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.su10-rb-f { font-size: 13px; color: var(--muted); font-weight: 600; }
+.su10-rb-n { font-size: 16px; color: var(--ink); overflow-wrap: anywhere; }
+.su10-rb-n b { font-size: 20px; color: var(--blue-ink); }
+.su10-rb-s { font-size: 13px; color: var(--muted); }
+
+/* ---------- Scenario ---------- */
+.su10-sf { padding: 16px 18px; margin: 0; }
+.su10-sf .h5 { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; }
+.su10-as { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.su10-as li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+.su10-as li .chip { flex: none; }
+
+/* ---------- Stock level bar (qty vs min / ROP / max) ---------- */
+.su10-lv { position: relative; display: block; min-width: 90px; height: 10px; border-radius: 999px; background: var(--bg-2); }
+.su10-lv i { display: block; height: 100%; border-radius: inherit; background: var(--tone, var(--blue)); }
+.su10-lv em { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--crit); }
+.su10-lv em.rp { background: var(--warn); }
+.su10-lvw { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: center; margin-top: 14px; }
+.su10-lvw .su10-lv { grid-column: 1 / -1; height: 14px; }
+.su10-lvw .sub5:last-child { text-align: right; }
+
+/* ---------- Stock alert tiles (phone + iPad) ---------- */
+.su10-als { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.su10-al { display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); color: var(--ink); text-decoration: none; }
+.su10-al:hover { border-color: var(--blue-100); box-shadow: 0 6px 18px rgba(11,61,120,.08); }
+.su10-al-ic { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 14px; background: var(--blue-50); color: var(--blue); }
+.su10-al-ic .i { width: 22px; height: 22px; }
+.su10-al-b { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.su10-al-b b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.su10-al-b small { color: var(--muted); font-size: 13px; }
+.su10-al-crit { border-color: var(--crit-line, var(--crit)); background: var(--crit-50); }
+.su10-al-crit .su10-al-ic { background: var(--white); color: var(--crit); }
+.su10-al-warn .su10-al-ic { background: var(--warn-50); color: var(--warn); }
+.su10-al-appr { margin-top: 10px; border-color: var(--orange-100); background: var(--orange-50); }
+.su10-al-appr .su10-al-ic { background: var(--white); color: var(--orange); }
+
+/* ---------- Forms ---------- */
+.su10-cb { display: flex; align-items: center; gap: 10px; min-height: 48px; font-weight: 600; }
+.su10-cb input { width: 22px; height: 22px; accent-color: var(--blue); }
+.su10-in { width: 96px; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line-2, var(--line)); border-radius: 10px; font: inherit; font-size: 16px; text-align: right; background: var(--white); }
+.su10-in-w { width: 100%; min-width: 180px; text-align: left; }
+.su10-in:focus { outline: 3px solid rgba(0,168,235,.4); outline-offset: 1px; border-color: var(--blue); }
+
+/* ---------- PR rules ---------- */
+.su10-rules { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 8px; }
+.su10-rules li { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; }
+.su10-rules li .i { width: 18px; height: 18px; flex: none; }
+.su10-rules li.on { color: var(--ink); font-weight: 600; }
+.su10-rules li.on .i { color: var(--ok); }
+
+/* ---------- PR approval cards (iPad first) ---------- */
+.su10-aps { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 16px; margin-bottom: 16px; }
+.su10-ap { margin: 0; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+.su10-ap h2 { margin: 0; font-size: 20px; color: var(--blue-ink); }
+.su10-ap p { margin: 0; }
+.su10-ap-h { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.su10-ap-f { padding: 0; margin: 0; }
+.su10-ab { display: flex; flex-wrap: wrap; gap: 10px; }
+.su10-ab .btn-xl { min-height: 64px; font-size: 18px; flex: 1 1 140px; border-radius: 16px; }
+.su10-ab .note5 { flex: 1 1 100%; margin: 0; }
+
+/* ---------- RFQ create ---------- */
+.su10-rf .h5 { margin: 14px 0 8px; }
+.su10-rf .h5:first-child { margin-top: 0; }
+.su10-cks { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.su10-ck { display: flex; gap: 12px; align-items: flex-start; min-height: 64px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--white); cursor: pointer; }
+.su10-ck:has(input:checked) { border-color: var(--blue); background: var(--blue-50); }
+.su10-ck input { width: 22px; height: 22px; margin-top: 2px; flex: none; accent-color: var(--blue); }
+.su10-ck span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.su10-ck small { color: var(--muted); font-size: 13px; }
+
+/* ---------- Quotes ---------- */
+.su10-qs { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.su10-q { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); min-width: 0; }
+.su10-q.on { border-color: var(--ok); box-shadow: inset 0 3px 0 var(--ok); }
+.su10-q-h { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; font-weight: 700; }
+.su10-q .btn { align-self: flex-start; }
+
+/* ---------- Supplier comparison ---------- */
+.su10-cmp th small, .su10-cmp td small { display: block; font-weight: 500; }
+.su10-cmp td.su10-best, .su10-cmp th.su10-best { background: var(--ok-50); }
+.su10-cmp thead th { vertical-align: bottom; }
+.su10-tot { font-size: 22px; color: var(--blue-ink); }
+.su10-cmb { display: grid; gap: 12px; }
+.su10-cmb .su10-ul li { padding: 6px 0; font-size: 14px; }
+
+/* ---------- Three-way match ---------- */
+.su10-m3 { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.su10-m3:last-of-type { border-bottom: 0; }
+.su10-m3-h { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.su10-m3-g { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.su10-m3-g div { display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 12px; background: var(--bg-2); min-width: 0; }
+.su10-m3-g span { font-size: 12.5px; color: var(--muted); font-weight: 700; }
+.su10-m3-g b { font-size: 16px; color: var(--blue-ink); overflow-wrap: anywhere; }
+.su10-m3-g small { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+
+/* ---------- iPad (820–1239): bigger tap targets ---------- */
+@media (min-width: 700px) and (max-width: 1239px) {
+  .su10-aps { grid-template-columns: minmax(0, 1fr); }
+  .su10-in { min-height: 52px; width: 110px; }
+  .su10-q .btn, .su10-ar .btn { min-height: 52px; }
+  .su10-bb .btn-sm { min-height: 44px; }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 699px) {
+  .su10-rbs, .su10-m3-g { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .su10-rbs { grid-template-columns: minmax(0, 1fr); }
+  .su10-aps, .su10-als, .su10-cks, .su10-qs { grid-template-columns: minmax(0, 1fr); }
+  .su10-ap { padding: 16px; }
+  .su10-ab .btn-xl { min-height: 56px; font-size: 17px; }
+  .su10-fx { font-size: 13px; }
+}
+
+/* ---------- Tables inside these screens ---------- */
+.su10 .tbl td.num, .su10 .tbl th.r { white-space: nowrap; }
+.su10 .tbl td small.sub5 { display: block; }
+.su10 { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.su10 > .card, .su10 > section { margin: 0; }
+@media (max-width: 699px) { .su10 { gap: 16px; } }
+.su10-g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.su10-g3 > .f5-w { grid-column: span 1; }
+@media (max-width: 899px) { .su10-g3 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+@media (max-width: 699px) { .su10-g3 { grid-template-columns: minmax(0, 1fr); } }
+.su10-rb-n b { white-space: nowrap; }
+.su10 .tbl .btn { white-space: nowrap; }
+@media (max-width: 1239px) { .su10-m3-g { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.su10 .tbl .mono6 { white-space: nowrap; }

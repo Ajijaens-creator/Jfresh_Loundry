@@ -129,6 +129,31 @@ Code:
 - `assets/js/jfos-comm-docs.js` — data for the Phase 6 pages.
 - `assets/brand/phase6/` — reference visuals NV-01 to NV-09.
 
+## Phase 10 — Business Support, Finance, Costing & Scale-Up Intelligence (NP 1.0)
+
+Sign in as `aji` (owner / CEO: CFO dashboard, ratios, decisions, scenarios), `budi` (finance: accounting, cash, AR, AP, costing, budget, close), `rai` (supply / purchasing, iPad), `komang` (asset admin, iPad), `gita` (second finance user, approves budi's large cash-outs) or `dewi` (operations manager: HPP, consumption, inventory). Password `jfresh123`.
+
+Core rule: enter once, use everywhere, trace every number, explain every decision.
+
+| Page | File |
+|---|---|
+| ACC-001…005 accounting, CASH-001…005, AR-001…005, AP-001…005, HPP-001…005, ITEM-001…004, PRICE-001…005, INV-001…005, PUR-001…007, AST-001…005, BUD-001…004, CFO-001…007 | `app/index.html` |
+| Phase 10 overview (operating model, NP-01 to NP-12, demo accounts, §101 rules, §100 Definition of Done, visuals) | `phase10/index.html` |
+| Screen specifications (62 screens) | `phase10/screens.html` |
+| Test cases run in the browser + responsive checklist | `phase10/tests.html` |
+
+Code:
+
+- `assets/js/jfos-fin.js` — `JFFIN` core: chart of accounts, balanced journals with source trace, periods (open / soft close / closed / locked), the ledger built from Phase 6–9 activity, cash accounts and treasury with forecast, Billing Ready → invoice → payment, AR aging and collection, expenses and AP with three-way match, duplicate checks and maker-checker, bank reconciliation. FIN-001…005 of the brief are `ACC-001…005` because Phase 5 already uses those IDs.
+- `assets/js/jfos-fin-cost.js` — item weights (kg, versioned), HPP per period with versions, allocation per service / client / property, pricing (markup vs margin, recommended price, scenarios, price versions through Phase 6) and client / service profitability.
+- `assets/js/jfos-fin-sup.js` — inventory, stock movements, adjustments and stock count, PR → RFQ → comparison → PO → receiving, suppliers, asset register and straight-line depreciation linked to the Phase 8 machines.
+- `assets/js/jfos-fin-cfo.js` — budget vs actual, reconciliation center, monthly close, cash flow, BEP, the 12 core ratios with versioned thresholds, health score, decision cards (branch, sales, operations, machine, client, investment, pricing, hold expansion), scenario builder and comparison, top actions that create Phase 5 decisions, races, R2RE and reflection items; screens, menus, roles and `install()`.
+- `assets/js/jfos-fin-data.js` — sample ledger April–October 2026 and the master data.
+- `app/screens-fin.js` (shared helpers), `app/screens-fin-acc.js`, `app/screens-fin-ap.js`, `app/screens-fin-sup.js`, `app/screens-fin-cfo.js`, `app/fin*.css` — the screens (desktop for CFO and finance, iPad for approvals, inventory, purchasing and assets, phone for alerts and summaries).
+- `assets/js/jfos-fin-tests.js` — 45 test cases. Run `node tools/test-fin.js`.
+- `assets/js/jfos-fin-docs.js` — data for the Phase 10 pages.
+- `assets/brand/phase10/` — the NV-01 to NV-10 and NV-11 to NV-12 reference sheets sent for Phase 10.
+
 ## Phase 9 — Delivery, Client Completion & Service Closure (NP 1.0)
 
 Sign in as `ketut` (driver, phone-first), `nyoman.kayana` (Kayana client, phone), `saras` (supervisor, iPad), `dewi` (operations manager), `budi` (finance), `aji` (owner, read only) or `ayu` (sales). Team 3 `luh` sees the ready queue and receives returns. Password `jfresh123`.
