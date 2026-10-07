@@ -30,6 +30,7 @@
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function sum(a) { return a.reduce(function (s, x) { return s + (+x || 0); }, 0); }
   function r1(x) { return Math.round(x * 10) / 10; }
+  function r2(x) { return Math.round(x * 100) / 100; }
   function pct(a, b) { return b ? Math.round(a / b * 1000) / 10 : null; }
   function by(arr, k, v) { for (var i = 0; i < arr.length; i++) if (arr[i][k] === v) return arr[i]; return null; }
   function T(x) { return Array.isArray(x) ? x[0] : (x == null ? '' : String(x)); }
@@ -72,17 +73,18 @@
     'dlv.return.receive': L('Terima return di plant', 'Receive returns at the plant'), 'dlv.complete': L('Tetapkan Service Completed', 'Set Service Completed'),
     'dlv.comp.amend': L('Amandemen service completion', 'Service completion amendment'), 'dlv.bill.view': L('Lihat Billing Ready', 'View Billing Ready'),
     'dlv.bill': L('Validasi & kirim Billing Ready ke Finance', 'Validate & send Billing Ready to Finance'), 'dlv.kpi': L('KPI delivery & pengalaman klien', 'Delivery & client experience KPI'),
-    'dlv.timeline': L('Timeline layanan lengkap', 'Full service timeline'), 'dlv.track.own': L('Lacak delivery sendiri (klien)', 'Track own deliveries (client)'), 'dlv.feedback': L('Kirim feedback (klien)', 'Send feedback (client)')
+    'dlv.timeline': L('Timeline layanan lengkap', 'Full service timeline'), 'dlv.track.own': L('Lacak delivery sendiri (klien)', 'Track own deliveries (client)'), 'dlv.feedback': L('Kirim feedback (klien)', 'Send feedback (client)'),
+    'dlv.feedback.view': L('Lihat feedback klien', 'View client feedback')
   };
-  var SPV9 = ['dlv.release.view', 'dlv.release', 'dlv.override', 'dlv.view', 'dlv.dispatch', 'dlv.pod.amend', 'dlv.rec.review', 'dlv.issue.report', 'dlv.issue.manage', 'dlv.return', 'dlv.return.receive', 'dlv.complete', 'dlv.kpi', 'dlv.timeline'];
+  var SPV9 = ['dlv.release.view', 'dlv.release', 'dlv.override', 'dlv.view', 'dlv.dispatch', 'dlv.pod.amend', 'dlv.rec.review', 'dlv.issue.report', 'dlv.issue.manage', 'dlv.return', 'dlv.return.receive', 'dlv.complete', 'dlv.kpi', 'dlv.timeline', 'dlv.feedback.view'];
   M.ROLE_PERMS = {
     driver: ['dlv.drv', 'dlv.issue.report'],
-    client: ['dlv.track.own', 'dlv.feedback', 'dlv.issue.report'],
+    client: ['dlv.track.own', 'dlv.feedback', 'dlv.feedback.view', 'dlv.issue.report'],
     supervisor: SPV9,
     opsmgr: SPV9.concat(['dlv.comp.amend', 'dlv.bill.view']),
-    owner: ['dlv.release.view', 'dlv.view', 'dlv.kpi', 'dlv.timeline', 'dlv.bill.view'],
+    owner: ['dlv.release.view', 'dlv.view', 'dlv.kpi', 'dlv.timeline', 'dlv.bill.view', 'dlv.feedback.view'],
     finance: ['dlv.view', 'dlv.bill.view', 'dlv.bill', 'dlv.timeline', 'dlv.kpi'],
-    sales: ['dlv.view', 'dlv.kpi', 'dlv.timeline'],
+    sales: ['dlv.view', 'dlv.kpi', 'dlv.timeline', 'dlv.feedback.view'],
     prod3: ['dlv.release.view', 'dlv.return.receive']
   };
   function can(ctx, p) { return !p || !!(ctx && ctx.perms && ctx.perms.indexOf(p) >= 0); }
@@ -443,9 +445,9 @@
       if (f.date && d.date !== f.date) return false;
       if (f.cl && d.cl !== f.cl) return false;
       if (f.drv && M.driverOf(d) !== f.drv) return false;
-      if (f.q) { var q = f.q.toLowerCase(); if ([d.id, d.ord, M.clientName(d.cl), M.propName(d.prop)].join(' ').toLowerCase().indexOf(q) < 0) return false; }
+      if (f.q) { var q = f.q.toLowerCase(); if ([d.id, d.ord, d.oref, M.clientName(d.cl), M.propName(d.prop)].join(' ').toLowerCase().indexOf(q) < 0) return false; }
       return true;
-    }).sort(function (a, b) { return (b.date + b.win[0] > a.date + a.win[0] ? 0 : 0) || a.date.localeCompare(b.date) || a.win[0].localeCompare(b.win[0]) || M.priRank(b.pri) - M.priRank(a.pri); });
+    }).sort(function (a, b) { return a.date.localeCompare(b.date) || a.win[0].localeCompare(b.win[0]) || M.priRank(b.pri) - M.priRank(a.pri); });
   };
   // The board lanes (§9) for today.
   M.LANES = [['waiting', L('Menunggu Dispatch', 'Waiting Dispatch'), 'inbox'], ['assigned', L('Ditugaskan / Siap', 'Assigned / Ready'), 'user'], ['moving', L('Di Jalan', 'On The Way'), 'truck'], ['site', L('Di Lokasi', 'At Client'), 'flag'], ['delivered', L('Terkirim', 'Delivered'), 'checkc'], ['exception', L('Masalah / Return', 'Issue / Return'), 'alert']];
@@ -461,15 +463,15 @@
     function add(sev, kind, txt, d, x) { out.push(Object.assign({ sev: sev, kind: kind, txt: txt, dlv: d ? d.id : null }, x || {})); }
     M.deliveries(ctx, {}).forEach(function (d) {
       var s0 = M.status(d), start = ms(d.date + ' ' + d.win[0]);
-      if (s0 === 'waiting' && d.date === M.TODAY && start - now < 120 * MIN) add(start < now ? 'crit' : 'warn', 'nodrv', L('Belum ada driver · ' + M.propName(d.prop) + ' ' + d.win.join('–'), 'No driver yet · ' + M.propName(d.prop) + ' ' + d.win.join('–')), d);
-      if (d.hold) add('warn', 'hold', L('Ditahan · ' + M.propName(d.prop) + ': ' + T(d.hold.reason), 'On hold · ' + M.propName(d.prop) + ': ' + d.hold.reason[1]), d);
+      if (s0 === 'waiting' && d.date === M.TODAY && start - now < 120 * MIN) add(start < now ? 'crit' : 'warn', 'nodrv', L(M.propName(d.prop) + ' ' + d.win.join('–'), M.propName(d.prop) + ' ' + d.win.join('–')), d);
+      if (d.hold) add('warn', 'hold', L(M.propName(d.prop) + ': ' + T(d.hold.reason), M.propName(d.prop) + ': ' + d.hold.reason[1]), d);
       if (M.late(d)) { var e = M.eta(d); add(e.delay >= 30 ? 'crit' : 'warn', 'delay', L('Terlambat ± ' + e.delay + ' menit · ' + M.propName(d.prop), 'Late by ~' + e.delay + ' min · ' + M.propName(d.prop)), d); }
-      if (d.rec && d.rec.review === 'pending') add('crit', 'recdiff', L('Selisih menunggu review · ' + M.propName(d.prop), 'Difference waiting for review · ' + M.propName(d.prop)), d);
+      if (d.rec && d.rec.review === 'pending') add('crit', 'recdiff', L('Menunggu review supervisor · ' + M.propName(d.prop), 'Difference waiting for review · ' + M.propName(d.prop)), d);
       if ((s0 === 'delivered' || s0 === 'completed') && !d.pod) add('crit', 'podmiss', L('POD belum ada · ' + d.id, 'POD missing · ' + d.id), d);
-      if (s0 === 'delivered' && d.pod && M.compChecks(d).every(function (c) { return c.ok; })) add('info', 'complete', L('Siap ditetapkan Service Completed · ' + M.propName(d.prop), 'Ready for Service Completed · ' + M.propName(d.prop)), d);
+      if (s0 === 'delivered' && d.pod && M.compChecks(d).every(function (c) { return c.ok; })) add('info', 'complete', L('Semua syarat terpenuhi · ' + M.propName(d.prop), 'Every condition met · ' + M.propName(d.prop)), d);
     });
     if (can(ctx, 'dlv.return') || can(ctx, 'dlv.return.receive')) S().rets.filter(function (r) { return ['arrived', 'review', 'ready'].indexOf(r.st) >= 0; }).forEach(function (r) { add(r.st === 'ready' ? 'info' : 'warn', 'ret', L('Return ' + r.id + ' · ' + T(M.RET_ST[r.st][0]), 'Return ' + r.id + ' · ' + M.RET_ST[r.st][0][1]), null, { ret: r.id }); });
-    if (can(ctx, 'dlv.release.view')) M.releases(ctx, { st: 'ready' }).forEach(function (r) { var v = M.relView(r); add('info', 'rel', L('Siap release · ' + M.propName(v.prop), 'Ready to release · ' + M.propName(v.prop)), null, { rel: r.id }); });
+    if (can(ctx, 'dlv.release.view')) M.releases(ctx, { st: 'ready' }).forEach(function (r) { var v = M.relView(r); add('info', 'rel', L(r.id + ' · ' + M.propName(v.prop), r.id + ' · ' + M.propName(v.prop)), null, { rel: r.id }); });
     var R = { crit: 3, warn: 2, info: 1 };
     return out.sort(function (a, b) { return R[b.sev] - R[a.sev]; });
   };
@@ -610,7 +612,7 @@
   // POD view with amendments applied; the original stays as captured (§19).
   M.podView = function (p) {
     if (!p) return null;
-    var v = { recv: p.recv, role: p.role, pkgs: p.pkgs, qty: p.qty, kg: p.kg, cond: p.cond, notes: p.notes };
+    var v = Object.assign({}, p);
     (p.amend || []).forEach(function (a) { v[a.field] = a.to; });
     return v;
   };
@@ -731,7 +733,7 @@
     save(); return Object.assign({ ok: true, issue: i }, out);
   };
   function createComplaint(ctx, d, f) {
-    var c = { id: nid('cmp', 'CMP-2610-', 2), dlv: d.id, cl: d.cl, prop: d.prop, batch: d.batch, ord: d.ord, pod: d.pod ? d.pod.id : null, type: f.type === 'quality' ? 'stain' : f.type, at: nowS(), by: empId(ctx), note: L(str(f.note), str(f.note)), st: 'open' };
+    var c = { id: nid('cmp', 'CMP-2610-', 2), dlv: d.id, cl: d.cl, prop: d.prop, batch: d.batch, ord: d.ord || d.oref, pod: d.pod ? d.pod.id : null, type: f.type === 'quality' ? 'stain' : f.type, at: nowS(), by: empId(ctx), note: L(str(f.note), str(f.note)), st: 'open' };
     S().cmps.unshift(c); pushComplaint(c);
     M.audit('COMPLAINT.CREATE', ctx, { dlv: d.id, rec: c.id, to: c.type, reason: f.note });
     return c;
@@ -739,7 +741,7 @@
   function pushComplaint(c) { if (CM && CM.D && CM.D.COMPLAINTS && !by(CM.D.COMPLAINTS, 'id', c.id)) { CM.D.COMPLAINTS.push({ id: c.id, cl: c.cl, prop: c.prop, date: String(c.at).slice(0, 10), type: c.type, st: c.st, claim: 0, src9: c.dlv }); if (CM._clearCache) CM._clearCache(); } }
   function createReturn(ctx, d, f) {
     var at = nowS();
-    var r = { id: nid('ret', 'RET-2610-', 2), dlv: d.id, ord: d.ord, cl: d.cl, prop: d.prop, reason: f.reason, note: L(str(f.note), str(f.note)), pkgs: f.pkgs, qty: f.qty, kg: f.kg, photo: f.photo || null, drv: M.driverOf(d),
+    var r = { id: nid('ret', 'RET-2610-', 2), dlv: d.id, ord: d.ord || d.oref, cl: d.cl, prop: d.prop, reason: f.reason, note: L(str(f.note), str(f.note)), pkgs: f.pkgs, qty: f.qty, kg: f.kg, photo: f.photo || null, drv: M.driverOf(d),
       at: at, st: 'created', need: f.need || 'review', owner: 'EMP-021', redel: null, issue: f.issue || null, hist: [['created', at, empId(ctx)]] };
     if (f.intransit !== false) { r.st = 'intransit'; r.hist.push(['intransit', at, M.driverOf(d) || empId(ctx)]); }
     S().rets.unshift(r); d.ret = r.id;
@@ -809,7 +811,7 @@
     var sla = d.sla || (p ? slaOf(d, p.at) : null);
     var out = {
       delivered: [(d.st === 'delivered' || d.st === 'completed') && !!p, T((M.DLV_ST[M.status(d)] || [L(d.st, d.st)])[0])],
-      pod: [!!(p && p.recv && p.sign && p.photo && p.at && (d.ord || d.batch)), p ? p.id + ' · ' + p.recv : T(L('Belum ada', 'None'))],
+      pod: [!!(p && p.recv && p.sign && p.photo && p.at && (d.ord || d.oref || d.batch)), p ? p.id + ' · ' + p.recv : T(L('Belum ada', 'None'))],
       rec: [!!(rec && (rec.res === 'ok' || rec.review === 'approved' || rec.review === 'client')), rec ? T(M.REC_RES[rec.res][0]) + (rec.review ? ' · ' + T(M.REV_ST[rec.review][0]) : '') : T(L('Belum direkonsiliasi', 'Not reconciled'))],
       crit: [!crit.length, crit.length ? crit.map(function (i) { return i.id; }).join(', ') : T(L('Tidak ada', 'None'))],
       sla: [!!(sla && sla.actual && sla.st !== 'pending'), sla && sla.actual ? T(M.SLA_ST[sla.st][0]) + ' · ' + (sla.min > 0 ? '+' : '') + sla.min + ' ' + T(L('mnt', 'min')) : '—']
@@ -831,7 +833,7 @@
   function compData(d, at) {
     var pv = M.podView(d.pod) || {}, rec = d.rec || {}, src = srcSla(d), start = src.start || (d.created ? isoT(ms(d.created[0]) - 20 * 60 * MIN) : null), sla = d.sla || slaOf(d, d.pod ? d.pod.at : null);
     var iss = d.issues.map(M.issue).filter(Boolean);
-    return { ord: d.ord, cl: d.cl, prop: d.prop, date: String(at).slice(0, 10), time: String(at).slice(11, 16), tat: start ? Math.round((ms(at) - ms(start)) / MIN) : null, start: start,
+    return { ord: d.ord || d.oref, cl: d.cl, prop: d.prop, date: String(at).slice(0, 10), time: String(at).slice(11, 16), tat: start ? Math.round((ms(at) - ms(start)) / MIN) : null, start: start,
       qty: rec.acc === 'partial' && rec.accQty != null ? rec.accQty : pv.qty != null ? pv.qty : d.qty, kg: pv.kg != null ? pv.kg : d.kg, pkgs: pv.pkgs != null ? pv.pkgs : d.pkgs,
       slaPick: src.pick, slaProd: src.prod, slaDel: sla.st, overall: worst([src.pick, src.prod, sla.st]), delRes: rec.acc || 'full', issRes: iss.length ? iss.filter(function (i) { return ['resolved', 'closed'].indexOf(i.st) >= 0; }).length + '/' + iss.length : '0', final: 'completed' };
   }
@@ -980,7 +982,7 @@
   };
   function payload(d, at) {
     var c = d.bill && d.bill.calc || M.billCalc(d);
-    return { id: d.bill && d.bill.id, at: at || nowS(), cl: d.cl, prop: d.prop, ord: d.ord, dlv: d.id, svc: d.svc, unit: c.unit, qty: c.qty, rate: c.rate, rc: c.rc ? c.rc + ' v' + c.v : 'master', charge: c.charge, disc: c.disc, sur: c.sur, tax: c.tax, taxPct: c.taxPct, total: c.total,
+    return { id: d.bill && d.bill.id, at: at || nowS(), cl: d.cl, prop: d.prop, ord: d.ord || d.oref, dlv: d.id, svc: d.svc, unit: c.unit, qty: c.qty, rate: c.rate, rc: c.rc ? c.rc + ' v' + c.v : 'master', charge: c.charge, disc: c.disc, sur: c.sur, tax: c.tax, taxPct: c.taxPct, total: c.total,
       ctr: c.ctr, compVer: d.comp ? d.comp.ver : null, evidence: [d.pod ? d.pod.id : null, d.rec ? (d.rec.res === 'ok' ? 'REC:ok' : 'REC:' + d.rec.review) : null, d.batch].filter(Boolean) };
   }
   M.payload = payload;
@@ -1078,7 +1080,7 @@
       var first = x.first + mine.filter(function (d) { return (d.attempt || 1) === 1; }).length;
       var fbs = S().fb.filter(function (f) { var d = M.dlv(f.dlv); return d && M.driverOf(d) === id && String(f.at).slice(0, 10) === M.TODAY; });
       var rN = x.rN + fbs.length, rS = x.rSum + sum(fbs.map(function (f) { return f.dr; }));
-      return { id: id, n: M.empName(id), del: del, on: pct(on, del), pod: pct(pod, del), iss: pct(iss, del), first: pct(first, del), rating: rN ? r1(rS / rN * 10) / 10 : null };
+      return { id: id, n: M.empName(id), del: del, on: pct(on, del), pod: pct(pod, del), iss: pct(iss, del), first: pct(first, del), rating: rN ? r2(rS / rN) : null };
     }).sort(function (a, b) { return (b.on || 0) - (a.on || 0); });
   };
   // §48 client / property performance.
@@ -1120,7 +1122,7 @@
     var mine = S().dlv.filter(function (d) { return d.cl === cl; }), fbs = S().fb.filter(function (f) { return f.cl === cl; });
     var rN = sum(props.map(function (p) { return p.rN; })) + fbs.length, rS = sum(props.map(function (p) { return p.rSum; })) + sum(fbs.map(function (f) { return f.dr; }));
     return { cl: cl, n: n, sla: pct(on, n), cmp: S().cmps.filter(function (c) { return c.cl === cl; }).length, ret: S().rets.filter(function (r) { return r.cl === cl; }).length, acc: pct(mine.filter(function (d) { return d.rec && d.rec.acc === 'full'; }).length, mine.filter(function (d) { return d.rec; }).length),
-      rating: rN ? r1(rS / rN * 10) / 10 : null, iss: S().issues.filter(function (i) { var d = M.dlv(i.dlv); return d && d.cl === cl; }).length };
+      rating: rN ? r2(rS / rN) : null, iss: S().issues.filter(function (i) { var d = M.dlv(i.dlv); return d && d.cl === cl; }).length };
   };
   M.perfFeed = function (P) {
     if (!P || !P.D || !P.D.TEAMS) return 0;
@@ -1230,7 +1232,7 @@
     sc('BILL-001', L('Antrian Billing Ready', 'Billing Ready Queue'), 'T05', 'dlv.bill.view', 'NP-09', 'NV-09', 'invoice', L('Transaksi selesai: Belum Siap, Perlu Validasi, Billing Ready, Terkirim, Ditahan, Masalah.', 'Completed transactions: Not Ready, Validation Required, Billing Ready, Sent, Hold, Issue.'), L('Belum ada transaksi Billing Ready.', 'No Billing Ready transaction yet.'), { lvl: 3, dev: 'd' }),
     sc('BILL-002', L('Validasi Billing', 'Billing Validation'), 'T04', 'dlv.bill.view', 'NP-09', 'NV-09', 'filecheck', L('Kontrak, rate card, tarif historis, qty, diskon, surcharge, pajak → MARK AS BILLING READY.', 'Contract, rate card, historical rate, qty, discount, surcharge, tax → MARK AS BILLING READY.'), null, { lvl: 3, dev: 'd' }),
     sc('DLV-KPI-001', L('Performa Delivery', 'Delivery Performance Dashboard'), 'T08', 'dlv.kpi', 'NP-10', 'NV-10', 'gauge', L('8 KPI delivery, pengalaman klien, tren, driver, tim, property, masalah teratas, Ambidex & Client Health.', '8 delivery KPIs, client experience, trends, drivers, team, properties, top issues, Ambidex & Client Health.'), null, { lvl: 4, dev: 'd' }),
-    sc('FEEDBACK-001', L('Feedback Klien', 'Client Feedback'), 'T06', 'dlv.view', 'NP-10', 'NV-10', 'star', L('Klien: rating pengiriman dan kualitas 1–5, komentar opsional → KIRIM FEEDBACK.', 'Client: delivery and quality rating 1–5, optional comment → KIRIM FEEDBACK.'), L('Belum ada feedback.', 'No feedback yet.'), { dev: 'm' })
+    sc('FEEDBACK-001', L('Feedback Klien', 'Client Feedback'), 'T06', 'dlv.feedback.view', 'NP-10', 'NV-10', 'star', L('Klien: rating pengiriman dan kualitas 1–5, komentar opsional → KIRIM FEEDBACK.', 'Client: delivery and quality rating 1–5, optional comment → KIRIM FEEDBACK.'), L('Belum ada feedback.', 'No feedback yet.'), { dev: 'm' })
   ];
   M.screen = function (id) { return by(M.SCREENS, 'id', id); };
   M.PARENTS = { 'REL-002': ['REL-001'], 'DISP-002': ['DISP-001'], 'DLV-POD-001': ['DRV-HO-001'], 'DLV-POD-002': ['DISP-002'], 'REDEL-001': ['RETURN-001', 'DISP-001'], 'BILL-002': ['BILL-001'], 'DLV-TIMELINE-001': ['DISP-002', 'COMP-001'] };
@@ -1254,7 +1256,8 @@
     client: { insertAt: [2, N('del', L('Pengiriman', 'Deliveries'), 'truck', 'CLIENT-DEL-001', { also: ['FEEDBACK-001', 'DLV-ISSUE-001'] })], mnav: ['trk', N('del', L('Pengiriman', 'Deliveries'), 'truck', 'CLIENT-DEL-001', { also: ['FEEDBACK-001', 'DLV-ISSUE-001', 'TRACK-003'] })] }
   };
   // A client user for Kayana so the live Phase 7 delivery of ORD-2610-105 can be followed by its client.
-  M.NEW_USERS = [{ user: { id: 'USR-093', u: 'nyoman.kayana', email: 'ubud@kayana.com', name: 'Pak Nyoman', client: 'CL-03', contact: 'CT-034', status: 'active', roles: [{ k: 'client', def: true }], plants: [], lang: 'id' }, demo: { u: 'nyoman.kayana', d: L('Klien · Kayana (delivery live)', 'Client · Kayana (live delivery)') } }];
+  M.NEW_USERS = [{ user: { id: 'USR-093', u: 'nyoman.kayana', email: 'ubud@kayana.com', name: 'Pak Nyoman', client: 'CL-03', contact: 'CT-034', status: 'active', roles: [{ k: 'client', def: true }], plants: [], lang: 'id' }, demo: { u: 'nyoman.kayana', d: L('Klien · Kayana (delivery live)', 'Client · Kayana (live delivery)') } },
+    { user: { id: 'USR-096', u: 'dewi', email: 'dewi@jfreshlaundry.app', emp: 'EMP-010', status: 'active', roles: [{ k: 'opsmgr', def: true }], plants: ['*'], lang: 'id' }, emp: { id: 'EMP-010', n: 'Dewi Lestari', short: 'Dewi', dept: L('Operasional', 'Operations'), status: 'active' }, demo: { u: 'dewi', d: L('Operations Manager · completion & performa delivery', 'Operations Manager · completion & delivery performance') } }];
   /* install(): joins the Phase 9 permissions, screens and menus to the shared config and access roles, guards
      the Phase 7 trip start and the Phase 8 logistics handover on release, feeds Phase 5 and Phase 6. Safe to call more than once. */
   M.install = function (C, X, P, CM2, LG2, PR2) {
@@ -1263,7 +1266,7 @@
     Object.keys(M.PERMS).forEach(function (k) { C.PERMS[k] = M.PERMS[k]; });
     function addP(list, extra) { extra.forEach(function (p) { if (list.indexOf(p) < 0) list.push(p); }); }
     Object.keys(M.ROLE_PERMS).forEach(function (r) { var rl = C.ROLES[r], xr = X && X.ROLES[r]; if (rl) addP(rl.perms, M.ROLE_PERMS[r]); if (xr && xr.perms) addP(xr.perms, M.ROLE_PERMS[r]); });
-    if (X) M.NEW_USERS.forEach(function (x) { if (!X.USERS.some(function (u) { return u.u === x.user.u; })) X.USERS.push(Object.assign({}, x.user)); if (!X.DEMO.some(function (y) { return y.u === x.demo.u; })) X.DEMO.push(x.demo); });
+    if (X) M.NEW_USERS.forEach(function (x) { if (x.emp && X.employee && !X.employee(x.emp.id)) X.EMPLOYEES.push(x.emp); if (!X.USERS.some(function (u) { return u.u === x.user.u; })) X.USERS.push(Object.assign({}, x.user)); if (!X.DEMO.some(function (y) { return y.u === x.demo.u; })) X.DEMO.push(x.demo); });
     Object.keys(M.NAV).forEach(function (r) {
       var cfg = M.NAV[r], rl = C.ROLES[r]; if (!rl) return;
       if (cfg.add) rl.nav = rl.nav.concat(cfg.add);

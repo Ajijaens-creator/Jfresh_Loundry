@@ -36,7 +36,8 @@
   // Delivery tasks (§8–§9). ord = Phase 7 order when the delivery runs on a Phase 7 trip; seeded tasks that
   // already ran keep their own driver, vehicle and events. ev: [status, time, by, note]
   function dl(id, cl, prop, svc, date, win, pkgs, qty, kg, st, x) {
-    return Object.assign({ id: id, rel: null, ord: null, batch: null, cl: cl, prop: prop, svc: svc, date: date, win: win, pkgs: pkgs, qty: qty, kg: kg, pri: 'normal', instr: '', ct: null, drv: null, veh: null, route: null,
+    // oref: the archived order number of a historic delivery (not a live Phase 7 order).
+    return Object.assign({ id: id, rel: null, ord: null, oref: 'ORD-2610-' + id.slice(-3), batch: null, cl: cl, prop: prop, svc: svc, date: date, win: win, pkgs: pkgs, qty: qty, kg: kg, pri: 'normal', instr: '', ct: null, drv: null, veh: null, route: null,
       st: st, ev: [], created: null, ho: null, pod: null, rec: null, issues: [], ret: null, orig: null, redel: null, sla: null, comp: null, bill: null, fb: null, attempt: 1, hold: null }, x || {});
   }
   function pod(id, recv, role, at, pkgs, qty, kg, cond, notes, by, x) { return Object.assign({ id: id, recv: recv, role: role, sign: 'seed:sig', photo: 'seed:pod', at: at, loc: true, pkgs: pkgs, qty: qty, kg: kg, cond: cond, notes: notes || '', by: by, ver: 1, amend: [] }, x || {}); }
@@ -138,7 +139,7 @@
     pp('PR-08A', 13, 12, 10, 1, 0, 58, 12), pp('PR-09A', 9, 7, 25, 2, 1, 36, 8), pp('PR-11A', 4, 4, 0, 0, 0, 20, 4)
   ];
   // Top delivery issue types over the last 30 days (closed days).
-  D.ISSUE30 = { unavail: 28, wrongpkg: 16, late: 12, quality: 8, wrongprop: 5, missing: 4, damaged: 3, reject: 2, qty: 6, other: 3 };
+  D.ISSUE30 = { unavail: 28, wrongitem: 16, late: 12, quality: 8, wrongprop: 5, missing: 4, damaged: 3, reject: 2, qty: 6, other: 3 };
 
   /* KPI history: one row per closed day for the last 400 days (deterministic, no server yet).
      [date, planned, delivered, onTime, firstOk, podOk, recOk, returns, redel, issues, complaints, fullAcc, rSumD, rSumQ, rN, waitMin, respMin] */
