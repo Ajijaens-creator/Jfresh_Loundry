@@ -12,7 +12,7 @@
   }
   function render() {
     var res = run(), pass = res.filter(function (r) { return r.ok; }).length;
-    var G = D.NP.map(function (n) { return [n.id, L(n.k + ' · ' + n.t[0], n.k + ' · ' + n.t[1]), n.ic]; }).concat([['audit', L('§81 Audit', '§81 Audit'), 'history']]);
+    var G = D.NP.map(function (n) { return [n.id, L(n.k + ' · ' + n.t[0], n.k + ' · ' + n.t[1]), n.ic]; }).concat([['audit', L('§81 Audit', '§81 Audit'), 'history'], ['gov', L('§81–§97 Kontrol: persetujuan, privasi, scope, freshness', '§81–§97 Controls: approvals, privacy, scope, freshness'), 'shield']]);
     var h = P3.section({ id: 'summary', icon: 'checkc', title: L('Hasil', 'Result'), desc: L('Dijalankan sekarang di browser ini. Hasil yang sama: node tools/test-perf.js', 'Run just now in this browser. Same result: node tools/test-perf.js'),
       body: '<div class="p4-sum"><b class="big">' + pass + ' / ' + res.length + '</b>' + DS.Feedback.Inline({ type: pass === res.length ? 'success' : 'error', text: pass === res.length ? L('Semua kasus uji lulus.', 'Every test case passed.') : L((res.length - pass) + ' kasus gagal.', (res.length - pass) + ' cases failed.') }) + '</div>' });
     G.forEach(function (g) {

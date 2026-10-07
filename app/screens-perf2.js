@@ -23,17 +23,17 @@
       var low = teams[teams.length - 1];
       return A.pageHead(null, t(L('Skor tim dihitung dari KPI bersama tim, bukan rata-rata skor anggota.', 'Team score comes from shared team KPIs, not an average of member scores.'))) +
         tiles([tile({ k: L('Rata-rata Teamwork Score', 'Average Teamwork Score'), ring: avg }), tile({ k: L('Tim', 'Teams'), v: teams.length, s: teams.filter(function (x) { return x.score >= 85; }).length + ' ' + t(L('tim healthy ke atas', 'teams healthy or better')) }),
-          tile({ k: L('Tim terbaik', 'Top team'), v: t(teams[0].n), s: sc1(teams[0].score) + ' · ' + T(teams[0].band.n), href: href('TEAM-DTL-001', teams[0].k), tone: 'ok' }), tile({ k: L('Perlu perhatian', 'Needs attention'), v: t(low.n), s: sc1(low.score) + ' · ' + T(low.band.n), href: href('TEAM-DTL-001', low.k), tone: low.band.tone })], 'tls5-4') +
+          tile({ k: L('Tim terbaik', 'Top team'), v: t(teams[0].n), s: sc1(teams[0].score) + ' · ' + T(teams[0].band.n), href: href('TEAM-002', teams[0].k), tone: 'ok' }), tile({ k: L('Perlu perhatian', 'Needs attention'), v: t(low.n), s: sc1(low.score) + ' · ' + T(low.band.n), href: href('TEAM-002', low.k), tone: low.band.tone })], 'tls5-4') +
         card(L('Skor tim', 'Team scores'), '<div class="tcs5">' + teams.map(function (tm) {
           var mAvg = P.memberAvg(tm.k);
-          return '<a class="tc5" href="' + href('TEAM-DTL-001', tm.k) + '"><div class="tc5-h"><b>' + t(tm.n) + '</b>' + bandc(tm.band) + '</div><div class="pl5-m">' + ring(tm.score, { size: 64, label: tm.n }) + '<span class="pl5-b"><span>' + delta(tm.delta) + ' <small>' + t(L('vs Agu', 'vs Aug')) + '</small></span><small>Lead ' + esc(emp(tm.lead)) + '</small><small>' + tm.members.length + ' ' + t(L('anggota', 'members')) + '</small></span>' + spark(tm.trend, { w: 70, h: 26 }) + '</div>' +
+          return '<a class="tc5" href="' + href('TEAM-002', tm.k) + '"><div class="tc5-h"><b>' + t(tm.n) + '</b>' + bandc(tm.band) + '</div><div class="pl5-m">' + ring(tm.score, { size: 64, label: tm.n }) + '<span class="pl5-b"><span>' + delta(tm.delta) + ' <small>' + t(L('vs Agu', 'vs Aug')) + '</small></span><small>Lead ' + esc(emp(tm.lead)) + '</small><small>' + tm.members.length + ' ' + t(L('anggota', 'members')) + '</small></span>' + spark(tm.trend, { w: 70, h: 26 }) + '</div>' +
             '<p class="tc5-c">' + t(L('Rata-rata anggota ', 'Member average ')) + '<b class="num">' + sc1(mAvg) + '</b> · ' + t(L('KPI tim ', 'Team KPIs ')) + tm.lines.length + '</p></a>';
         }).join('') + '</div>' + note(t(L('Teamwork Score = Σ (skor KPI tim × bobot). Kontribusi anggota ditampilkan terpisah di detail tim.', 'Teamwork Score = Σ (team KPI score × weight). Member contribution is shown separately in the team detail.')), 'info'), { icon: 'users' });
     }
   };
 
-  /* ================= NP-06 · TEAM-DTL-001 Team detail ================= */
-  V['TEAM-DTL-001'] = {
+  /* ================= NP-06 · TEAM-002 Team detail ================= */
+  V['TEAM-002'] = {
     title: function (rec) { var tm = by(D.TEAMS, 'k', rec); return tm ? tm.n : L('Detail Tim', 'Team Detail'); },
     render: function (c) {
       var tm = P.team(c.rec);
@@ -57,11 +57,11 @@
         card(L('Scorecard tim', 'Team scorecard'), A.list(tm.lines, cols, function (l) { return { t: t(l.k.n), r: pct(l.ach), s: pct(l.k.weight, 0) + ' · ' + fv(l.actual, l.k.unit) + ' / ' + fv(l.k.target, l.k.unit), chip: stc(l.st) }; }, function (l) { return l.k.parent && P.kpi(l.k.parent) && open('KPI-DTL-001') ? href('KPI-DTL-001', l.k.parent) : null; }, { dense: true }), { icon: 'list' }) +
         card(L('Kontribusi anggota', 'Member contribution'), A.list(members, [
           { h: L('Anggota', 'Member'), v: function (m) { return '<span class="who5"><span class="av sm">' + esc(initials(m.n)) + '</span><span><b>' + esc(m.n) + '</b><small class="sub5">' + t(m.title) + '</small></span></span>'; } },
-          { h: L('Kontribusi', 'Contribution'), cls: 'r num', v: function (m) { return sc1(m.contrib); } }, { h: 'Personal Score', cls: 'r num', v: function (m) { return '<b>' + sc1(m.score) + '</b>'; } },
-          { h: L('Status', 'Status'), v: function (m) { return bandc(m.band); } }, { h: L('Tren', 'Trend'), v: function (m) { return trendc(m.trend); } }
-        ], function (m) { return { t: esc(m.n), r: sc1(m.score), s: t(L('Kontribusi ', 'Contribution ')) + sc1(m.contrib) + ' · ' + t(m.title), chip: bandc(m.band) }; }, function (m) { return open('PERF-USR-001') && P.canSeePerson(c0, m.id) ? href('PERF-USR-001', m.id) : null; }, { dense: true }), { icon: 'user', count: members.length }) +
+          { h: L('Kontribusi', 'Contribution'), cls: 'r num', v: function (m) { return sc1(m.contrib); } }, { h: 'Personal Score', cls: 'r num', v: function (m) { return P.canSeePerson(c0, m.id) ? '<b>' + sc1(m.score) + '</b>' : ic('lock') + '<span class="sr">' + t(L('Privat', 'Private')) + '</span>'; } },
+          { h: L('Status', 'Status'), v: function (m) { return P.canSeePerson(c0, m.id) ? bandc(m.band) : '—'; } }, { h: L('Tren', 'Trend'), v: function (m) { return P.canSeePerson(c0, m.id) ? trendc(m.trend) : '—'; } }
+        ], function (m) { var see = P.canSeePerson(c0, m.id); return { t: esc(m.n), r: see ? sc1(m.score) : ic('lock'), s: t(L('Kontribusi ', 'Contribution ')) + sc1(m.contrib) + ' · ' + t(m.title), chip: see ? bandc(m.band) : '' }; }, function (m) { return open('PERSON-001') && P.canSeePerson(c0, m.id) ? href('PERSON-001', m.id) : null; }, { dense: true }), { icon: 'user', count: members.length }) +
         (races.length ? card(L('Race tim hari ini', 'Team races today'), '<div class="rc5s">' + races.map(function (r) { return raceCard(r); }).join('') + '</div>', { icon: 'zap', count: races.length }) : '') +
-        card(L('Drill-down', 'Drill-down'), drill([{ go: 'TEAM-001', i: 'users', l: L('Tim', 'Team'), s: T(tm.n) }, weak ? { go: weak.k.parent ? 'KPI-DTL-001' : null, rec: weak.k.parent, i: 'chart', l: 'KPI', s: T(weak.k.n) } : null, { i: 'clock', l: L('Shift', 'Shift'), s: T(L('Pagi · Malam', 'Day · Night')) }, { go: 'PERF-USR-001', rec: tm.lead, i: 'user', l: L('Anggota', 'Member'), s: emp(tm.lead) }, { go: 'RACE-DLY-001', q: { team: tm.k }, i: 'zap', l: 'Race', s: races[0] ? T(races[0].n) : 'Daily Race' }, { go: 'RACE-DLY-001', q: { team: tm.k, ev: '1' }, i: 'filecheck', l: L('Bukti', 'Evidence') }].filter(Boolean)), { icon: 'route' });
+        card(L('Drill-down', 'Drill-down'), drill([{ go: 'TEAM-001', i: 'users', l: L('Tim', 'Team'), s: T(tm.n) }, weak ? { go: weak.k.parent ? 'KPI-DTL-001' : null, rec: weak.k.parent, i: 'chart', l: 'KPI', s: T(weak.k.n) } : null, { i: 'clock', l: L('Shift', 'Shift'), s: T(L('Pagi · Malam', 'Day · Night')) }, { go: 'PERSON-001', rec: tm.lead, i: 'user', l: L('Anggota', 'Member'), s: emp(tm.lead) }, { go: 'RACE-001', q: { team: tm.k }, i: 'zap', l: 'Race', s: races[0] ? T(races[0].n) : 'Daily Race' }, { go: 'RACE-001', q: { team: tm.k, ev: '1' }, i: 'filecheck', l: L('Bukti', 'Evidence') }].filter(Boolean)), { icon: 'route' });
     },
     act: { 'race-upd': raceUpdAct }
   };
@@ -101,7 +101,7 @@
       ];
       var rows = A.applyFilters(all, defs, function (p) { return p.n + ' ' + p.id; }).sort(function (a, b) { return b.score - a.score; });
       var f = P.cfg().personal;
-      return A.pageHead(null, t(L('Personal Score sesuai cakupan Anda. Skor membantu keputusan HR, tidak menggantikannya.', 'Personal Score within your scope. Scores support HR decisions and never replace them.'))) +
+      return A.pageHead(null, t(L('Personal Score sesuai cakupan Anda. Skor membantu keputusan HR, tidak menggantikannya.', 'Personal Score within your scope. Scores support HR decisions and never replace them.')) + ' ' + H.fresh('hr', { label: L('Data HR', 'HR data') })) +
         tiles([tile({ k: L('Karyawan', 'Employees'), v: all.length }), tile({ k: L('Rata-rata', 'Average'), ring: Math.round(sum(all.map(function (p) { return p.score; })) / (all.length || 1) * 10) / 10 }),
           tile({ k: L('Di bawah 75', 'Below 75'), v: all.filter(function (p) { return p.score < 75; }).length, tone: 'warn' }), tile({ k: 'PIP · Probation', v: all.filter(function (p) { return p.hr.pip; }).length + ' · ' + all.filter(function (p) { return p.st === 'probation'; }).length })], 'tls5-4') +
         A.filters(defs, { search: L('Cari nama atau ID', 'Search name or ID'), force: true }) +
@@ -110,7 +110,7 @@
           { h: L('Tim', 'Team'), v: function (p) { return t(teamName(p.team)); } }, { h: L('Status kerja', 'Employment'), v: function (p) { return empSt(p.st) + (p.hr.pip ? A.chip('crit', 'PIP') : ''); } },
           { h: 'Personal Score', cls: 'r num', v: function (p) { return '<b>' + sc1(p.score) + '</b>'; } }, { h: L('3 bln', '3 mo'), cls: 'r num', v: function (p) { return sc1(p.avg3); } },
           { h: L('Tren', 'Trend'), v: function (p) { return spark(p.hist.filter(function (x) { return x > 0; }), { w: 70, h: 22 }); } }, { h: L('Status', 'Status'), v: function (p) { return bandc(p.band); } }
-        ], function (p) { return { t: esc(p.n), r: sc1(p.score), s: t(teamName(p.team)) + ' · ' + t(p.title), chip: bandc(p.band) }; }, function (p) { return href('PERF-USR-001', p.id); }, { dense: true }), { icon: 'idcard', count: rows.length }) +
+        ], function (p) { return { t: esc(p.n), r: sc1(p.score), s: t(teamName(p.team)) + ' · ' + t(p.title), chip: bandc(p.band) }; }, function (p) { return href('PERSON-001', p.id); }, { dense: true }), { icon: 'idcard', count: rows.length }) +
         card(L('Formula Personal Score', 'Personal Score formula'), '<ul class="fm5">' + [['def', L('Default', 'Default')], ['drv', 'Driver'], ['spv', 'Supervisor'], ['sales', 'Sales']].map(function (r) { var x = f[r[0]] || f.def; return '<li><b>' + t(r[1]) + '</b><span>' + bar(x.ind, 'info') + '</span><small class="num">' + x.ind + '% KPI · ' + x.team + '% ' + t(L('tim', 'team')) + '</small></li>'; }).join('') + '</ul>' +
           note(t(L('Porsi tim = 50% Teamwork Score + 50% kontribusi anggota.', 'Team share = 50% Teamwork Score + 50% member contribution.')), 'info') + A.pbtn('hr.config', 'ghost', L('Atur Formula', 'Configure Formula'), 'cog', { act: 'formula' }), { icon: 'percent' });
     },
@@ -126,7 +126,7 @@
 
   var HR_TABS = [['kpi', L('KPI & Skor', 'KPI & Score'), 'target'], ['att', L('Kehadiran', 'Attendance'), 'calendar'], ['coach', 'Coaching', 'users'], ['train', L('Pelatihan', 'Training'), 'idcard'], ['ach', L('Pencapaian', 'Achievement'), 'star'], ['rec', L('Rekognisi', 'Recognition'), 'sparkles'], ['prob', 'Probation', 'clock'], ['pip', 'PIP', 'alert'], ['promo', L('Kesiapan Promosi', 'Promotion Readiness'), 'arrowup'], ['hist', L('Riwayat', 'History'), 'history']];
   var PROMO = { ready: ['ok', L('Siap dipertimbangkan', 'Ready to consider')], '6-12': ['info', L('6–12 bulan', '6–12 months')], notyet: ['mute', L('Belum', 'Not yet')] };
-  V['PERF-USR-001'] = {
+  V['PERSON-001'] = {
     title: function (rec) { var p = person(rec); return p ? p.n : L('Profil Kinerja', 'Performance Profile'); },
     render: function (c) {
       var c0 = cx(), p = person(c.rec) ? P.person(c.rec) : null;
@@ -144,7 +144,7 @@
       else if (tab === 'promo') { var pr = PROMO[hr.promo.k] || PROMO.notyet; body = kv([[L('Kesiapan', 'Readiness'), A.chip(pr[0], pr[1])], [L('Catatan', 'Note'), t(hr.promo.note)], [L('Rata-rata 6 bulan', '6-month average'), sc1(p.avg6)]]) + note(t(P.HR_RULE), 'shield'); }
       else if (tab === 'hist') body = A.lineChart([{ n: 'Personal Score', v: p.hist.map(function (x) { return x || null; }).filter(function (x) { return x != null; }) }], M12.filter(function (m, i) { return p.hist[i] > 0; }).map(function (m) { return H.mon(m); }), { h: 200, min: 40, max: 100, label: 'Personal Score' }) +
         lst(notes, function (n) { return '<li>' + ic('edit') + '<span><b>' + t(P.HR_NOTE_KINDS[n.kind]) + ': ' + esc(n.text) + '</b><small>' + dtt(n.at) + ' · ' + esc(n.by) + '</small></span></li>'; }, L('Belum ada catatan HR baru.', 'No new HR notes.'));
-      else body = '<div class="grid2">' + card(T(L('KPI peran ', 'Role KPIs ')) + T(p.roleN), kpiRows(p, false), { icon: 'target' }) + card(L('Perhitungan skor', 'Score calculation'), kv([[L('Skor KPI individu', 'Individual KPI score'), sc1(p.ind) + ' × ' + p.f.ind + '%'], [L('Porsi tim', 'Team share'), sc1(p.teamPart) + ' × ' + p.f.team + '%'], ['Teamwork Score ' + T(tm.n), lnk('TEAM-DTL-001', tm.k, sc1(p.teamScore))], [L('Kontribusi anggota', 'Member contribution'), sc1(p.contrib)], ['Personal Score', '<b>' + sc1(p.score) + '</b>']]) +
+      else body = '<div class="grid2">' + card(T(L('KPI peran ', 'Role KPIs ')) + T(p.roleN), kpiRows(p, false), { icon: 'target' }) + card(L('Perhitungan skor', 'Score calculation'), kv([[L('Skor KPI individu', 'Individual KPI score'), sc1(p.ind) + ' × ' + p.f.ind + '%'], [L('Porsi tim', 'Team share'), sc1(p.teamPart) + ' × ' + p.f.team + '%'], ['Teamwork Score ' + T(tm.n), lnk('TEAM-002', tm.k, sc1(p.teamScore))], [L('Kontribusi anggota', 'Member contribution'), sc1(p.contrib)], ['Personal Score', '<b>' + sc1(p.score) + '</b>']]) +
         note(t(L('Personal Score = KPI individu × ' + p.f.ind + '% + (50% Teamwork Score + 50% kontribusi) × ' + p.f.team + '%.', 'Personal Score = individual KPI × ' + p.f.ind + '% + (50% Teamwork Score + 50% contribution) × ' + p.f.team + '%.')), 'percent'), { icon: 'percent' }) + '</div>';
       var profile = '<section class="pf5"><span class="pf5-av" aria-hidden="true">' + esc(initials(p.n)) + '</span><div class="pf5-t"><b>' + esc(p.n) + '</b><small>' + esc(p.id) + ' · ' + t(p.title) + '</small><span>' + t(teamName(p.team)) + ' · ' + esc(P.D && X ? T(X.plantName(p.plant)) : p.plant) + ' · ' + empSt(p.st) + (hr.pip ? A.chip('crit', 'PIP') : '') + '</span></div>' +
         '<div class="pf5-s">' + ring(p.score, { size: 96, label: 'Personal Score' }) + '<span>' + bandc(p.band) + delta(p.delta) + '</span></div></section>';
@@ -175,7 +175,7 @@
     o = o || {};
     var st = P.ST[r.status] || P.ST.progress, g = P.goalRaw(r.goal);
     return '<article class="rc5 t-' + st.tone + '"><div class="rc5-h"><b>' + t(r.n) + '</b>' + stc(r.status) + '</div>' +
-      (o.simple ? '' : '<div class="rc5-m">' + [g ? lnk('GOL-DTL-001', g.id, esc(g.id)) : '', P.kpi(r.kpi) ? lnk('KPI-DTL-001', r.kpi, esc(r.kpi)) : esc(r.kpi), lnk('PERF-USR-001', r.pic, esc(emp(r.pic)))].filter(Boolean).join(' · ') + '</div>') +
+      (o.simple ? '' : '<div class="rc5-m">' + [g ? lnk('GOAL-002', g.id, esc(g.id)) : '', P.kpi(r.kpi) ? lnk('KPI-DTL-001', r.kpi, esc(r.kpi)) : esc(r.kpi), lnk('PERSON-001', r.pic, esc(emp(r.pic)))].filter(Boolean).join(' · ') + '</div>') +
       '<div class="rc5-p">' + bar(r.prog, st.tone) + '<span class="num">' + fv(r.actual, r.unit) + ' / ' + fv(r.target, r.unit) + ' · ' + pct(r.prog, 0) + '</span></div>' +
       '<div class="rc5-d">' + ic('clock') + '<span>' + t(L('Deadline ', 'Deadline ')) + dt(r.deadline) + '</span></div>' +
       (T(r.blocker) ? '<p class="rc5-b">' + ic('alert') + '<span><small>' + t(L('Blocker', 'Blocker')) + '</small>' + t(r.blocker) + '</span></p>' : '') +
@@ -193,9 +193,9 @@
       onOk: function (v) { var n = num(v.actual); if (n == null || isNaN(n)) return P.MSG.invalid; var res = P.raceUpdate(c, r.id, { actual: n, status: v.status, blocker: v.blocker ? [v.blocker, v.blocker] : '', result: v.result ? [v.result, v.result] : '', follow: v.follow ? [v.follow, v.follow] : '' }); if (!res.ok) return res.msg; after(L('Progres race diperbarui.', 'Race progress updated.')); return true; } });
   }
   function raceTabs(cur) {
-    return tabs([['RACE-DLY-001', 'Daily Race', 'zap'], ['RACE-WK-001', 'Weekly Race', 'flag'], ['R2RE-001', 'R2RE', 'clipboard'], ['REFL-001', 'Monthly Reflection', 'history']].filter(function (x) { return open(x[0]); }), cur, null, { hf: function (k) { return href(k); }, label: 'Race' });
+    return tabs([['RACE-001', 'Daily Race', 'zap'], ['RACE-002', 'Weekly Race', 'flag'], ['RACE-003', 'R2RE', 'clipboard'], ['REFL-001', 'Monthly Reflection', 'history']].filter(function (x) { return open(x[0]); }), cur, null, { hf: function (k) { return href(k); }, label: 'Race' });
   }
-  V['RACE-DLY-001'] = {
+  V['RACE-001'] = {
     render: function (c) {
       var c0 = cx(), mineOk = c0 && c0.employee && P.daily(c0, 'mine').length, frontline = A.R().group !== 'management';
       var scope = c.q.scope || (frontline && mineOk ? 'mine' : 'all'), rows = P.daily(c0, scope === 'mine' ? 'mine' : null);
@@ -203,7 +203,7 @@
       var order = { off: 0, risk: 1, on: 2, done: 3 };
       rows = rows.slice().sort(function (a, b) { return (order[a.status] - order[b.status]) || (a.deadline < b.deadline ? -1 : 1); });
       var all = P.daily(c0), up = all.filter(P.needsUpload).length;
-      return A.pageHead(null, t(L('Eksekusi harian yang terhubung ke goal dan KPI · ', 'Daily execution linked to goals and KPIs · ')) + dt(P.TODAY), A.pbtn('race.edit', 'primary', L('Tambah Race', 'Add Race'), 'plus', { act: 'add' })) + raceTabs('RACE-DLY-001') +
+      return A.pageHead(null, t(L('Eksekusi harian yang terhubung ke goal dan KPI · ', 'Daily execution linked to goals and KPIs · ')) + dt(P.TODAY), A.pbtn('race.edit', 'primary', L('Tambah Race', 'Add Race'), 'plus', { act: 'add' })) + raceTabs('RACE-001') +
         tiles([tile({ k: L('Race hari ini', 'Races today'), v: all.length }), tile({ k: L('Selesai', 'Done'), v: all.filter(function (r) { return r.status === 'done'; }).length, tone: 'ok' }), tile({ k: 'At Risk', v: all.filter(function (r) { return r.status === 'risk'; }).length, tone: 'warn' }), tile({ k: 'Off Track', v: all.filter(function (r) { return r.status === 'off'; }).length, tone: 'crit' }), tile({ k: L('Perlu upload bukti', 'Needs evidence upload'), v: up, s: t(L('Bukti otomatis diutamakan', 'Automatic evidence first')) })], 'tls5-5') +
         '<div class="fb">' + tabs([['all', L('Semua', 'All')], ['mine', L('Race saya', 'My races')]].filter(function (x) { return x[0] === 'all' || mineOk; }), scope, 'scope', { seg: true, def: frontline && mineOk ? 'mine' : 'all', label: L('Cakupan', 'Scope') }) +
           (c.q.team ? A.chip('info', L('Tim: ' + T(teamName(c.q.team)), 'Team: ' + T(teamName(c.q.team))), 'users') + '<a class="lnk5" href="' + qhref({ team: null }) + '">' + t(L('Hapus filter', 'Clear filter')) + '</a>' : '') + '</div>' +
@@ -220,17 +220,17 @@
       }
     }
   };
-  V['RACE-WK-001'] = {
+  V['RACE-002'] = {
     render: function () {
       var w = P.weekly();
-      return A.pageHead(null, t(L('Minggu 41 · 5–11 Okt 2026 · total berjalan dinilai terhadap pace hari ke-2 dari 7', 'Week 41 · 5–11 Oct 2026 · running totals judged against day 2 of 7 pace'))) + raceTabs('RACE-WK-001') +
+      return A.pageHead(null, t(L('Minggu 41 · 5–11 Okt 2026 · total berjalan dinilai terhadap pace hari ke-2 dari 7', 'Week 41 · 5–11 Oct 2026 · running totals judged against day 2 of 7 pace'))) + raceTabs('RACE-002') +
         tiles([tile({ k: L('Fokus minggu ini', 'This week\'s focus'), v: w.length }), tile({ k: 'On Track', v: w.filter(function (x) { return x.st === 'on'; }).length, tone: 'ok' }), tile({ k: 'At Risk', v: w.filter(function (x) { return x.st === 'risk'; }).length, tone: 'warn' }), tile({ k: 'Off Track', v: w.filter(function (x) { return x.st === 'off'; }).length, tone: 'crit' })], 'tls5-4') +
         card('Weekly Race', A.list(w, [
-          { h: L('Fokus mingguan', 'Weekly focus'), v: function (x) { return '<b>' + t(x.n) + '</b><small class="sub5">' + lnk('GOL-DTL-001', x.goal, esc(x.goal)) + ' · ' + esc(x.kpi) + '</small>'; } },
+          { h: L('Fokus mingguan', 'Weekly focus'), v: function (x) { return '<b>' + t(x.n) + '</b><small class="sub5">' + lnk('GOAL-002', x.goal, esc(x.goal)) + ' · ' + esc(x.kpi) + '</small>'; } },
           { h: L('Target', 'Target'), cls: 'r num', v: function (x) { return fv(x.target, x.unit); } }, { h: L('Aktual', 'Actual'), cls: 'r num', v: function (x) { return '<b>' + fv(x.actual, x.unit) + '</b>'; } },
           { h: L('Pencapaian', 'Achievement'), cls: 'r num', v: function (x) { return pct(x.ach) + (x.pace != null ? '<small class="sub5">pace ' + pct(x.pace) + '</small>' : ''); } },
           { h: L('Varian', 'Variance'), cls: 'r num', v: function (x) { return (x.variance > 0 ? '+' : x.variance < 0 ? '−' : '') + fv(Math.abs(x.variance), x.unit); } },
-          { h: 'PIC', v: function (x) { return lnk('PERF-USR-001', x.pic, esc(emp(x.pic))); } }, { h: 'Issue', cls: 'r num', v: function (x) { return x.issues || 0; } },
+          { h: 'PIC', v: function (x) { return lnk('PERSON-001', x.pic, esc(emp(x.pic))); } }, { h: 'Issue', cls: 'r num', v: function (x) { return x.issues || 0; } },
           { h: L('Bukti', 'Evidence'), v: function (x) { return x.ev ? A.chip('ok', x.ev, 'database') : A.chip('warn', L('Perlu bukti', 'Needs evidence')); } }, { h: L('Status', 'Status'), v: function (x) { return stc(x.st); } }
         ], function (x) { return { t: t(x.n), r: pct(x.pace != null ? x.pace : x.ach), s: fv(x.actual, x.unit) + ' / ' + fv(x.target, x.unit) + ' · ' + esc(emp(x.pic)), chip: stc(x.st) }; }, null, { dense: true }), { icon: 'flag' }) +
         note(t(L('Race dengan pace (mis. revenue) dinilai terhadap target × hari berjalan agar tidak tampak gagal di awal minggu.', 'Paced races (e.g. revenue) are judged against target × elapsed days so they do not look failed early in the week.')), 'info');
@@ -241,34 +241,40 @@
   var WEEKS = P.REFL_WEEKS;
   function wkOf(q) { return WEEKS.indexOf(q.wk) >= 0 ? q.wk : 'W40'; }
   function wkTabs(wk, extra) { return tabs(WEEKS.map(function (w) { var x = by(D.R2_WEEKS, 'k', w); return [w, x.n]; }), wk, 'wk', { seg: true, def: 'W40', label: L('Minggu', 'Week'), hf: extra }); }
-  V['R2RE-001'] = {
+  V['RACE-003'] = {
     render: function (c) {
-      var wk = wkOf(c.q), b = P.r2Board(wk), rv = b.reviews, cats = P.CAT_ORDER.filter(function (k) { return b.lines.some(function (l) { return l.k.cat === k; }); });
+      var wk = wkOf(c.q), b = P.r2Board(wk), rv = b.reviews, c0 = cx(), scoped = P.r2Scoped(c0), mine = b.lines.filter(function (l) { return !scoped || P.leadScope(c0, l.k.code); });
+      var cats = P.CAT_ORDER.filter(function (k) { return mine.some(function (l) { return l.k.cat === k; }); }), order = P.r2Order(wk, c0);
+      // §86: high-weight, at-risk and off-track KPIs come first in the review.
+      var pri = order.filter(function (l) { return l.st === 'off' || l.st === 'risk' || l.st === 'critical'; }).slice(0, 5);
+      var priCard = card(L('Prioritas review', 'Review priority'), pri.length ? '<ol class="pri5">' + pri.map(function (l) { return '<li><a href="' + href('RACE-004', l.k.code, { wk: wk }) + '"><span class="pri5-w num">' + pct(l.k.weight, 0) + '</span><span class="pri5-t"><b>' + t(l.k.n) + '</b><small>' + fv(l.actual, l.k.unit) + ' / ' + fv(l.k.target, l.k.unit) + ' · ' + pct(l.ach) + '</small></span>' + stc(l.st) + '</a></li>'; }).join('') + '</ol>' : A.empty(L('Semua KPI on track. Review tetap berjalan sesuai urutan bobot.', 'Every KPI is on track. The review still follows weight order.')), { icon: 'flag', count: pri.length });
       var groups = cats.map(function (cat) {
-        var ls = b.lines.filter(function (l) { return l.k.cat === cat; }), w = sum(ls.map(function (l) { return l.k.weight; }));
+        var ls = mine.filter(function (l) { return l.k.cat === cat; }), w = sum(ls.map(function (l) { return l.k.weight; }));
         return '<section class="r2g5"><h3 class="h5">' + ic(P.CAT_ICON[cat]) + '<span>' + t(P.CATS[cat]) + '</span><small class="num">' + pct(w, 0) + '</small></h3>' + A.list(ls, [
           { h: 'KPI', v: function (l) { return '<b>' + t(l.k.n) + '</b><small class="sub5">' + esc(l.k.code) + ' · PIC ' + esc(emp(l.k.owner)) + '</small>'; } },
           { h: L('Bobot', 'Weight'), cls: 'r num', v: function (l) { return pct(l.k.weight, 0); } }, { h: L('Target', 'Target'), cls: 'r num', v: function (l) { return fv(l.k.target, l.k.unit); } },
           { h: L('Aktual', 'Actual'), cls: 'r num', v: function (l) { return '<b>' + fv(l.actual, l.k.unit) + '</b>'; } }, { h: L('Pencapaian', 'Achievement'), cls: 'r num', v: function (l) { return pct(l.ach); } },
           { h: 'Weighted', cls: 'r num', v: function (l) { return fmt.num(l.ws, 2); } }, { h: L('vs minggu lalu', 'vs last week'), v: function (l) { return trendc(l.trend); } },
           { h: L('Status', 'Status'), v: function (l) { return stc(l.st); } }, { h: 'Review', v: function (l) { return rv[l.k.code] && rv[l.k.code].reviewed ? A.chip('ok', L('Direview', 'Reviewed'), 'checkc') : A.chip('mute', L('Belum', 'Not yet')); } }
-        ], function (l) { return { t: t(l.k.n), r: pct(l.ach), s: fv(l.actual, l.k.unit) + ' / ' + fv(l.k.target, l.k.unit) + ' · ' + pct(l.k.weight, 0), chip: stc(l.st) + (rv[l.k.code] && rv[l.k.code].reviewed ? A.chip('ok', L('Direview', 'Reviewed'), 'checkc') : '') }; }, function (l) { return href('R2RE-MTG-001', l.k.code, { wk: wk }); }, { dense: true }) + '</section>';
+        ], function (l) { return { t: t(l.k.n), r: pct(l.ach), s: fv(l.actual, l.k.unit) + ' / ' + fv(l.k.target, l.k.unit) + ' · ' + pct(l.k.weight, 0), chip: stc(l.st) + (rv[l.k.code] && rv[l.k.code].reviewed ? A.chip('ok', L('Direview', 'Reviewed'), 'checkc') : '') }; }, function (l) { return href('RACE-004', l.k.code, { wk: wk }); }, { dense: true }) + '</section>';
       }).join('');
-      var first = b.lines.filter(function (l) { return !(rv[l.k.code] && rv[l.k.code].reviewed); })[0] || b.lines[0];
-      return A.pageHead(null, t(L('Tim ', 'Team ')) + t(b.team.n) + ' · Race Leader ' + esc(emp(b.leader)) + ' · ' + t(b.week.d) + ' · ' + t(b.sc.n) + ' v' + b.sc.v, A.btn('primary', L('Mulai Meeting Mode', 'Start Meeting Mode'), 'target', { go: 'R2RE-MTG-001', rec: first.k.code, qs: 'wk=' + wk })) + raceTabs('R2RE-001') + wkTabs(wk) +
+      var first = order.filter(function (l) { return !(rv[l.k.code] && rv[l.k.code].reviewed); })[0] || order[0];
+      if (!first) return A.pageHead(null, t(b.team.n)) + raceTabs('RACE-003') + wkTabs(wk) + A.stateCard('empty', L('Belum ada KPI dalam scope Anda pada R2RE ini.', 'No KPI in your scope on this R2RE.'), A.btn('blue', 'Daily Race', 'zap', { go: 'RACE-001' }));
+      return A.pageHead(null, t(L('Tim ', 'Team ')) + t(b.team.n) + ' · Race Leader ' + esc(emp(b.leader)) + ' · ' + t(b.week.d) + ' · ' + t(b.sc.n) + ' v' + b.sc.v, A.btn('primary', L('Mulai Meeting Mode', 'Start Meeting Mode'), 'target', { go: 'RACE-004', rec: first.k.code, qs: 'wk=' + wk })) + raceTabs('RACE-003') + wkTabs(wk) +
         tiles([tile({ k: L('Skor minggu ini', 'Week score'), ring: b.score }), tile({ k: L('Minggu lalu', 'Last week'), v: sc1(b.prev), s: delta(b.score - b.prev) }), tile({ k: 'KPI', v: b.counts.total, s: b.counts.on + ' on · ' + b.counts.risk + ' risk · ' + b.counts.off + ' off' }), tile({ k: L('Sudah direview', 'Reviewed'), v: b.reviewed + ' / ' + b.counts.total, tone: b.reviewed === b.counts.total ? 'ok' : '' })], 'tls5-4') +
-        weightMsg(b.check) + card(L('KPI per kategori', 'KPIs by category'), groups + note(t(L('Urutan: kategori → bobot terbesar → kritis / at risk dulu → pencapaian terendah.', 'Order: category → highest weight → critical / at risk first → lowest achievement.')), 'sort'), { icon: 'clipboard' }) +
+        weightMsg(b.check) + (scoped ? note(t(L('Anda melihat KPI dalam scope Anda saja (' + mine.length + ' dari ' + b.lines.length + ' KPI). Target dan bobot terkunci.', 'You see only the KPIs in your scope (' + mine.length + ' of ' + b.lines.length + ' KPIs). Targets and weights are locked.')), 'lock') : '') + priCard +
+        card(L('KPI per kategori', 'KPIs by category'), groups + note(t(L('Meeting Mode membahas KPI off track dan at risk dulu, lalu bobot terbesar. Board dikelompokkan per kategori.', 'Meeting Mode covers off-track and at-risk KPIs first, then the highest weight. The board is grouped by category.')), 'sort'), { icon: 'clipboard' }) +
         card(L('Hak Race Leader', 'Race Leader rights'), '<div class="grid2"><ul class="can5">' + P.LEADER_ACTIONS.map(function (x) { return '<li class="ok">' + ic('checkc') + '<span>' + t(x[1]) + '</span></li>'; }).join('') + '</ul><ul class="can5">' + P.LEADER_CANNOT.map(function (x) { return '<li class="no">' + ic('lock') + '<span>' + t(L('Tidak bisa ubah: ', 'Cannot change: ')) + t(x[1]) + '</span></li>'; }).join('') + '</ul></div>', { icon: 'shield' });
     }
   };
-  V['R2RE-MTG-001'] = {
+  V['RACE-004'] = {
     title: function (rec) { var k = P.kpi(rec); return k ? k.n : 'R2RE'; },
     render: function (c) {
-      var wk = wkOf(c.q), b = P.r2Board(wk), i = b.lines.map(function (l) { return l.k.code; }).indexOf(c.rec);
-      if (i < 0) return A.stateCard('empty', P.MSG.notfound, A.btn('blue', 'R2RE', 'arrowl', { go: 'R2RE-001' }));
-      var l = b.lines[i], k = l.k, rv = b.reviews[k.code] || {}, prev = b.lines[i - 1], st = P.ST[l.st];
+      var wk = wkOf(c.q), b = P.r2Board(wk), ls = P.r2Order(wk, cx()), i = ls.map(function (l) { return l.k.code; }).indexOf(c.rec);
+      if (i < 0) return b.lines.some(function (l) { return l.k.code === c.rec; }) ? A.stateCard('noperm', L('KPI ini di luar scope Race Anda.', 'This KPI is outside your Race scope.'), A.btn('blue', 'R2RE', 'arrowl', { go: 'RACE-003', qs: 'wk=' + wk })) : A.stateCard('empty', P.MSG.notfound, A.btn('blue', 'R2RE', 'arrowl', { go: 'RACE-003' }));
+      var l = ls[i], k = l.k, rv = b.reviews[k.code] || {}, prev = ls[i - 1], st = P.ST[l.st];
       var labels = D.R2_WEEKS.map(function (w) { return T(w.n).replace('Minggu ', 'M').replace('Week ', 'W'); });
-      return '<div class="mtg5"><div class="mtg5-top"><span>' + t(L('KPI ', 'KPI ')) + (i + 1) + t(L(' dari ', ' of ')) + b.lines.length + ' · ' + t(b.week.n) + '</span>' + bar((i + 1) / b.lines.length * 100, 'info') + '</div>' +
+      return '<div class="mtg5"><div class="mtg5-top"><span>' + t(L('KPI ', 'KPI ')) + (i + 1) + t(L(' dari ', ' of ')) + ls.length + ' · ' + t(b.week.n) + '</span>' + bar((i + 1) / ls.length * 100, 'info') + '</div>' +
         '<section class="mtg5-k t-' + st.tone + '"><div><span class="chip info">' + ic(P.CAT_ICON[k.cat]) + '<span>' + t(P.CATS[k.cat]) + '</span></span><h1>' + t(k.n) + '</h1><small>' + esc(k.code) + ' · PIC ' + esc(emp(k.owner)) + '</small></div>' +
         '<div class="mtg5-n">' + kv([[L('Target', 'Target'), ic('lock') + ' ' + fv(k.target, k.unit)], [L('Aktual', 'Actual'), '<b>' + fv(l.actual, k.unit) + '</b>'], [L('Pencapaian', 'Achievement'), pct(l.ach)], [L('Bobot', 'Weight'), ic('lock') + ' ' + pct(k.weight, 0)], [L('Minggu lalu', 'Last week'), fv(l.prev, k.unit)], [L('Status', 'Status'), stc(l.st) + trendc(l.trend)]]) + '</div></section>' +
         card(L('Tren mingguan', 'Weekly trend'), A.lineChart([{ n: k.n, v: l.vals.map(function (v) { return v == null ? 0 : v; }) }], labels, { h: 150, target: k.target, fmt: function (v) { return fv(v, k.unit); }, fmtAx: function (v) { return T(k.unit) === 'Rp' ? fmt.num(v / 1e6, 0) : fmt.num(v, 1); }, min: Math.min.apply(null, l.vals.concat([k.target])) * 0.97, label: T(k.n) }), { icon: 'trend' }) +
@@ -281,8 +287,8 @@
           '<label class="ck5"><input type="checkbox" name="issue"' + (rv.issue ? ' checked' : '') + '><span>' + t(L('Catat sebagai issue', 'Log as an issue')) + '</span></label>' +
           '<label class="ck5"><input type="checkbox" name="carry"' + (rv.carry ? ' checked' : '') + '><span>' + t(L('Bawa issue ke minggu depan', 'Carry the issue forward')) + '</span></label>' +
           '<label class="ck5"><input type="checkbox" name="closed"' + (rv.closed ? ' checked' : '') + '><span>' + t(L('Tutup diskusi KPI ini', 'Close this KPI discussion')) + '</span></label></div>', { icon: 'clipboard' }) + '</form>' +
-        A.actionBar(A.btn('primary', i < b.lines.length - 1 ? L('Simpan & KPI Berikutnya', 'Save & Next KPI') : L('Simpan & Selesai', 'Save & Finish'), 'arrow', { act: 'next' }),
-          (prev ? A.btn('ghost', L('Sebelumnya', 'Previous'), 'arrowl', { go: 'R2RE-MTG-001', rec: prev.k.code, qs: 'wk=' + wk }) : '') + A.btn('ghost', L('Board', 'Board'), 'list', { go: 'R2RE-001', qs: 'wk=' + wk })) + '</div>';
+        A.actionBar(A.btn('primary', i < ls.length - 1 ? L('Simpan & KPI Berikutnya', 'Save & Next KPI') : L('Simpan & Selesai', 'Save & Finish'), 'arrow', { act: 'next' }),
+          (prev ? A.btn('ghost', L('Sebelumnya', 'Previous'), 'arrowl', { go: 'RACE-004', rec: prev.k.code, qs: 'wk=' + wk }) : '') + A.btn('ghost', L('Board', 'Board'), 'list', { go: 'RACE-003', qs: 'wk=' + wk })) + '</div>';
     },
     act: {
       next: function () {
@@ -291,9 +297,9 @@
         var rec = {}; Object.keys(v).forEach(function (k) { if (v[k] !== '' && v[k] !== false) rec[k] = v[k]; });
         var r = P.r2Review(c, wk, code, rec);
         if (!r.ok) { A.toast(r.msg, 'crit'); return; }
-        var nx = P.r2Next(wk, code);
-        if (nx) { A.go('R2RE-MTG-001', nx, { wk: wk }); setTimeout(function () { A.toast(L('Tersimpan. KPI berikutnya.', 'Saved. Next KPI.')); }, 350); }
-        else { A.go('R2RE-001', null, { wk: wk }); setTimeout(function () { A.toast(L('Review R2RE ' + wk + ' selesai.', 'R2RE ' + wk + ' review finished.')); }, 350); }
+        var nx = P.r2Next(wk, code, c);
+        if (nx) { A.go('RACE-004', nx, { wk: wk }); setTimeout(function () { A.toast(L('Tersimpan. KPI berikutnya.', 'Saved. Next KPI.')); }, 350); }
+        else { A.go('RACE-003', null, { wk: wk }); setTimeout(function () { A.toast(L('Review R2RE ' + wk + ' selesai.', 'R2RE ' + wk + ' review finished.')); }, 350); }
       }
     }
   };
@@ -316,6 +322,15 @@
         .map(function (x) { return '<div><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>'; }).join('') + '</dl></article>';
   }
   function approverCtx() { return { uid: 'USR-050', name: 'Aji Jaens', perms: X.rolePerms('owner') }; }
+  // §87: Reflection walks Understand → Reflect → Learn → Decide → Create Strategy → Prepare Next STRACON.
+  var REFL_STEPS = [['dash', L('Pahami', 'Understand'), 'gauge'], ['tbl', L('Refleksikan', 'Reflect'), 'list'], ['ins', L('Pelajari', 'Learn'), 'bulb'], ['iss', L('Putuskan', 'Decide'), 'filecheck'], ['sum', L('Susun Strategi', 'Create Strategy'), 'route'], ['stra', L('Siapkan STRACON', 'Prepare Next STRACON'), 'clipboard']];
+  var STEP_OF = { dash: 0, tbl: 1, trend: 1, ins: 2, iss: 3, sum: 4, stra: 5, appr: 5 };
+  function reflSteps(tab) {
+    var cur = STEP_OF[tab] != null ? STEP_OF[tab] : 0;
+    return '<ol class="rst5" aria-label="' + t(L('Langkah reflection', 'Reflection steps')) + '">' + REFL_STEPS.map(function (x, i) {
+      return '<li class="' + (i < cur ? 'done' : i === cur ? 'now' : '') + '"><a href="' + H.hubHref('REFL-001', x[0], 'dash') + '"' + (i === cur ? ' aria-current="step"' : '') + '><span class="rst5-n">' + (i < cur ? ic('check') : i + 1) + '</span><span>' + t(x[1]) + '</span></a></li>';
+    }).join('') + '</ol>';
+  }
   V['REFL-001'] = {
     render: function (c) {
       var sel = weeksOf(c.q), R = P.reflection(sel), tab = c.q.tab || 'dash', st = R.status, body;
@@ -333,12 +348,12 @@
           var tr = P.trendOf(s.vals, s.k.dir);
           return '<article class="tr5"><div class="tr5-h"><b>' + t(s.k.n) + '</b>' + trendc(tr) + '</div>' + spark(s.vals, { w: 220, h: 44 }) + '<small class="num">' + s.vals.map(function (v) { return fv(v, s.k.unit); }).join(' → ') + '</small></article>';
         }).join('') + '</div>' + A.barChart(R.weekScores.map(function (v, i) { return { l: 'W' + (i + 1), v: v, hi: i === 3 }; }), { h: 170, label: T(L('Skor R2RE per minggu', 'R2RE score per week')), fmt: function (v) { return sc1(v); } }), { icon: 'trend' });
-      else if (tab === 'iss') { var iss = P.state().issues; body = card(L('Register issue', 'Issue register'), A.list(iss, [
+      else if (tab === 'iss') { var iss = P.state().issues, issEdit = can('race.lead') || can('refl.edit'); body = card(L('Register issue', 'Issue register'), (issEdit ? '<div class="ds-btnbar">' + A.btn('blue', L('Catat Issue', 'Log Issue'), 'plus', { act: 'issAdd' }) + '</div>' : '') + (!iss.filter(function (i) { return i.status !== 'resolved'; }).length ? A.empty(L('Belum ada issue terbuka.', 'No open issues.')) : '') + A.list(iss, [
           { h: 'Issue', v: function (i) { return '<b>' + t(i.n) + '</b><small class="sub5">' + esc(i.id) + ' · ' + esc(i.kpi) + ' · ' + t(L('ditemukan ', 'found ')) + esc(i.week) + '</small>'; } },
           { h: 'Root cause', v: function (i) { return t(i.rc); } }, { h: L('Dampak', 'Impact'), v: function (i) { return t(i.impact) + (i.fin ? '<small class="sub5">' + t(i.fin) + '</small>' : ''); } },
           { h: 'Owner', v: function (i) { return esc(emp(i.owner)); } }, { h: L('Umur', 'Age'), cls: 'r num', v: function (i) { return P.issueAge(i) + t(L(' hari', ' d')); } },
           { h: L('Status', 'Status'), v: function (i) { return stc(i.status) + (i.carried ? A.chip('appr', L('Dibawa ke Okt', 'Carried to Oct'), 'arrow') : ''); } },
-          { h: '', v: function (i) { return i.status !== 'resolved' && !i.carried && (can('race.lead') || can('refl.edit')) ? '<button type="button" class="btn btn-ghost btn-sm" data-act="carry" data-val="' + esc(i.id) + '">' + ic('arrow') + '<span>' + t(L('Bawa ke depan', 'Carry forward')) + '</span></button>' : ''; } }
+          { h: '', v: function (i) { return (i.status !== 'resolved' && issEdit ? '<button type="button" class="btn btn-ghost btn-sm" data-act="issUpd" data-val="' + esc(i.id) + '">' + ic('edit') + '<span>' + t(L('Perbarui', 'Update')) + '</span></button>' : '') + (i.status !== 'resolved' && !i.carried && issEdit ? '<button type="button" class="btn btn-ghost btn-sm" data-act="carry" data-val="' + esc(i.id) + '">' + ic('arrow') + '<span>' + t(L('Bawa ke depan', 'Carry forward')) + '</span></button>' : ''); } }
         ], function (i) { return { t: t(i.n), r: P.issueAge(i) + t(L(' hari', ' d')), s: esc(i.id) + ' · ' + esc(emp(i.owner)) + ' · ' + t(i.action), chip: stc(i.status) + (i.carried ? A.chip('appr', L('Dibawa', 'Carried'), 'arrow') : '') }; }, null, { dense: true }) +
         note(t(L('Carry forward menyimpan minggu ditemukan, umur, owner, KPI terkait dan riwayat issue.', 'Carry forward keeps the week found, age, owner, linked KPI and issue history.')), 'history') +
         '<ol class="aud5">' + iss.filter(function (i) { return i.hist; }).map(function (i) { return '<li><b>' + esc(i.id) + '</b><small>' + i.hist.map(function (h) { return dt(h[0]) + ' ' + T(h[1]); }).join(' · ') + '</small></li>'; }).join('') + '</ol>', { icon: 'alert', count: iss.length }); }
@@ -349,11 +364,12 @@
           '<li class="ok">' + ic('star') + '<span><small>' + t(L('Kemenangan terbesar', 'Biggest win')) + '</small><b>' + t(R.summary.win.k.n) + ' · ' + pct(R.summary.win.ach) + '</b></span></li>' +
           '<li class="crit">' + ic('xc') + '<span><small>' + t(L('Risiko terbesar', 'Biggest risk')) + '</small><b>' + t(R.summary.risk.k.n) + ' · ' + pct(R.summary.risk.ach) + '</b></span></li>' +
           '<li class="info">' + ic('bulb') + '<span><small>' + t(L('Peluang terbesar', 'Biggest opportunity')) + '</small><b>' + t(R.summary.opp) + '</b></span></li></ul>', { icon: 'sparkles' }) +
-        card(L('Menuju goal', 'Toward the goal'), R.goals.map(function (g) { return '<a class="gp5" href="' + href('GOL-DTL-001', g.id) + '"><b>' + t(g.n) + '</b>' + bar(g.progress, P.ST[g.status] ? P.ST[g.status].tone : 'info') + '<span>' + pct(g.progress, 0) + ' · ' + T(P.ST[g.status] ? P.ST[g.status].n : g.status) + '</span></a>'; }).join(''), { icon: 'target' }) + '</div>' +
+        card(L('Menuju goal', 'Toward the goal'), R.goals.map(function (g) { return '<a class="gp5" href="' + href('GOAL-002', g.id) + '"><b>' + t(g.n) + '</b>' + bar(g.progress, P.ST[g.status] ? P.ST[g.status].tone : 'info') + '<span>' + pct(g.progress, 0) + ' · ' + T(P.ST[g.status] ? P.ST[g.status].n : g.status) + '</span></a>'; }).join(''), { icon: 'target' }) + '</div>' +
         card(L('Strategy board', 'Strategy board'), A.list(P.state().strategy, [
-          { h: L('Strategi', 'Strategy'), v: function (s) { return '<b>' + t(s.n) + '</b><small class="sub5">' + lnk('GOL-DTL-001', s.goal, esc(s.goal)) + ' · ' + lnk('KPI-DTL-001', s.kpi, esc(s.kpi)) + '</small>'; } },
-          { h: 'Owner', v: function (s) { return esc(emp(s.owner)); } }, { h: 'Due', v: function (s) { return dt(s.due); } }, { h: L('Dampak', 'Impact'), v: function (s) { return t(s.impact); } }, { h: L('Status', 'Status'), v: function (s) { return stc(s.status); } }
-        ], function (s) { return { t: t(s.n), s: esc(emp(s.owner)) + ' · ' + dt(s.due) + ' · ' + t(s.impact), chip: stc(s.status) }; }, null, { dense: true }), { icon: 'route' });
+          { h: L('Strategi', 'Strategy'), v: function (s) { return '<b>' + t(s.n) + '</b><small class="sub5">' + lnk('GOAL-002', s.goal, esc(s.goal)) + ' · ' + lnk('KPI-DTL-001', s.kpi, esc(s.kpi)) + '</small>'; } },
+          { h: 'Owner', v: function (s) { return esc(emp(s.owner)); } }, { h: 'Due', v: function (s) { return dt(s.due); } }, { h: L('Dampak', 'Impact'), v: function (s) { return t(s.impact); } }, { h: L('Status', 'Status'), v: function (s) { return stc(s.status); } },
+          { h: '', v: function (s) { return can('refl.edit') || can('stracon.create') ? '<button type="button" class="btn btn-ghost btn-sm" data-act="strUpd" data-val="' + esc(s.id) + '">' + ic('edit') + '<span>' + t(L('Perbarui', 'Update')) + '</span></button>' : ''; } }
+        ], function (s) { return { t: t(s.n), s: esc(emp(s.owner)) + ' · ' + dt(s.due) + ' · ' + t(s.impact), chip: stc(s.status) }; }, null, { dense: true }) + note(t(L('Setiap strategi wajib terhubung ke goal dan KPI. Perubahan status tercatat di audit.', 'Every strategy must link to a goal and a KPI. Status changes are audited.')), 'link'), { icon: 'route' });
       else if (tab === 'stra') { var d = P.state().stracon, SRC = { gap: L('Gap KPI', 'KPI gap'), issue: L('Issue terbuka', 'Open issue'), carry: L('Dibawa', 'Carried'), insight: L('Insight', 'Insight'), goal: 'Goal' };
         body = card(L('STRACON Oktober 2026', 'STRACON October 2026'), (d ? '<div class="stra5-h">' + A.chip(d.status === 'active' ? 'ok' : d.status === 'review' ? 'info' : 'mute', d.status === 'active' ? L('Aktif', 'Active') : d.status === 'review' ? 'Review' : 'Draft') + '<span>' + esc(d.id) + ' · ' + d.items.length + ' ' + t(L('item', 'items')) + ' · ' + dtt(d.at) + '</span></div>' +
           A.list(d.items, [{ h: L('Sumber', 'Source'), v: function (x) { return A.chip('info', SRC[x.src] || x.src); } }, { h: L('Rencana', 'Plan'), v: function (x) { return '<b>' + t(x.t) + '</b>' + (x.why ? '<small class="sub5">' + t(x.why) + '</small>' : ''); } }, { h: 'KPI', v: function (x) { return x.kpi ? esc(x.kpi) : '—'; } }, { h: 'Owner', v: function (x) { return x.owner ? esc(emp(x.owner)) : '—'; } }],
@@ -370,15 +386,34 @@
           '<h3 class="h5">' + t(L('Riwayat', 'History')) + '</h3>' + (st.log.length ? '<ol class="aud5">' + st.log.map(function (x) { return '<li><b>' + esc(x.from) + ' → ' + esc(x.to) + '</b><small>' + dtt(x.at) + ' · ' + esc(x.name || x.by) + '</small></li>'; }).join('') + '</ol>' : A.empty(L('Belum ada perubahan status.', 'No status changes yet.'))) +
           (st.amend.length ? '<h3 class="h5">' + t(L('Amandemen', 'Amendments')) + '</h3><ol class="aud5">' + st.amend.map(function (a) { return '<li><b>v' + a.v + ' · ' + esc(a.reason) + '</b><small>' + dtt(a.at) + ' · approver ' + esc(a.approverName) + (a.change ? ' · ' + esc(a.change) : '') + '</small></li>'; }).join('') + '</ol>' : ''), { icon: 'filecheck' }); }
       else body = tiles([
-          tile({ k: L('Skor reflection', 'Reflection score'), ring: R.score }), tile({ k: L('Bulan lalu (W36)', 'Last month (W36)'), v: sc1(R.prevScore), s: delta(R.score - R.prevScore) }), tile({ k: 'XScore', v: sc1(R.xscore), s: delta(R.xdelta), href: open('XSC-001') ? href('XSC-001') : null }),
+          tile({ k: L('Skor reflection', 'Reflection score'), ring: R.score }), tile({ k: L('Bulan lalu (W36)', 'Last month (W36)'), v: sc1(R.prevScore), s: delta(R.score - R.prevScore) }), tile({ k: 'XScore', v: sc1(R.xscore), s: delta(R.xdelta), href: open('XSCORE-001') ? href('XSCORE-001') : null }),
           tile({ k: L('Progres goal', 'Goal progress'), v: pct(R.goalProg, 0) }), tile({ k: 'KPI', v: R.counts.total, s: R.counts.on + ' on · ' + R.counts.risk + ' risk · ' + R.counts.off + ' off' }), tile({ k: 'Issue', v: R.openIssues + ' ' + t(L('terbuka', 'open')), s: R.closedIssues + ' ' + t(L('selesai', 'closed')), tone: R.openIssues ? 'warn' : 'ok' })
         ], 'tls5-6') + weightMsg(P.validateWeights(R.lines.map(function (l) { return l.weight; }))) +
         '<div class="grid2">' + card(L('Skor per minggu', 'Score per week'), A.barChart(R.weekScores.map(function (v, i) { return { l: 'W' + (i + 1), v: v, hi: sel.indexOf(WEEKS[i]) >= 0 }; }), { h: 180, label: 'R2RE', fmt: function (v) { return sc1(v); } }), { icon: 'chart' }) +
           card(L('KPI paling menentukan', 'KPIs that matter most'), kpiList(R.lines.slice().sort(function (a, b) { return (b.weight * (100 - b.pts)) - (a.weight * (100 - a.pts)); }).slice(0, 4), { noLink: false }), { icon: 'target' }) + '</div>';
-      return A.pageHead(null, t(L('Refleksi September 2026 dari 4 R2RE · status ', 'September 2026 reflection from 4 R2REs · status ')) + t(flow[idx] ? flow[idx][1] : st.status) + ' · v' + st.v) + raceTabs('REFL-001') + weekSel(sel) +
-        tabs(REFL_TABS, tab, 'tab', { def: 'dash', label: L('Bagian reflection', 'Reflection sections') }) + body;
+      return A.pageHead(null, t(L('Refleksi September 2026 dari 4 R2RE · status ', 'September 2026 reflection from 4 R2REs · status ')) + t(flow[idx] ? flow[idx][1] : st.status) + ' · v' + st.v) + raceTabs('REFL-001') + reflSteps(tab) + weekSel(sel) +
+        tabs(REFL_TABS, tab, 'tab', { def: 'dash', hf: function (k) { return H.hubHref('REFL-001', k, 'dash'); }, label: L('Bagian reflection', 'Reflection sections') }) + body;
     },
     act: {
+      issAdd: function () {
+        var c = cx(), kp = P.library().map(function (k) { return [k.code, k.code + ' · ' + T(k.n)]; });
+        dlg({ title: L('Catat issue', 'Log issue'), sub: t(L('Issue wajib terhubung ke KPI dan punya owner serta due date.', 'An issue must link to a KPI and have an owner and due date.')),
+          body: '<div class="fg5">' + fld('Issue', inp('n', ''), { req: true, wide: true }) + fld('KPI', sel('kpi', kp, kp[0] && kp[0][0]), { req: true }) + fld('Owner', sel('owner', peopleOpts(), 'EMP-010'), { req: true }) + fld('Due date', inp('due', '2026-10-14', { type: 'date' }), { req: true }) + fld('Root cause', inp('rc', '')) + fld(L('Aksi', 'Action'), inp('action', ''), { wide: true }) + '</div>',
+          onOk: function (v) { var r = P.issueAdd(c, { n: [v.n, v.n], kpi: v.kpi, owner: v.owner, due: v.due, rc: v.rc ? [v.rc, v.rc] : undefined, action: v.action ? [v.action, v.action] : undefined }); if (!r.ok) return r.msg; after(L('Issue dicatat.', 'Issue logged.')); return true; } });
+      },
+      issUpd: function (el) {
+        var c = cx(), id = el.getAttribute('data-val'), i = by(P.state().issues, 'id', id);
+        dlg({ title: L('Perbarui issue', 'Update issue'), sub: esc(id) + ' · ' + t(i.n),
+          body: '<div class="fg5">' + fld(L('Status', 'Status'), sel('status', Object.keys(P.ISSUE_ST).map(function (k) { return [k, P.ISSUE_ST[k]]; }), i.status), { req: true }) + fld('Owner', sel('owner', peopleOpts(), i.owner)) + fld(L('Hasil penyelesaian', 'Resolution'), area('resolution', '', L('Wajib saat menutup issue', 'Required when closing')), { wide: true }) + '</div>',
+          onOk: function (v) { var r = P.issueUpdate(c, id, { status: v.status, owner: v.owner, resolution: v.resolution || undefined }); if (!r.ok) return r.msg; after(v.status === 'resolved' ? L('Issue ditutup.', 'Issue closed.') : L('Issue diperbarui.', 'Issue updated.')); return true; } });
+      },
+      strUpd: function (el) {
+        var c = cx(), id = el.getAttribute('data-val'), s0 = by(P.state().strategy, 'id', id), sts = ['notstarted', 'progress', 'on', 'risk', 'off', 'done', 'cancelled'].filter(function (k) { return P.ST[k]; });
+        if (sts.indexOf(s0.status) < 0) sts.unshift(s0.status);
+        dlg({ title: L('Perbarui strategi', 'Update strategy'), sub: t(s0.n),
+          body: '<div class="fg5">' + fld(L('Status', 'Status'), sel('status', sts.map(function (k) { return [k, P.ST[k] ? P.ST[k].n : k]; }), s0.status), { req: true }) + fld('Owner', sel('owner', peopleOpts(), s0.owner)) + fld('Due', inp('due', s0.due, { type: 'date' })) + fld(L('Alasan', 'Reason'), area('reason', ''), { req: true, wide: true }) + '</div>',
+          onOk: function (v) { if (!String(v.reason || '').trim()) return P.MSG.reason || L('Alasan wajib diisi.', 'A reason is required.'); var r = P.strategyUpdate(c, id, { status: v.status, owner: v.owner, due: v.due, reason: v.reason }); if (!r.ok) return r.msg; after(L('Strategi diperbarui.', 'Strategy updated.')); return true; } });
+      },
       carry: function (el) { var r = P.carryForward(cx(), el.getAttribute('data-val')); if (!r.ok) { A.toast(r.msg, 'crit'); return; } after(L('Issue dibawa ke Oktober dengan riwayatnya.', 'Issue carried to October with its history.')); },
       straNew: function () { var r = P.straconDraft(cx()); if (!r.ok) { A.toast(r.msg, 'crit'); return; } after(L('Draft STRACON dibuat (' + r.d.items.length + ' item). Review sebelum diaktifkan.', 'STRACON draft created (' + r.d.items.length + ' items). Review before activation.')); },
       stra: function (el) { var r = P.straconTransition(cx(), el.getAttribute('data-val')); if (!r.ok) { A.toast(r.msg, 'crit'); return; } after(L('Status STRACON diperbarui.', 'STRACON status updated.')); },
@@ -412,28 +447,28 @@
     var lab = by(P.MGMT_ACTIONS.map(function (y) { return { k: y[0], l: y[1] }; }), 'k', a).l;
     dlg({ title: lab, sub: t(x.t), body: body, ok: lab, onOk: function (v) { var r = P.insightAct(c, x.id, a, v); if (!r.ok) return r.msg; after(L('Tindak lanjut ' + r.task.id + ' dicatat.', 'Follow-up ' + r.task.id + ' recorded.')); return true; } });
   }
-  function diTabs(cur) { return tabs([['DI-BRF-001', 'Executive Brief', 'bulb'], ['DI-INS-001', 'Insight', 'sparkles'], ['DI-DEC-001', 'Decision Log', 'filecheck'], ['DI-RPT-001', 'Report Library', 'file']].filter(function (x) { return open(x[0]); }), cur, null, { hf: function (k) { return href(k); }, label: 'Decision Intelligence' }); }
-  V['DI-BRF-001'] = {
+  function diTabs(cur) { return tabs([['DI-001', 'Executive Brief', 'bulb'], ['DI-002', 'Insight', 'sparkles'], ['DI-005', 'Decision Log', 'filecheck'], ['REPORT-001', 'Report Library', 'file']].filter(function (x) { return open(x[0]); }), cur, null, { hf: function (k) { return href(k); }, label: 'Decision Intelligence' }); }
+  V['DI-001'] = {
     render: function () {
       var b = P.brief();
       function sec(title, icon, rows, go) { return '<section class="brf5"><h3 class="h5">' + ic(icon) + '<span>' + t(title) + '</span>' + (go && open(go[0]) ? '<a class="card-l" href="' + href(go[0], null, go[1]) + '">' + t(L('Detail', 'Detail')) + ic('chevr') + '</a>' : '') + '</h3>' + kv(rows) + '</section>'; }
-      return A.pageHead(null, t(L('Ringkasan untuk keputusan hari ini · ', 'Brief for today\'s decisions · ')) + dt(P.TODAY)) + diTabs('DI-BRF-001') +
+      return A.pageHead(null, t(L('Ringkasan untuk keputusan hari ini · ', 'Brief for today\'s decisions · ')) + dt(P.TODAY) + ' ' + H.fresh('kpi', { label: 'KPI' })) + diTabs('DI-001') +
         '<div class="brfs5">' +
-          sec(L('Keuangan', 'Financial'), 'coins', [[L('Kas tersedia', 'Available cash'), rpj(b.fin.cash)], ['Revenue MTD', rpj(b.fin.rev) + ' · ' + pct(b.fin.revVs)], [L('Net profit (Sep)', 'Net profit (Sep)'), rpj(b.fin.net) + ' · NM ' + pct(b.fin.nm)], ['AR', rpj(b.fin.ar) + ' · ' + t(L('jatuh tempo ', 'overdue ')) + rpj(b.fin.arOver)]], ['FIN-HLT-001']) +
+          sec(L('Keuangan', 'Financial'), 'coins', [[L('Kas tersedia', 'Available cash'), rpj(b.fin.cash)], ['Revenue MTD', rpj(b.fin.rev) + ' · ' + pct(b.fin.revVs)], [L('Net profit (Sep)', 'Net profit (Sep)'), rpj(b.fin.net) + ' · NM ' + pct(b.fin.nm)], ['AR', rpj(b.fin.ar) + ' · ' + t(L('jatuh tempo ', 'overdue ')) + rpj(b.fin.arOver)]], ['FIN-001']) +
           sec(L('Operasional', 'Operations'), 'washer', [[L('Volume (Sep)', 'Volume (Sep)'), fmt.num(b.ops.vol, 0) + ' kg'], ['SLA', pct(b.ops.sla)], [L('Kapasitas', 'Capacity'), pct(b.ops.cap)]], ['EXE-PIL-001']) +
           sec(L('Klien', 'Client'), 'hotel', [[L('Pertumbuhan', 'Growth'), pct(b.cli.growth)], [L('Penurunan', 'Decline'), t(b.cli.decline)], [L('Komplain /1.000', 'Complaints /1,000'), fmt.num(b.cli.complaint, 1)]]) +
           sec('People', 'users', [['Teamwork Score', sc1(b.ppl.team)], [L('Karyawan perlu perhatian', 'Employees needing attention'), b.ppl.risk]], ['TEAM-001']) +
-          sec('Ambidex', 'target', [['XScore', sc1(b.amb.xscore) + ' ' + delta(b.amb.xdelta)], [L('Progres goal', 'Goal progress'), pct(b.amb.goal, 0)], ['Weekly Race on track', esc(b.amb.race)], ['Reflection', sc1(b.amb.refl)]], ['XSC-001']) +
+          sec('Ambidex', 'target', [['XScore', sc1(b.amb.xscore) + ' ' + delta(b.amb.xdelta)], [L('Progres goal', 'Goal progress'), pct(b.amb.goal, 0)], ['Weekly Race on track', esc(b.amb.race)], ['Reflection', sc1(b.amb.refl)]], ['XSCORE-001']) +
         '</div>' +
         '<div class="grid2">' + card(L('Alert prioritas', 'Priority alerts'), '<ol class="atts5">' + b.alerts.map(H.attItem).join('') + '</ol>' + note(t(L('Urutan: severity → dampak finansial → bobot KPI → dampak strategis → due time.', 'Order: severity → financial impact → KPI weight → strategic impact → due time.')), 'sort'), { icon: 'alert', count: b.alerts.length }) +
-          card(L('Rekomendasi', 'Recommendations'), b.recs.map(function (x) { return insightCard(x, true); }).join(''), { icon: 'bulb', link: open('DI-INS-001') ? ['DI-INS-001', L('Semua insight', 'All insights')] : null }) + '</div>';
+          card(L('Rekomendasi', 'Recommendations'), b.recs.map(function (x) { return insightCard(x, true); }).join(''), { icon: 'bulb', link: open('DI-002') ? ['DI-002', L('Semua insight', 'All insights')] : null }) + '</div>';
     },
     act: { att: H.attAct }
   };
-  V['DI-INS-001'] = {
+  V['DI-002'] = {
     render: function (c) {
       var ty = c.q.type || '', all = P.insights(), rows = ty ? all.filter(function (x) { return x.type === ty; }) : all;
-      return A.pageHead(null, t(L('Setiap insight menjawab WHAT · WHY · RISK · RECOMMENDATION · ACTION.', 'Every insight answers WHAT · WHY · RISK · RECOMMENDATION · ACTION.'))) + diTabs('DI-INS-001') +
+      return A.pageHead(null, t(L('Setiap insight menjawab WHAT · WHY · RISK · RECOMMENDATION · ACTION.', 'Every insight answers WHAT · WHY · RISK · RECOMMENDATION · ACTION.'))) + diTabs('DI-002') +
         tabs([['', L('Semua', 'All'), null, all.length]].concat(Object.keys(P.INS_TYPE).map(function (k) { return [k, P.INS_TYPE[k].n, P.INS_TYPE[k].icon, all.filter(function (x) { return x.type === k; }).length]; })), ty, 'type', { def: '', label: L('Jenis insight', 'Insight type') }) +
         (ty ? note(t(P.INS_TYPE[ty].d), P.INS_TYPE[ty].icon) : '') +
         '<div class="inss5">' + rows.map(function (x) { return insightCard(x); }).join('') + '</div>' + (!can('di.act') ? note(t(L('Tindakan manajemen hanya untuk pemegang izin tindak lanjut insight.', 'Management actions are only for holders of the insight action permission.')), 'lock') : '');
@@ -441,10 +476,10 @@
     act: { ins: insAct }
   };
   var DEC_ST = ['notstarted', 'progress', 'on', 'risk', 'done', 'cancelled'];
-  V['DI-DEC-001'] = {
+  V['DI-005'] = {
     render: function () {
       var rows = P.decisions();
-      return A.pageHead(null, t(L('Keputusan penting, owner, hasil yang diharapkan dan hasil aktual.', 'Important decisions, owners, expected and actual results.')), A.pbtn('di.act', 'primary', L('Catat Keputusan', 'Record Decision'), 'plus', { act: 'add' })) + diTabs('DI-DEC-001') +
+      return A.pageHead(null, t(L('Keputusan penting, owner, hasil yang diharapkan dan hasil aktual.', 'Important decisions, owners, expected and actual results.')), A.pbtn('di.act', 'primary', L('Catat Keputusan', 'Record Decision'), 'plus', { act: 'add' })) + diTabs('DI-005') +
         card('Decision Log', A.list(rows, [
           { h: L('Keputusan', 'Decision'), v: function (d) { return '<b>' + t(d.d) + '</b><small class="sub5">' + esc(d.id) + ' · ' + dt(d.at) + (d.src ? ' · ' + esc(d.src) : '') + '</small>'; } },
           { h: 'Owner', v: function (d) { return esc(emp(d.owner)); } }, { h: 'Due', v: function (d) { return dt(d.due); } }, { h: L('Hasil diharapkan', 'Expected result'), v: function (d) { return t(d.exp || '—'); } },
@@ -473,11 +508,11 @@
     ['Teamwork Score', L('Hasil KPI bersama tim, bukan rata-rata skor anggota.', 'Shared team KPI results, never an average of member scores.')],
     ['Personal Score', L('KPI individu + kontribusi tim, formula sesuai peran.', 'Individual KPIs + team contribution, formula by role.')]
   ];
-  V['DI-RPT-001'] = {
+  V['REPORT-001'] = {
     render: function (c) {
       var c0 = cx(), reps = P.reports(c0), cur = by(reps, 'k', c.q.r) || null;
       var prev = cur && cur.allowed ? P.reportRows(cur.k) : null;
-      return A.pageHead(null, t(L('Laporan siap pakai. Export PDF, Excel atau CSV sesuai izin.', 'Ready-made reports. Export to PDF, Excel or CSV where permitted.'))) + diTabs('DI-RPT-001') +
+      return A.pageHead(null, t(L('Laporan siap pakai. Export PDF, Excel atau CSV sesuai izin.', 'Ready-made reports. Export to PDF, Excel or CSV where permitted.'))) + diTabs('REPORT-001') +
         '<div class="rps5">' + reps.map(function (r) {
           return '<article class="rp5' + (cur && cur.k === r.k ? ' on' : '') + (r.allowed ? '' : ' off') + '"><div class="rp5-h"><span class="pl5-ic">' + ic(r.icon) + '</span><b>' + t(r.n) + '</b></div><p>' + t(r.d) + '</p>' +
             (r.allowed ? '<div class="rp5-a"><a class="btn btn-ghost btn-sm" href="' + qhref({ r: r.k }) + '">' + ic('eye') + '<span>' + t(L('Pratinjau', 'Preview')) + '</span></a>' + (r.exportable ? P.EXPORT_FORMATS.map(function (f) { return '<button type="button" class="btn btn-ghost btn-sm" data-act="exp" data-val="' + esc(r.k + '|' + f[0]) + '">' + ic('download') + '<span>' + f[1] + '</span></button>'; }).join('') : '') + '</div>' + (!r.exportable ? '<small class="sub5">' + t(L('Lihat saja (tanpa izin export)', 'View only (no export permission)')) + '</small>' : '')

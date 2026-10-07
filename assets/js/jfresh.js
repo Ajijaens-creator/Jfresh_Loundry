@@ -29,7 +29,7 @@
   ];
   // Phase 5 pages (Executive & Performance OS): overview + screen specs + tests
   var P5 = [
-    { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 23 layar NP-01 sampai NP-10', en: 'Specs for the 23 NP-01 to NP-10 screens', ic: 'file' },
+    { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 41 layar inventaris §89', en: 'Specs for the 41 §89 inventory screens', ic: 'file' },
     { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine skor dan checklist responsif', en: 'Score engine test cases and responsive checklist', ic: 'checkc' }
   ];
   var PAGES = PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);

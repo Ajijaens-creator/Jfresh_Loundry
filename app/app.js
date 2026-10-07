@@ -452,7 +452,7 @@
     if (S.force === 'loading') return;
     S.timer = setTimeout(function () {
       try { view.innerHTML = '<div class="pg pg-' + s.a + '">' + S.cur.render({ rec: S.rec, q: S.q, s: s }) + '</div>'; }
-      catch (e) { console.error(e); view.innerHTML = '<div class="pg">' + stateCard('error', s.err) + '</div>'; }
+      catch (e) { console.error(e); view.innerHTML = '<div class="pg">' + stateCard('error', s.err, btn('blue', L('Coba Lagi', 'Try Again'), 'refresh', { act: 'retry' }) + backBtn('ghost')) + '</div>'; }
       if (S.cur.after) S.cur.after({ rec: S.rec, q: S.q, s: s });
       if (window.JFDS && view.querySelector('.ds')) window.JFDS.lang(view);
       if (!first) view.focus({ preventScroll: true });
@@ -483,7 +483,7 @@
   function section(title, body, o) {
     o = o || {};
     return '<section class="card' + (o.cls ? ' ' + o.cls : '') + '"><div class="card-h"><h2>' + (o.icon ? ic(o.icon) : '') + '<span>' + t(title) + '</span></h2>' + (o.count != null ? '<span class="cnt num">' + o.count + '</span>' : '') +
-      (o.link ? '<a class="card-l" href="' + href(o.link[0], o.link[2]) + '">' + t(o.link[1]) + ic('chevr') + '</a>' : '') + '</div>' + body + '</section>';
+      (o.link ? '<a class="card-l" href="' + href(o.link[0], o.link[2]) + '">' + t(o.link[1]) + ic('chevr') + '</a>' : '') + (o.right || '') + '</div>' + body + '</section>';
   }
   function rowLink(o) {
     return '<a class="rl' + (o.tone ? ' rl-' + o.tone : '') + '" href="' + o.href + '"><span class="rl-ic">' + ic(o.icon || 'file') + '</span><span class="rl-t"><b>' + o.t + '</b>' + (o.s ? '<span>' + o.s + '</span>' : '') + '</span>' +

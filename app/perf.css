@@ -375,6 +375,97 @@ a.dr5:hover { border-color: var(--blue); background: var(--blue-50); }
 .sc5d li { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 12px; padding: 10px 12px; border-radius: 12px; background: var(--bg-2); font-size: 14.5px; }
 .sc5d b { color: var(--blue-ink); }
 
+
+/* ---------- §93 Data freshness ---------- */
+.fr5 { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 2px 4px 2px 10px; border-radius: 999px; background: var(--bg-2); color: var(--muted); font-size: 13px; font-weight: 600; max-width: 100%; }
+.fr5 > .i { width: 15px; height: 15px; flex: none; }
+.fr5 > span { min-width: 0; overflow-wrap: anywhere; }
+.fr5-old { background: var(--warn-50); color: var(--orange-ink, #8A4B00); }
+.fr5-b { display: inline-grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 999px; background: transparent; color: var(--blue); cursor: pointer; flex: none; }
+.fr5-b:hover { background: var(--blue-50); } .fr5-b .i { width: 16px; height: 16px; }
+.fr5-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.card-h .more5, .more5 { margin-left: auto; display: inline-flex; align-items: center; gap: 2px; min-height: 32px; color: var(--blue); font-size: 13.5px; font-weight: 700; white-space: nowrap; }
+.more5 .i { width: 16px; height: 16px; }
+
+/* ---------- NV-02 Financial Health ---------- */
+.fin5-g { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.fin5-g > * { margin-top: 0 !important; min-width: 0; }
+.fin5-k { margin-bottom: 8px; }
+.dn5 { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; align-items: center; }
+.dn5 svg { width: 140px; height: 140px; }
+.dn5-s { fill: none; stroke-width: 18; }
+.dn5-s.c-blue, .dn5-k i.c-blue { stroke: var(--blue); background: var(--blue); }
+.dn5-s.c-ok, .dn5-k i.c-ok { stroke: var(--ok); background: var(--ok); }
+.dn5-s.c-orange, .dn5-k i.c-orange { stroke: var(--orange); background: var(--orange); }
+.dn5-s.c-fresh, .dn5-k i.c-fresh { stroke: var(--blue-2, #00A8EB); background: var(--blue-2, #00A8EB); }
+.dn5-v { font-size: 15px; font-weight: 700; fill: var(--blue-ink); }
+.dn5-l { font-size: 11px; fill: var(--muted); }
+.dn5-k { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 13.5px; }
+.dn5-k li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 4px 8px; align-items: center; }
+.dn5-k i { width: 10px; height: 10px; border-radius: 3px; }
+.dn5-k b { font-weight: 700; color: var(--blue-ink); }
+.dn5-k b + b { grid-column: 2 / -1; color: var(--muted); font-weight: 600; font-size: 12.5px; }
+.ag5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.ag5-c { display: grid; gap: 2px; padding: 10px; border-radius: 12px; background: var(--bg-2); min-width: 0; }
+.ag5-c small { color: var(--muted); font-size: 12px; font-weight: 600; }
+.ag5-c b { color: var(--blue-ink); font-size: 14.5px; overflow-wrap: anywhere; }
+.ag5-c span { font-size: 12px; color: var(--muted); }
+.ag5-w { background: var(--warn-50); } .ag5-w b { color: var(--orange-ink, #8A4B00); }
+.top5 { display: grid; gap: 6px; margin: 0; padding-left: 20px; font-size: 14px; }
+.top5 li { display: flex; justify-content: space-between; gap: 10px; }
+
+/* ---------- KPI-004 version history ---------- */
+.ver5 { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.ver5-i { position: relative; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-lg, 16px); background: var(--white); }
+.ver5-i p { margin: 6px 0 10px; color: var(--ink); }
+.ver5-h { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ver5-h b { font-size: 16px; color: var(--blue-ink); }
+.ver5-h span { color: var(--muted); font-size: 13px; margin-left: auto; }
+.chips5 { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip5 { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 999px; background: var(--blue-50); color: var(--blue); font-weight: 700; font-size: 13.5px; }
+.chip5:hover { background: var(--blue-100); }
+
+/* ---------- DI-003 alerts, DI-004 recommendations ---------- */
+.alc5 { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.alc5-i { --tone: var(--blue); display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid var(--tone); border-radius: 14px; background: var(--white); }
+.alc5-i.s-crit { --tone: var(--crit); } .alc5-i.s-warn { --tone: var(--warn); } .alc5-i.s-ok { --tone: var(--ok); }
+.alc5-n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; background: var(--bg-2); font-weight: 700; color: var(--blue-ink); }
+.alc5-b { display: grid; gap: 4px; min-width: 0; }
+.alc5-b small { color: var(--muted); font-size: 13px; }
+.alc5-a { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.rcs5 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.rc5r { display: grid; gap: 8px; align-content: start; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg, 16px); background: var(--white); min-width: 0; }
+.rc5r header { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.rc5r header .sub5 { margin: 0 0 0 auto; }
+.rc5r p { margin: 0; color: var(--muted); font-size: 14px; }
+.ck5 { display: flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 600; }
+.ck5 input { width: 20px; height: 20px; accent-color: var(--blue); }
+
+/* ---------- APR-PERF-001 approvals, AUD-PERF-001 audit ---------- */
+.apr5 { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.apr5-i { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--white); }
+.apr5-ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--orange-50); color: var(--orange-ink, #8A4B00); }
+.apr5-ic .i { width: 20px; height: 20px; }
+.apr5-b { display: grid; gap: 4px; min-width: 0; }
+.apr5-b small { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.apr5-a { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.aud5-f { overflow-x: auto; max-width: 100%; }
+
+
+/* ---------- §87 Reflection steps, §86 R2RE priority ---------- */
+.rst5 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; counter-reset: none; }
+.rst5 a { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); color: var(--muted); font-size: 13.5px; font-weight: 700; }
+.rst5-n { display: grid; place-items: center; width: 26px; height: 26px; flex: none; border-radius: 999px; background: var(--bg-2); color: var(--blue-ink); font-size: 13px; }
+.rst5-n .i { width: 14px; height: 14px; }
+.rst5 .done a { color: var(--blue-ink); } .rst5 .done .rst5-n { background: var(--ok-50); color: var(--ok); }
+.rst5 .now a { border-color: var(--blue); background: var(--blue-50); color: var(--blue-ink); } .rst5 .now .rst5-n { background: var(--blue); color: var(--white); }
+.pri5 { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pri5 a { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 12px; align-items: center; min-height: 56px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); }
+.pri5 a:hover { border-color: var(--blue-100); background: var(--blue-50); }
+.pri5-w { display: grid; place-items: center; height: 36px; border-radius: 10px; background: var(--blue-50); color: var(--blue); font-weight: 700; }
+.pri5-t { display: grid; min-width: 0; } .pri5-t small { color: var(--muted); font-size: 13px; }
+.ph-s .fr5 { margin-left: 4px; vertical-align: middle; }
+
 /* ---------- iPad ---------- */
 @media (max-width: 1239px) {
   .tls5-8 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -388,6 +479,9 @@ a.dr5:hover { border-color: var(--blue); background: var(--blue-50); }
   .inss5 { grid-template-columns: minmax(0, 1fr); }
   .wb5-r { grid-template-columns: minmax(0, 1fr) 90px 52px; }
   .wb5-r .chip, .wb5-r .btn { grid-column: auto; }
+  .fin5-g { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rcs5 { grid-template-columns: minmax(0, 1fr); }
+  .rst5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 /* ---------- Mobile ---------- */
 @media (max-width: 699px) {
@@ -421,4 +515,13 @@ a.dr5:hover { border-color: var(--blue); background: var(--blue-50); }
   .dlg5-f { flex-direction: column-reverse; } .dlg5-f .btn { width: 100%; }
   .hero5 { gap: 14px; }
   .att5-a .btn-sm { flex: 1 1 auto; }
+  .fin5-g { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .dn5 { grid-template-columns: minmax(0, 1fr); justify-items: center; } .dn5-k { width: 100%; }
+  .alc5-i, .apr5-i { grid-template-columns: 32px minmax(0, 1fr); } .alc5-a, .apr5-a { grid-column: 1 / -1; justify-content: stretch; } .alc5-a .btn, .apr5-a .btn { flex: 1 1 auto; }
+  .apr5-ic { width: 32px; height: 32px; }
+  .ver5-h span { margin-left: 0; width: 100%; }
+  .fr5 { font-size: 12.5px; }
+  .rst5 { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; } .rst5 li { flex: 0 0 auto; scroll-snap-align: start; } .rst5 li:not(.now) a > span:last-child { display: none; }
+  .pri5 a { grid-template-columns: 44px minmax(0, 1fr); } .pri5 a > .chip { grid-column: 2; justify-self: start; }
+  .ph-s .fr5 { margin: 6px 0 0; display: flex; width: fit-content; }
 }

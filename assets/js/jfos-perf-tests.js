@@ -15,6 +15,7 @@
   function ctx(role, emp, extra) {
     return function (P) { var perms = (P.ROLE_PERMS[role] || []).concat(['apr.view', 'rpt.export', 'rpt.exec', 'rpt.ops']).concat(extra || []); return { uid: 'T-' + role, name: 'Tester ' + role, roleKey: role, perms: perms, employee: emp ? { id: emp } : null }; };
   }
+  var hrc = ctx('hr', 'EMP-090'), rl = ctx('raceleader', 'EMP-075'), fin0 = function (P) { var c = ctx('finance', 'EMP-030')(P); c.perms = P.ROLE_PERMS.finance.slice(); return c; };
   var own = ctx('owner', 'EMP-050'), spv = ctx('supervisor', 'EMP-021'), opsm = ctx('opsmgr', 'EMP-010'), fin = ctx('finance', 'EMP-030'), opr = ctx('operator', 'EMP-001'), none = function () { return { uid: 'T-none', name: 'No perms', perms: [] }; };
   function kOf(P, code) { return P.kpi(code); }
 
@@ -203,15 +204,16 @@
   /* ----- NP-08 Race & R2RE ----- */
   add('np08', 'RC-01', L('Race Leader bisa review, root cause dan keputusan', 'Race Leader can review, add root cause and decide'), function (P) {
     var r = P.r2Review(spv(P), 'W40', 'R2-GM', { why: 'Kimia', rootCause: 'Dosing', recovery: 'Kalibrasi', pic: 'EMP-071', due: '2026-10-09', decision: 'Lanjut' }); eq(r.ok, true); eq(r.rec.reviewed, true);
-    eq(P.r2Board('W40').reviewed, 1); eq(P.auditLog()[0].ev, 'R2RE.REVIEW'); eq(P.r2Next('W40', P.r2Board('W40').lines[0].k.code), P.r2Board('W40').lines[1].k.code, 'next KPI');
+    eq(P.r2Board('W40').reviewed, 1); eq(P.auditLog()[0].ev, 'R2RE.REVIEW'); eq(P.r2Next('W40', P.r2Order('W40')[0].k.code), P.r2Order('W40')[1].k.code, 'next KPI');
   });
   add('np08', 'RC-02', L('Race Leader tidak bisa ubah target, formula, bobot, struktur', 'Race Leader cannot change target, formula, weight, structure'), function (P) {
     ['target', 'weight', 'formula'].forEach(function (f) { var o = {}; o[f] = 1; eq(P.r2Review(spv(P), 'W40', 'R2-GM', o).code, 'protected', f); });
     ok(!P.racePerm(spv(P), 'structure') && !P.racePerm(spv(P), 'target'), 'racePerm'); ok(P.racePerm(own(P), 'target'), 'owner with kpi.edit may');
   });
-  add('np08', 'RC-03', L('Board R2RE: bobot 100%, dikelompokkan per kategori', 'R2RE board: weights 100%, grouped by category'), function (P) {
+  add('np08', 'RC-03', L('Board R2RE: bobot 100%, per kategori, off track / at risk lebih dulu (§86)', 'R2RE board: weights 100%, by category, off track / at risk first (§86)'), function (P) {
     var b = P.r2Board('W40'); ok(b.check.ok, '100%'); eq(b.counts.total, 8); eq(b.counts.on + b.counts.risk + b.counts.off, 8);
-    var fin2 = b.lines.filter(function (l) { return l.k.cat === 'financial'; }); ok(fin2[0].k.weight >= fin2[1].k.weight, 'weight desc within category');
+    var rank = function (l) { return l.st === 'off' ? 0 : l.st === 'risk' ? 1 : 2; };
+    P.CAT_ORDER.forEach(function (c) { var g = b.lines.filter(function (l) { return l.k.cat === c; }); for (var i = 1; i < g.length; i++) ok(rank(g[i - 1]) < rank(g[i]) || (rank(g[i - 1]) === rank(g[i]) && g[i - 1].k.weight >= g[i].k.weight), 'off / at risk first, then weight, within ' + c); });
   });
   add('np08', 'RC-04', L('Bukti sistem: tidak perlu upload manual', 'System evidence: no manual upload needed'), function (P) {
     var d = P.state().daily; eq(P.needsUpload(d.filter(function (r) { return r.id === 'DR-07'; })[0]), false, 'POD auto'); eq(P.needsUpload(d.filter(function (r) { return r.id === 'DR-04'; })[0]), true, 'briefing needs upload');
@@ -290,6 +292,75 @@
   });
   add('audit', 'AUD-02', L('Hitungan deterministik: hasil sama setiap dijalankan', 'Deterministic: same result on every run'), function (P) { var a = JSON.stringify([P.health().score, P.xscore().now, P.fin.health().score, P.r2Board().score, P.reflection().score]); P._reset(); eq(JSON.stringify([P.health().score, P.xscore().now, P.fin.health().score, P.r2Board().score, P.reflection().score]), a); });
   add('audit', 'AUD-03', L('Tindakan tanpa izin ditolak dan dicatat', 'Actions without permission are refused and logged'), function (P) { eq(P.kpiSave(none(P), 'OPS-01', { target: 1 }, 'x').code, 'noperm'); eq(P.auditLog()[0].ev, 'ACCESS.DENIED'); });
+
+  /* ---------- §81–§94 governance ---------- */
+  add('audit', 'AUD-04', L('Audit menyimpan siapa, kapan, nilai lama, nilai baru, alasan dan persetujuan', 'Audit stores who, when, old value, new value, reason and approval'), function (P) {
+    P.manualInput(opsm(P), 'OPS-01', 95.9, 'Koreksi data kurir'); var e = P.auditLog()[0];
+    eq(e.ev, 'APPROVAL.REQUEST'); ok(e.by && e.at && e.reason, 'who / when / why'); eq(e.to, '95.9'); ok(e.from != null, 'old value'); eq(e.appr.st, 'pending');
+    ['goal', 'kpi', 'target', 'weight', 'formula', 'actual', 'scorecard', 'race', 'issue', 'refl', 'strategy', 'decision', 'approval'].forEach(function (o) { ok(P.AUDIT_OBJECTS.some(function (x) { return x[0] === o; }), '§81 object ' + o); });
+  });
+  add('gov', 'APR-01', L('Input manual dari non-approver menunggu persetujuan; pengaju tidak bisa menyetujui sendiri', 'Manual input by a non-approver waits for approval; requesters cannot approve themselves'), function (P) {
+    var before = P.kpi('OPS-01').actual, r = P.manualInput(opsm(P), 'OPS-01', 95.9, 'Koreksi data kurir');
+    eq(r.pending, true); eq(P.kpi('OPS-01').actual, before, 'not applied yet');
+    var q = P.approvalQueue(own(P)).filter(function (a) { return a.kind === 'manual'; })[0]; ok(q && q.canAct, 'owner can act');
+    eq(P.approvalDecide(opsm(P), r.a.id, true).code, 'noperm'); eq(P.approvalDecide(own(P), r.a.id, false, '').code, 'reason', 'reject needs a reason');
+    eq(P.approvalDecide(own(P), r.a.id, true, 'OK').ok, true); eq(P.kpi('OPS-01').actual, 95.9); eq(P.kpi('OPS-01').src, 'manual');
+    ok(P.auditLog().some(function (e) { return e.ev === 'MANUAL.INPUT' && e.appr && e.appr.st === 'approved'; }), 'applied entry carries the approval');
+    var self = P.requestApproval(own(P), 'manual', 'OPS-01', { value: 1 }, 'x'); eq(P.approvalDecide(own(P), self.a.id, true).code, 'self');
+  });
+  add('gov', 'APR-02', L('Koreksi keuangan diajukan Finance dan disetujui Owner', 'Financial adjustments are requested by Finance and approved by the Owner'), function (P) {
+    eq(P.finAdjust(spv(P), 'cash', 'ACC-02', 1e6, 'x').code, 'noperm'); eq(P.finAdjust(fin0(P), 'cash', 'ACC-02', 1e6, '').code, 'reason');
+    var r = P.finAdjust(fin0(P), 'cash', 'ACC-02', -2500000, 'Biaya admin bank belum tercatat'); eq(r.pending, true);
+    eq(P.approvalDecide(fin0(P), r.a.id, true).code, 'noperm'); eq(P.approvalDecide(own(P), r.a.id, true, 'OK').ok, true);
+    eq(P.state().finadj.length, 1); ok(P.auditLog().some(function (e) { return e.ev === 'FIN.ADJUST' && e.appr.by; }), 'audited with approver');
+  });
+  add('gov', 'PRV-01', L('Personal Score terlindungi: peran, hierarki, HR, tim dan akses eksplisit', 'Personal Scores protected: role, hierarchy, HR, team scope and explicit access'), function (P) {
+    ok(P.canSeePerson(spv(P), 'EMP-071'), 'supervisor → ops team member'); ok(!P.canSeePerson(spv(P), 'EMP-040'), 'supervisor ↛ sales'); ok(!P.canSeePerson(spv(P), 'EMP-030'), 'supervisor ↛ finance');
+    ok(!P.canSeePerson(opr(P), 'EMP-061'), 'operator ↛ colleague'); ok(P.canSeePerson(opr(P), 'EMP-001'), 'operator → self');
+    ok(!P.canSeePerson(fin0(P), 'EMP-079'), 'finance without perf.view ↛ team'); ok(P.canSeePerson(hrc(P), 'EMP-040'), 'HR → everyone'); ok(P.canSeePerson(own(P), 'EMP-040'), 'owner → everyone');
+    ok(P.canSeePerson(opsm(P), 'EMP-002'), 'ops manager → delivery (department)'); ok(!P.canSeePerson(opsm(P), 'EMP-080'), 'ops manager ↛ sales');
+    eq(P.grantAccess(spv(P), 'EMP-021', 'EMP-040', 'x').code, 'noperm'); var g = P.grantAccess(hrc(P), 'EMP-021', 'EMP-040', 'Proyek lintas tim Q4'); eq(g.ok, true); ok(P.canSeePerson(spv(P), 'EMP-040'), 'explicit grant');
+    P.revokeAccess(hrc(P), g.g.id, 'Selesai'); ok(!P.canSeePerson(spv(P), 'EMP-040'), 'revoked');
+  });
+  add('gov', 'RL-01', L('Race Leader hanya pada cakupan yang ditugaskan', 'Race Leader limited to the assigned scope'), function (P) {
+    eq(P.r2Review(rl(P), 'W40', 'R2-UPT', { why: 'Bearing', decision: 'Ganti' }).ok, true, 'own KPI line'); eq(P.r2Review(rl(P), 'W40', 'R2-REV', { why: 'x' }).code, 'scope', 'other line');
+    eq(P.r2Review(rl(P), 'W40', 'R2-UPT', { target: 99 }).code, 'protected', 'no target change'); eq(P.r2Review(rl(P), 'W40', 'R2-UPT', { weight: 30 }).code, 'protected', 'no weight change');
+    ok(P.r2Scoped(rl(P)), 'board is scoped'); ok(!P.r2Scoped(spv(P)), 'board leader sees all'); ok(!P.r2Scoped(own(P)), 'race.all sees all');
+  });
+  add('gov', 'R2-PRI', L('Meeting Mode mulai dari KPI off track, at risk, lalu bobot terbesar (§86)', 'Meeting Mode starts with off track, at risk, then the heaviest KPIs (§86)'), function (P) {
+    var pr = P.r2Priority(P.r2Board('W40').lines), rank = function (l) { return l.st === 'off' ? 0 : l.st === 'risk' ? 1 : 2; };
+    for (var i = 1; i < pr.length; i++) ok(rank(pr[i - 1]) < rank(pr[i]) || (rank(pr[i - 1]) === rank(pr[i]) && pr[i - 1].k.weight >= pr[i].k.weight), 'order at ' + i);
+    eq(P.r2Next('W40', pr[0].k.code), pr[1].k.code, 'next follows priority');
+  });
+  add('gov', 'FR-01', L('Kesegaran data: waktu update, peringatan data lama, saldo dengan waktu per rekening', 'Data freshness: update time, stale warning, balances with per-account as-of time'), function (P) {
+    eq(P.fresh('pos').stale, false); eq(P.fresh('hr').stale, true, 'HRIS sync older than 24 h');
+    P.refreshData(own(P), 'hr'); eq(P.fresh('hr').stale, false); eq(P.auditLog()[0].ev, 'DATA.REFRESH');
+    P.fin.cash().accounts.forEach(function (a) { var x = P.acctAsOf(a); ok(x.at <= P.now() && x.min >= 0, 'as-of for ' + a.id); });
+  });
+  add('gov', 'ISS-01', L('Issue Register: wajib KPI, tutup wajib hasil, tercatat di audit', 'Issue Register: KPI required, closing needs a resolution, audited'), function (P) {
+    eq(P.issueAdd(spv(P), { n: L('x', 'x'), kpi: 'NOPE', owner: 'EMP-071', due: '2026-10-10' }).code, 'invalid');
+    var r = P.issueAdd(spv(P), { n: L('Dryer 2 bocor', 'Dryer 2 leaking'), kpi: 'R2-UPT', owner: 'EMP-075', due: '2026-10-10' }); eq(r.ok, true); eq(P.auditLog()[0].ev, 'ISSUE.CREATE');
+    eq(P.issueUpdate(spv(P), r.i.id, { status: 'resolved' }).code, 'reason'); eq(P.issueUpdate(spv(P), r.i.id, { status: 'resolved', resolution: 'Seal diganti' }).ok, true); eq(P.auditLog()[0].ev, 'ISSUE.CLOSE');
+    eq(P.issueAdd(opr(P), { n: L('x', 'x'), kpi: 'R2-UPT', owner: 'EMP-075', due: '2026-10-10' }).code, 'noperm');
+  });
+  add('gov', 'STR-01', L('Strategi wajib terhubung ke goal', 'Strategies must link to a goal'), function (P) {
+    eq(P.strategyUpdate(own(P), 'STR-01', { goal: 'NOPE' }).code, 'invalid'); eq(P.strategyUpdate(own(P), 'STR-01', { status: 'risk', reason: 'Pipeline lambat' }).ok, true); eq(P.auditLog()[0].ev, 'STRATEGY.CHANGE');
+  });
+  add('gov', 'AL-01', L('Alert Center: prioritas, assign wajib owner, selesai wajib catatan', 'Alert Center: prioritised, assign needs an owner, resolve needs a note'), function (P) {
+    var a = P.alertList(); ok(P.SEV[a[0].sev].rank >= P.SEV[a[a.length - 1].sev].rank, 'severity first');
+    eq(P.alertAct(own(P), a[0].id, 'assigned', {}).code, 'invalid'); eq(P.alertAct(own(P), a[0].id, 'assigned', { owner: 'EMP-075' }).ok, true);
+    eq(P.alertAct(own(P), a[0].id, 'resolved', {}).code, 'reason'); eq(P.alertAct(own(P), a[0].id, 'resolved', { note: 'Dryer jalan lagi' }).ok, true); eq(P.alertList()[0].st, 'resolved');
+    eq(P.alertAct(opr(P), a[1].id, 'ack').code, 'noperm');
+  });
+  add('gov', 'REC-01', L('Rekomendasi: sumber jelas, diterima wajib owner & due, bisa jadi keputusan', 'Recommendations: clear source, accepting needs owner & due, can become a decision'), function (P) {
+    var r = P.recs(); ok(r.every(function (x) { return x.src; }), 'every recommendation has a source');
+    eq(P.recSet(own(P), r[0].id, 'accepted', {}).code, 'invalid'); eq(P.recSet(own(P), r[0].id, 'done').code, 'transition');
+    var n = P.decisions().length, ok1 = P.recSet(own(P), r[0].id, 'accepted', { owner: 'EMP-010', due: '2026-10-20', decision: true }); eq(ok1.ok, true); eq(P.decisions().length, n + 1); ok(ok1.decision, 'linked decision');
+    eq(P.recSet(own(P), r[1].id, 'rejected', {}).code, 'reason');
+  });
+  add('gov', 'EXP-01', L('Setiap skor bisa diurai ke komponen, bobot dan sumber', 'Every score breaks down into components, weights and sources'), function (P) {
+    ['health', 'fin', 'xscore', 'team:rcv', 'person:EMP-001'].forEach(function (k) { var e = P.explain(k); ok(e && e.rows.length, k); near(e.sum, e.total, 0.15, k + ' components add up'); });
+  });
 
   function run(P) {
     return T.map(function (c) {
