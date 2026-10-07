@@ -1,0 +1,6 @@
+/* JFRESH OS — Phase 10 documentation pages (layout only). Builds on phase3–phase9 css. */
+.p10-flows { display: grid; gap: var(--jf-space-4); }
+.p10-flows b { display: block; margin-bottom: var(--jf-space-2); color: var(--jf-brand-deep); }
+.p10-sheets { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--jf-space-4); align-items: start; }
+@media (max-width: 900px) { .p10-sheets { grid-template-columns: minmax(0, 1fr); } }
+.p10 .p4-res li > span, .p10 .p4-spec dd { overflow-wrap: anywhere; min-width: 0; }

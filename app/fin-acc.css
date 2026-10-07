@@ -1,0 +1,149 @@
+/* Phase 10 screens-fin-acc.js styles — accounting (ACC), cash & treasury (CASH), billing & receivables (AR).
+   Prefix ac10-. Approved palette tokens only. Breakpoints as fin.css: mobile < 700 · iPad 700–1239 · PC ≥ 1240. */
+
+/* ---------- Small text, chips, tones ---------- */
+.ac10-p { margin: 10px 0 0; }
+.ac10-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; align-items: center; }
+.ac10-chips .chip { max-width: 100%; white-space: normal; height: auto; min-height: 28px; line-height: 1.3; padding-top: 4px; padding-bottom: 4px; }
+.ac10-neg { color: var(--crit); }
+.ac10-wrn { color: var(--warn); font-weight: 700; }
+.ac10-h4 { margin: 14px 0 8px; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ac10-more { margin: 12px 0 0; text-align: center; }
+.ac10-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0 0; }
+.hr8 + .ac10-sp, .hr8 + .note5 { margin-top: 12px; }
+.ac10-sp { margin: 14px 0 12px; }
+.ac10-sp li.now { background: var(--blue-50); color: var(--blue-ink); }
+.ac10-sp li.done { background: var(--ok-50); color: var(--ok); }
+
+/* ---------- Money table (P.mtable wrapper): readable rows, not column headers ---------- */
+.ac10-mt .mt10 tbody th { text-transform: none; letter-spacing: 0; font-size: 14.5px; font-weight: 600; color: var(--ink); background: none; white-space: normal; }
+.ac10-mt .mt10 tr.ac10-ln th { padding-left: 26px; font-weight: 500; }
+.ac10-mt .mt10 tr.ac10-ln th .lnk5 { font-weight: 500; }
+.ac10-mt .mt10 tr.ac10-hd th { font-size: 12.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--blue-ink); background: var(--bg-2); }
+.ac10-mt .mt10 tr.ac10-hd td { background: var(--bg-2); }
+.ac10-mt .mt10 tr.tot th, .ac10-mt .mt10 tr.tot td { font-weight: 800; color: var(--blue-ink); }
+.ac10-mt .mt10 tr.neg td { color: var(--crit); }
+.ac10-mt .mt10 thead th { white-space: nowrap; }
+.ac10-mt .mt10 td { white-space: nowrap; }
+.ac10-hi th, .ac10-hi td { background: var(--blue-50); }
+
+/* ---------- Period list (ACC-001) ---------- */
+.ac10-per { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.ac10-per a { display: grid; grid-template-columns: 90px auto minmax(0, 1fr); align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; color: var(--ink); text-decoration: none; }
+.ac10-per a:hover { background: var(--blue-50); }
+.ac10-per b { color: var(--blue-ink); }
+.ac10-per small { color: var(--muted); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- Audit / history log ---------- */
+.ac10-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.ac10-log li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; align-items: baseline; }
+.ac10-log li:last-child { border-bottom: 0; }
+.ac10-log-t { color: var(--muted); font-size: 12.5px; }
+.ac10-log b { color: var(--blue-ink); min-width: 0; }
+.ac10-log li > span:last-child { grid-column: 1 / -1; color: var(--ink); overflow-wrap: anywhere; }
+
+/* ---------- Dialog forms ---------- */
+.dlg5-p.ac10-wide { max-width: 860px; width: calc(100vw - 32px); }
+.ac10-dg { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 14px; }
+.ac10-dg .f5 { min-width: 0; }
+.ac10-cb { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; font-weight: 600; font-size: 14.5px; }
+.ac10-cb input { width: 20px; height: 20px; flex: none; }
+.ac10-jh, .ac10-jl { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr); gap: 8px; }
+.ac10-jh { margin: 8px 0 4px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ac10-jl { margin-bottom: 6px; }
+.ac10-jl select, .ac10-jl input { width: 100%; min-width: 0; min-height: 42px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; font: inherit; font-size: 14px; background: var(--white); }
+.ac10-jl input { text-align: right; font-variant-numeric: tabular-nums; }
+.ac10-bal { display: flex; align-items: center; gap: 8px; margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; }
+.ac10-bal .i { width: 18px; height: 18px; flex: none; }
+.ac10-bal.ok { background: var(--ok-50); color: var(--ok); }
+.ac10-bal.crit { background: var(--crit-50); color: var(--crit); }
+@media (max-width: 699px) {
+  .ac10-dg { grid-template-columns: minmax(0, 1fr); }
+  .ac10-jh { display: none; }
+  .ac10-jl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .ac10-jl label:first-child { grid-column: 1 / -1; }
+}
+
+/* ---------- Ledger account picker (ACC-003) ---------- */
+.ac10-acc { margin-top: -6px; }
+.ac10-acc select { max-width: 420px; }
+
+/* ---------- Close checklist (ACC-005) ---------- */
+.ac10-ckh { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; margin-bottom: 12px; }
+.ac10-ckh b { color: var(--blue-ink); font-size: 18px; }
+.ac10-ck { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 6px; }
+.ac10-ck li { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: var(--bg-2); }
+.ac10-ck li > .i { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--muted); }
+.ac10-ck li.ok > .i { color: var(--ok); }
+.ac10-ck li.no { background: var(--crit-50); } .ac10-ck li.no > .i { color: var(--crit); }
+.ac10-ck li span { display: grid; gap: 2px; min-width: 0; }
+.ac10-ck li small { color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+
+/* ---------- Treasury & forecast ---------- */
+.kp10.ac10-k3 { grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 12px 0; }
+.ac10-scs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 0 0 16px; }
+.ac10-sc { padding: 16px 18px; border-radius: var(--r-lg); background: var(--white); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(11,61,120,.04); }
+.ac10-sc h3 { margin: 0 0 8px; font-size: 17px; color: var(--blue-ink); }
+.ac10-sc dl { margin: 0 0 10px; display: grid; gap: 4px; }
+.ac10-sc dl div { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
+.ac10-sc dt { color: var(--muted); font-weight: 600; }
+.ac10-sc dd { margin: 0; font-weight: 700; color: var(--ink); }
+.ac10-sc .tot { padding-top: 6px; border-top: 1px solid var(--line); }
+.ac10-sc .tot dd { font-size: 20px; color: var(--blue-ink); }
+.ac10-sc-base { border-color: var(--blue-100); box-shadow: inset 0 3px 0 var(--blue); }
+.ac10-sc-worst { box-shadow: inset 0 3px 0 var(--crit); }
+.ac10-sc-best { box-shadow: inset 0 3px 0 var(--ok); }
+.ac10-as { margin: 10px 0 12px; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; }
+@media (max-width: 699px) { .ac10-scs, .kp10.ac10-k3 { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- AR aging buckets ---------- */
+.ac10-ag { display: grid; gap: 10px; }
+.ac10-agb { display: grid; grid-template-columns: 130px minmax(0, 1fr) 110px 44px; align-items: center; gap: 12px; font-size: 14px; }
+.ac10-agb span { font-weight: 600; }
+.ac10-agb b { text-align: right; color: var(--blue-ink); }
+.ac10-agb small { text-align: right; color: var(--muted); font-weight: 700; }
+.ac10-agb .br10 { height: 12px; }
+@media (max-width: 699px) { .ac10-agb { grid-template-columns: 96px minmax(0, 1fr) 84px; } .ac10-agb small { display: none; } }
+
+/* ---------- Billing Ready selection bar (AR-001) ---------- */
+.ac10-selbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 16px; padding: 14px 18px; position: sticky; top: 72px; z-index: 5; }
+.ac10-selbar [data-selsum] { flex: 1 1 260px; font-weight: 600; }
+.ac10-selcl { display: flex; flex-wrap: wrap; gap: 6px; }
+.ac10-sel { width: 20px; height: 20px; cursor: pointer; }
+.ac10-jvs { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+
+/* ---------- Printable invoice ---------- */
+.ac10-doc { position: relative; overflow: hidden; }
+.ac10-wm { position: absolute; top: 210px; left: 50%; transform: translateX(-50%) rotate(-18deg); font-size: 96px; font-weight: 900; letter-spacing: .1em; color: var(--crit); opacity: .08; pointer-events: none; white-space: nowrap; }
+.ac10-wm-ok { color: var(--ok); }
+.ac10-dh { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; margin: 18px 0 0; }
+.ac10-dh h4 { margin: 0 0 6px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.ac10-dh b { font-size: 16px; color: var(--blue-ink); }
+.ac10-dh p { margin: 4px 0 0; font-size: 14px; }
+.ac10-dh .doc9-t { margin: 0; }
+.ac10-dl { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 14px; }
+.ac10-dl th { text-align: left; padding: 8px 10px; background: var(--blue-50); color: var(--blue-ink); font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; }
+.ac10-dl td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ac10-dl td small { display: block; color: var(--muted); font-size: 12px; }
+.ac10-dl .r { text-align: right; }
+.ac10-dl tfoot td { border-bottom: 0; padding: 4px 10px; }
+.ac10-dl tfoot tr.tot td { font-weight: 800; font-size: 15.5px; color: var(--blue-ink); border-top: 2px solid var(--blue); padding-top: 8px; }
+.ac10-pay { margin: 12px 0 16px; padding: 10px 12px; border-radius: 10px; background: var(--bg-2); font-size: 13.5px; }
+@media (max-width: 699px) { .ac10-dh { grid-template-columns: 1fr; } .ac10-wm { font-size: 56px; } }
+.ac10-nw { display: inline-flex; flex-wrap: nowrap; gap: 6px; white-space: nowrap; }
+.ac10-nw .btn { white-space: nowrap; }
+.tbl th.ac10-n, .tbl td.ac10-n { white-space: nowrap; }
+.ac10-selcl select { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 12px; font: inherit; font-weight: 600; background: var(--white); max-width: 100%; }
+
+/* ---------- Area wrapper: grids and iPad table density ---------- */
+.ac10 { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.ac10 > * { margin-top: 0; margin-bottom: 0; }
+@media (max-width: 699px) { .ac10 { gap: 16px; } }
+.ac10-g2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.ac10-g2 > .card { margin: 0; }
+@media (max-width: 1239px) {
+  .ac10-g2 { grid-template-columns: minmax(0, 1fr); }
+  .ac10 .tbl th { padding: 10px 8px; font-size: 12px; }
+  .ac10 .tbl td { padding: 10px 8px; font-size: 14px; }
+}
+@media (max-width: 699px) { .ac10 .tbl th, .ac10 .tbl td { padding: 8px 6px; font-size: 13px; } }

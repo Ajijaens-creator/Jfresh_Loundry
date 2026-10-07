@@ -52,8 +52,16 @@
     { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 18 layar inventaris §76', en: 'Specs for the 18 §76 inventory screens', ic: 'file' },
     { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine delivery dan checklist responsif', en: 'Delivery engine test cases and responsive checklist', ic: 'checkc' }
   ];
-  var PAGES = PHASE === 9 ? P9 : PHASE === 8 ? P8 : PHASE === 7 ? P7 : PHASE === 6 ? P6 : PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
-  var CH = PHASE === 9 ? {
+  // Phase 10 pages (Finance, Costing & Scale-Up): overview + screen specs + tests
+  var P10 = [
+    { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 62 layar inventaris §95', en: 'Specs for the 62 §95 inventory screens', ic: 'file' },
+    { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine finance dan checklist responsif', en: 'Finance engine test cases and responsive checklist', ic: 'checkc' }
+  ];
+  var PAGES = PHASE === 10 ? P10 : PHASE === 9 ? P9 : PHASE === 8 ? P8 : PHASE === 7 ? P7 : PHASE === 6 ? P6 : PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
+  var CH = PHASE === 10 ? {
+    dir: 'phase10/', home: 'phase10/index.html', sub: ['Fase 10 · Finance, Costing & Scale-Up', 'Phase 10 · Finance, Costing & Scale-Up'], ov: ['Ringkasan Fase 10', 'Phase 10 overview'],
+    menu: ['Fase 10', 'Phase 10'], all: ['Ringkasan Fase 10', 'Phase 10 overview'], foot: ['Fase 10 Business Support, Finance, Costing & Scale-Up Intelligence · NP Versi 1.0', 'Phase 10 Business Support, Finance, Costing & Scale-Up Intelligence · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
+  } : PHASE === 9 ? {
     dir: 'phase9/', home: 'phase9/index.html', sub: ['Fase 9 · Pengiriman & Penutupan Layanan', 'Phase 9 · Delivery & Service Closure'], ov: ['Ringkasan Fase 9', 'Phase 9 overview'],
     menu: ['Fase 9', 'Phase 9'], all: ['Ringkasan Fase 9', 'Phase 9 overview'], foot: ['Fase 9 Pengiriman & Penutupan Layanan · NP Versi 1.0', 'Phase 9 Delivery & Service Closure · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
   } : PHASE === 8 ? {
@@ -125,7 +133,8 @@
       (PHASE !== 6 ? '<a class="home" href="' + ROOT + 'phase6/index.html">' + ic('users') + '<span data-en="Phase 6 Client &amp; Commercial">Fase 6 Client &amp; Commercial</span></a>' : '') +
       (PHASE !== 7 ? '<a class="home" href="' + ROOT + 'phase7/index.html">' + ic('truck') + '<span data-en="Phase 7 Order, Pickup, Delivery &amp; Live Logistics">Fase 7 Order, Pickup, Delivery &amp; Live Logistics</span></a>' : '') +
       (PHASE !== 8 ? '<a class="home" href="' + ROOT + 'phase8/index.html">' + ic('factory') + '<span data-en="Phase 8 Laundry Production">Fase 8 Produksi Laundry</span></a>' : '') +
-      (PHASE !== 9 ? '<a class="home" href="' + ROOT + 'phase9/index.html">' + ic('checkc') + '<span data-en="Phase 9 Delivery &amp; Service Closure">Fase 9 Pengiriman &amp; Penutupan</span></a>' : '');
+      (PHASE !== 9 ? '<a class="home" href="' + ROOT + 'phase9/index.html">' + ic('checkc') + '<span data-en="Phase 9 Delivery &amp; Service Closure">Fase 9 Pengiriman &amp; Penutupan</span></a>' : '') +
+      (PHASE !== 10 ? '<a class="home" href="' + ROOT + 'phase10/index.html">' + ic('coins') + '<span data-en="Phase 10 Finance, Costing &amp; Scale-Up">Fase 10 Finance, Costing &amp; Scale-Up</span></a>' : '');
     PAGES.forEach(function (v) {
       items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">' + CH.num(v) + '</span><span>' + esc(v.t) + '</span></a>';
     });
