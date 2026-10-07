@@ -57,8 +57,16 @@
     { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 62 layar inventaris §95', en: 'Specs for the 62 §95 inventory screens', ic: 'file' },
     { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine finance dan checklist responsif', en: 'Finance engine test cases and responsive checklist', ic: 'checkc' }
   ];
-  var PAGES = PHASE === 10 ? P10 : PHASE === 9 ? P9 : PHASE === 8 ? P8 : PHASE === 7 ? P7 : PHASE === 6 ? P6 : PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
-  var CH = PHASE === 10 ? {
+  // Phase 11 pages (Client Portal, System Admin & Governance): overview + screen specs + tests
+  var P11 = [
+    { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 43 layar inventaris §73', en: 'Specs for the 43 §73 inventory screens', ic: 'file' },
+    { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine client portal dan sistem, checklist responsif', en: 'Client portal and system engine test cases, responsive checklist', ic: 'checkc' }
+  ];
+  var PAGES = PHASE === 11 ? P11 : PHASE === 10 ? P10 : PHASE === 9 ? P9 : PHASE === 8 ? P8 : PHASE === 7 ? P7 : PHASE === 6 ? P6 : PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
+  var CH = PHASE === 11 ? {
+    dir: 'phase11/', home: 'phase11/index.html', sub: ['Fase 11 · Client Portal, System Admin & Governance', 'Phase 11 · Client Portal, System Admin & Governance'], ov: ['Ringkasan Fase 11', 'Phase 11 overview'],
+    menu: ['Fase 11', 'Phase 11'], all: ['Ringkasan Fase 11', 'Phase 11 overview'], foot: ['Fase 11 Client Portal, System Administration & Governance · NP Versi 1.0', 'Phase 11 Client Portal, System Administration & Governance · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
+  } : PHASE === 10 ? {
     dir: 'phase10/', home: 'phase10/index.html', sub: ['Fase 10 · Finance, Costing & Scale-Up', 'Phase 10 · Finance, Costing & Scale-Up'], ov: ['Ringkasan Fase 10', 'Phase 10 overview'],
     menu: ['Fase 10', 'Phase 10'], all: ['Ringkasan Fase 10', 'Phase 10 overview'], foot: ['Fase 10 Business Support, Finance, Costing & Scale-Up Intelligence · NP Versi 1.0', 'Phase 10 Business Support, Finance, Costing & Scale-Up Intelligence · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
   } : PHASE === 9 ? {
@@ -134,7 +142,8 @@
       (PHASE !== 7 ? '<a class="home" href="' + ROOT + 'phase7/index.html">' + ic('truck') + '<span data-en="Phase 7 Order, Pickup, Delivery &amp; Live Logistics">Fase 7 Order, Pickup, Delivery &amp; Live Logistics</span></a>' : '') +
       (PHASE !== 8 ? '<a class="home" href="' + ROOT + 'phase8/index.html">' + ic('factory') + '<span data-en="Phase 8 Laundry Production">Fase 8 Produksi Laundry</span></a>' : '') +
       (PHASE !== 9 ? '<a class="home" href="' + ROOT + 'phase9/index.html">' + ic('checkc') + '<span data-en="Phase 9 Delivery &amp; Service Closure">Fase 9 Pengiriman &amp; Penutupan</span></a>' : '') +
-      (PHASE !== 10 ? '<a class="home" href="' + ROOT + 'phase10/index.html">' + ic('coins') + '<span data-en="Phase 10 Finance, Costing &amp; Scale-Up">Fase 10 Finance, Costing &amp; Scale-Up</span></a>' : '');
+      (PHASE !== 10 ? '<a class="home" href="' + ROOT + 'phase10/index.html">' + ic('coins') + '<span data-en="Phase 10 Finance, Costing &amp; Scale-Up">Fase 10 Finance, Costing &amp; Scale-Up</span></a>' : '') +
+      (PHASE !== 11 ? '<a class="home" href="' + ROOT + 'phase11/index.html">' + ic('shield') + '<span data-en="Phase 11 Client Portal, System Admin &amp; Governance">Fase 11 Client Portal, System Admin &amp; Governance</span></a>' : '');
     PAGES.forEach(function (v) {
       items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">' + CH.num(v) + '</span><span>' + esc(v.t) + '</span></a>';
     });

@@ -57,6 +57,12 @@
 <script src="../assets/js/jfos-fin-sup.js"></script>
 <script src="../assets/js/jfos-fin-cfo.js"></script>
 <script>JFFIN.install(JFOS, JFACCESS, JFPERF, JFCOMM, JFLOG, JFPROD, JFDLV);</script>
+<script src="../assets/js/jfos-clp-data.js"></script>
+<script src="../assets/js/jfos-clp.js"></script>
+<script>if (window.JFCLP) JFCLP.install(JFOS, JFACCESS, JFPERF, JFCOMM, JFLOG, JFPROD, JFDLV, JFFIN);</script>
+<script src="../assets/js/jfos-sys-data.js"></script>
+<script src="../assets/js/jfos-sys.js"></script>
+<script>if (window.JFSYS) JFSYS.install(JFOS, JFACCESS, JFPERF, JFCOMM, JFLOG, JFPROD, JFDLV, JFFIN, window.JFCLP);</script>
 <script src="login.js"></script>
 </body>
 </html>

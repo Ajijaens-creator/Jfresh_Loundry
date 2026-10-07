@@ -129,6 +129,31 @@ Code:
 - `assets/js/jfos-comm-docs.js` — data for the Phase 6 pages.
 - `assets/brand/phase6/` — reference visuals NV-01 to NV-09.
 
+## Phase 11 — Client Portal, System Administration & Governance (NP 1.0)
+
+Two worlds. **A · Client** (simple, transparent, hospitality-first): sign in as `arya.jaens` (Jaens Spa Group general manager, all four properties, manages users), `mila.jaens` (front office, Jaens Spa Center only), `putu.jaens` (finance: invoices and statement, no pickup or tracking), `kadek.jaens` (operations manager, Shanti and Triloka) or `sari.grandvista` (another client: never sees Jaens data). **B · System** (controlled, traceable, secure, governed): `rama` (Super Admin: System Control Center, backup and retention, no business approvals), `adit` (System Admin: users, roles, permissions, master data, configuration, notifications, security, audit, integrations, import/export) or `aji` (owner: governance, approves privileged access). Password `jfresh123`.
+
+Core rules: Client A never sees Client B; Super Admin is not a business approver (§63); used master data, audit, invoices, POD and journals are never hard-deleted; every sensitive change needs a reason and is audited before/after.
+
+| Page | File |
+|---|---|
+| CLP-001…015 client portal, ADM-001…005 users & roles, CFG-001…003 master data & configuration, NTF-001…004 notifications, SEC-001…005 audit & security, INT-001…007 integrations, import/export & health, SYS-001…006 Super Admin | `app/index.html` |
+| Phase 11 overview (two worlds, NP-01 to NP-12, operating model, demo accounts, §2 device matrix, §81 rules, §80 Definition of Done, reference visuals) | `phase11/index.html` |
+| Screen specifications (every §73 screen with device per NV and a link into the app as the right demo user) | `phase11/screens.html` |
+| Test cases run in the browser (JFCLP and JFSYS) + responsive checklist | `phase11/tests.html` |
+
+Code:
+
+- `assets/js/jfos-clp.js` — `JFCLP`, the client portal engine: client and property scope, home, pickup / extra pickup / reschedule / cancel requests that become Phase 7 orders, tracking on the Phase 7 engine, documents (POD, delivery note, completion, invoice, return, contract) with logged views and time-limited shares, read-only billing from the Phase 10 ledger with statement, cases with feedback, client users and property access, portal KPIs, notifications and audit. `install()` joins its permissions, screens, menus and the client nav to the shared config.
+- `assets/js/jfos-clp-data.js` — sample data (Jaens Spa Group with Center, Shanti, Triloka and Bisma, client users, invoices, cases, requests).
+- `assets/js/jfos-sys.js` — `JFSYS`, the system engine: internal users with access windows, roles with versions and clone, the permission matrix (6 actions × 5 scopes), maker-checker for privileged roles, access review campaigns, versioned master data and configuration, notification templates, channels and the communication log, the unified audit trail, security settings and alerts, integrations with masked credentials, validated import and logged export, system health, backups, retention and the Super Admin Control Center with the §63 limits.
+- `assets/js/jfos-sys-data.js` — sample data (admin users, branches, departments, taxes, templates, integrations, backups).
+- `app/screens-clp.js`, `app/clp.css` (client), `app/screens-sys.js`, `app/sys.css`, `app/screens-sys2.js`, `app/sys2.css` (system) — the screens (mobile first for clients, desktop first for admin, iPad for review and quick actions, phone alert-only for admin).
+- `assets/js/jfos-clp-tests.js` — 42 test cases. Run `node tools/test-clp.js`.
+- `assets/js/jfos-sys-tests.js` — 40 test cases. Run `node tools/test-sys.js`.
+- `assets/js/jfos-p11-docs.js` — data for the Phase 11 pages.
+- `assets/brand/phase11/` — the 18 reference sheets sent for Phase 11 (most show a different "J'FRESH Laundry & Linen Care" wordmark; the app keeps the official J'Fresh logo, `assets/brand/jfresh-logo.png`).
+
 ## Phase 10 — Business Support, Finance, Costing & Scale-Up Intelligence (NP 1.0)
 
 Sign in as `aji` (owner / CEO: CFO dashboard, ratios, decisions, scenarios), `budi` (finance: accounting, cash, AR, AP, costing, budget, close), `rai` (supply / purchasing, iPad), `komang` (asset admin, iPad), `gita` (second finance user, approves budi's large cash-outs) or `dewi` (operations manager: HPP, consumption, inventory). Password `jfresh123`.
