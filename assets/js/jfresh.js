@@ -37,8 +37,16 @@
     { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 29 layar inventaris §64', en: 'Specs for the 29 §64 inventory screens', ic: 'file' },
     { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine komersial dan checklist responsif', en: 'Commercial engine test cases and responsive checklist', ic: 'checkc' }
   ];
-  var PAGES = PHASE === 6 ? P6 : PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
-  var CH = PHASE === 6 ? {
+  // Phase 7 pages (Order, Pickup, Delivery & Live Logistics): overview + screen specs + tests
+  var P7 = [
+    { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 27 layar inventaris §84', en: 'Specs for the 27 §84 inventory screens', ic: 'file' },
+    { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine logistik dan checklist responsif', en: 'Logistics engine test cases and responsive checklist', ic: 'checkc' }
+  ];
+  var PAGES = PHASE === 7 ? P7 : PHASE === 6 ? P6 : PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
+  var CH = PHASE === 7 ? {
+    dir: 'phase7/', home: 'phase7/index.html', sub: ['Fase 7 · Order, Pickup, Delivery & Live Logistics', 'Phase 7 · Order, Pickup, Delivery & Live Logistics'], ov: ['Ringkasan Fase 7', 'Phase 7 overview'],
+    menu: ['Fase 7', 'Phase 7'], all: ['Ringkasan Fase 7', 'Phase 7 overview'], foot: ['Fase 7 Order, Pickup, Delivery & Live Logistics · NP Versi 1.0', 'Phase 7 Order, Pickup, Delivery & Live Logistics · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
+  } : PHASE === 6 ? {
     dir: 'phase6/', home: 'phase6/index.html', sub: ['Fase 6 · Client & Commercial', 'Phase 6 · Client & Commercial'], ov: ['Ringkasan Fase 6', 'Phase 6 overview'],
     menu: ['Fase 6', 'Phase 6'], all: ['Ringkasan Fase 6', 'Phase 6 overview'], foot: ['Fase 6 Client & Commercial · NP Versi 1.0', 'Phase 6 Client & Commercial · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
   } : PHASE === 5 ? {
@@ -98,7 +106,8 @@
       (PHASE !== 3 ? '<a class="home" href="' + ROOT + 'phase3/index.html">' + ic('palette') + '<span data-en="Phase 3 Design System">Fase 3 Design System</span></a>' : '') +
       (PHASE !== 4 ? '<a class="home" href="' + ROOT + 'phase4/index.html">' + ic('lock') + '<span data-en="Phase 4 Access &amp; App Shell">Fase 4 Akses &amp; App Shell</span></a>' : '') +
       (PHASE !== 5 ? '<a class="home" href="' + ROOT + 'phase5/index.html">' + ic('gauge') + '<span data-en="Phase 5 Executive &amp; Performance OS">Fase 5 Executive &amp; Performance OS</span></a>' : '') +
-      (PHASE !== 6 ? '<a class="home" href="' + ROOT + 'phase6/index.html">' + ic('users') + '<span data-en="Phase 6 Client &amp; Commercial">Fase 6 Client &amp; Commercial</span></a>' : '');
+      (PHASE !== 6 ? '<a class="home" href="' + ROOT + 'phase6/index.html">' + ic('users') + '<span data-en="Phase 6 Client &amp; Commercial">Fase 6 Client &amp; Commercial</span></a>' : '') +
+      (PHASE !== 7 ? '<a class="home" href="' + ROOT + 'phase7/index.html">' + ic('truck') + '<span data-en="Phase 7 Order, Pickup, Delivery &amp; Live Logistics">Fase 7 Order, Pickup, Delivery &amp; Live Logistics</span></a>' : '');
     PAGES.forEach(function (v) {
       items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">' + CH.num(v) + '</span><span>' + esc(v.t) + '</span></a>';
     });
