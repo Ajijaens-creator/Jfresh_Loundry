@@ -129,6 +129,34 @@ Code:
 - `assets/js/jfos-comm-docs.js` — data for the Phase 6 pages.
 - `assets/brand/phase6/` — reference visuals NV-01 to NV-09.
 
+## Phase 12 — Implementation, Readiness & Go-Live (NP 1.0)
+
+One rule across every module: **ONE DATA. ONE SOURCE. NO DOUBLE ENTRY.** Sign in as `bayu` (Implementation Lead / Go-Live Commander: environments, releases, blockers, reset requests, cut-off, incidents, backlog, hypercare), `intan` (QA & UAT Lead: test cases, bugs, E2E, security validation, UAT), `dodi` (Data Migration Lead: One Data, duplicates, migration and reconciliation), `ratih` (Training Lead: Tutorial Manager, training paths) or `aji` (owner = Product Owner: production release, migration and reset approvals, the Go/No-Go decision and START PRODUCTION). `budi` / `gita` (finance) are the second approver for finance-impacting migrations and resets; `rama` / `adit` run the technical side (deploy, restore test, executing an approved reset) and never approve. Every other user gets Smart Help, their own training, incident reporting (also on a phone) and their own UAT cases. Password `jfresh123`.
+
+Core rules: Phase 12 engines read the Phase 4–11 engines and never copy or change business data; go-live is a human decision (GO is refused while a hard gate fails); a reset always goes through a dependency check, preview, snapshot and dual approval and is a recoverable soft erase; destructive actions never run on a phone.
+
+| Page | File |
+|---|---|
+| IMP-001…003 build & environments, DATA-001…003 One Data, BUILD-001…004 roadmap & Command Center, QA-001…005, SVL-001…004 security validation, RLB-001…005 reliability, MIG-001…004 migration, UAT-001…004, HELP-001…007 Smart Help, CUT-001…007 cutover, LIVE-001…004 go-live, OPT-001…004 improvement | `app/index.html` |
+| Phase 12 overview (the One Data principle, four tracks, live readiness score and hard gates, §118 final flow, NP-01 to NP-12, demo accounts, §6/§113 device matrix, §111 audit events, §117 rules, backend note and steps to a live beta, Definition of Done, reference visual) | `phase12/index.html` |
+| Screen specifications (all 54 §112 screens with device per NV and a link into the app as the right demo user) | `phase12/screens.html` |
+| Test cases run in the browser (JFIMP, JFGO and JFHELP) + responsive checklist | `phase12/tests.html` |
+
+Screen IDs: §112's SEC-001…004 and REL-001…005 collide with Phase 11 and Phase 9, so they are `SVL-001…004` and `RLB-001…005`; the Phase 4 `HELP-001` became the Smart Help Home and stays open to every role, clients included.
+
+Code:
+
+- `assets/js/jfos-imp.js` — `JFIMP`: the four project roles and their navigation, DEV/QA/UAT/PRODUCTION environments, semver releases, the promotion pipeline with the §11 production gate and maker-checker, One Data domains with live counts, duplicate and orphan checks, module waves, the integration map, blockers, the §19 data-reuse trace, test cases and bugs, the regression manifest, golden E2E, business-rule tests, the 16-role permission matrix and negative tests, the security checklist, integration health, performance tests with a live benchmark, reliability simulations, backups and a real restore test.
+- `assets/js/jfos-go.js` — `JFGO`: migration batches with the Extract → Approve pipeline, mapping to existing masters and reconciliation against JFFIN, UAT cases and usability, pilot and parallel run, data classification, the Reset Center (soft erase, preview, snapshot, dual approval, restore, hard-delete protection), cut-off, START PRODUCTION with an immutable date, rollback, the readiness score, hard gates and Go/No-Go, the go-live command center, incidents, hypercare, 30/60/90 reviews, adoption KPIs, backlog and release plans.
+- `assets/js/jfos-help.js` — `JFHELP`: Smart Help content (versioned), contextual and button help, product tour, PANDU SAYA walkthroughs, Indonesian search, APA INI?, rule-based and role-aware Tanya JFRESH, training paths and progress, the Tutorial Manager and help analytics.
+- `assets/js/jfos-imp-data.js`, `assets/js/jfos-go-data.js`, `assets/js/jfos-help-data.js` — sample data (project data only; business numbers come from the owner engines).
+- `app/screens-imp.js`, `app/screens-imp2.js`, `app/screens-go.js`, `app/screens-go2.js`, `app/screens-help.js` and their CSS — the screens.
+- `assets/js/jfos-imp-tests.js` — 42 test cases. Run `node tools/test-imp.js`.
+- `assets/js/jfos-go-tests.js` — 46 test cases. Run `node tools/test-go.js`.
+- `assets/js/jfos-help-tests.js` — 35 test cases. Run `node tools/test-help.js`.
+- `assets/js/jfos-p12-docs.js` — data for the Phase 12 pages.
+- `assets/brand/phase12/` — the reference sheet sent for Phase 12 (twelve NV panels; it shows a different "J'Fresh Laundry" logo drawing, the app keeps the official J'Fresh logo, `assets/brand/jfresh-logo.png`).
+
 ## Phase 11 — Client Portal, System Administration & Governance (NP 1.0)
 
 Two worlds. **A · Client** (simple, transparent, hospitality-first): sign in as `arya.jaens` (Jaens Spa Group general manager, all four properties, manages users), `mila.jaens` (front office, Jaens Spa Center only), `putu.jaens` (finance: invoices and statement, no pickup or tracking), `kadek.jaens` (operations manager, Shanti and Triloka) or `sari.grandvista` (another client: never sees Jaens data). **B · System** (controlled, traceable, secure, governed): `rama` (Super Admin: System Control Center, backup and retention, no business approvals), `adit` (System Admin: users, roles, permissions, master data, configuration, notifications, security, audit, integrations, import/export) or `aji` (owner: governance, approves privileged access). Password `jfresh123`.

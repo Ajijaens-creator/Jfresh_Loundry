@@ -1082,8 +1082,11 @@
     take('delivery', function () { return M.DL.auditLog(); });
     take('finance', function () { return M.FN.auditLog(); });
     take('client', function () { return M.CLP && typeof M.CLP.auditLog === 'function' ? M.CLP.auditLog() : []; });
+    // Phase 12 hook: later engines register [module, fn → entries] here from their own install (guarded, read-only).
+    (M.AUDIT_SOURCES || []).forEach(function (s) { if (s && typeof s[1] === 'function') take(s[0], s[1]); });
     return out;
   }
+  M.AUDIT_SOURCES = M.AUDIT_SOURCES || [];
   // Read-only: there is no function that deletes or edits audit history.
   M.auditAll = function (ctx, f) {
     if (!can(ctx, 'sys11.audit.view')) return [];
