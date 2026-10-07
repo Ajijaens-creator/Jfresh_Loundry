@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>JFRESH OS</title>
-<meta name="description" content="JFRESH OS: role-based app shell with secure access (working prototype).">
+<title>JFRESH OS — Fase 12 · Spesifikasi Layar</title>
 <meta name="theme-color" content="#0754A6">
 <link rel="icon" href="../assets/brand/jfresh-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,31 +11,38 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="../assets/css/jfresh.css">
 <link rel="stylesheet" href="../assets/css/jfos-ds.css">
-<link rel="stylesheet" href="app.css">
-<link rel="stylesheet" href="access.css">
-<link rel="stylesheet" href="perf.css">
-<link rel="stylesheet" href="comm.css">
-<link rel="stylesheet" href="logi.css">
-<link rel="stylesheet" href="prod.css">
-<link rel="stylesheet" href="dlv.css">
-<link rel="stylesheet" href="fin.css">
-<link rel="stylesheet" href="fin-acc.css">
-<link rel="stylesheet" href="fin-ap.css">
-<link rel="stylesheet" href="fin-sup.css">
-<link rel="stylesheet" href="fin-cfo.css">
-<link rel="stylesheet" href="clp.css">
-<link rel="stylesheet" href="sys.css">
-<link rel="stylesheet" href="sys2.css">
-<link rel="stylesheet" href="help.css">
-<link rel="stylesheet" href="imp.css">
-<link rel="stylesheet" href="imp2.css">
-<link rel="stylesheet" href="go.css">
-<link rel="stylesheet" href="go2.css">
+<link rel="stylesheet" href="../phase3/phase3.css">
+<link rel="stylesheet" href="../phase4/phase4.css">
+<link rel="stylesheet" href="../phase5/phase5.css">
+<link rel="stylesheet" href="../phase6/phase6.css">
+<link rel="stylesheet" href="../phase7/phase7.css">
+<link rel="stylesheet" href="../phase8/phase8.css">
+<link rel="stylesheet" href="../phase9/phase9.css">
+<link rel="stylesheet" href="../phase10/phase10.css">
+<link rel="stylesheet" href="../phase11/phase11.css">
+<link rel="stylesheet" href="phase12.css">
 </head>
-<body class="app">
-<div id="app" aria-live="off"></div>
-<noscript><p style="padding:24px">JFRESH OS membutuhkan JavaScript. · JFRESH OS needs JavaScript.</p></noscript>
+<body class="p3 p4 p5 p6 p7 p8 p9 p10 p11 p12" data-root="../" data-phase="12" data-visual="1">
 <script src="../assets/js/icons.js"></script>
+
+<section class="hero">
+  <div class="bubbles"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span data-en="JFRESH OS · Phase 12 · Screen Specifications">JFRESH OS · Fase 12 · Spesifikasi Layar</span></div>
+      <div class="hero-os">JFRESH <b>OS</b></div>
+      <h1 data-en="Screen Specifications">Spesifikasi Layar</h1>
+      <p class="sub" data-en="The Phase 12 screens from the §112 inventory (with the renamed IDs: SEC → SVL, REL → RLB, HELP-001 becomes Smart Help Home) with their specification fields: purpose, roles, entry point, primary and secondary action, permission, validation, states, audit, device per NV, language and components, plus a link into the app as the right demo account.">Layar Fase 12 dari inventaris §112 (dengan ID yang diganti: SEC → SVL, REL → RLB, HELP-001 menjadi Smart Help Home) beserta field spesifikasi: tujuan, peran, pintu masuk, aksi utama dan sekunder, izin, validasi, state, audit, perangkat per NV, bahasa dan komponen, plus tautan ke aplikasi sebagai akun demo yang tepat.</p>
+      <div class="hero-btns" id="herobtns" style="display:flex;flex-wrap:wrap;gap:var(--jf-space-3);margin-top:var(--jf-space-5)"></div>
+    </div>
+    <div class="hero-side">
+      <div class="tagline">Satu data. Satu sumber. <b>Tanpa input ganda.</b></div>
+      <div class="values"><span data-en="Build · Test · Migrate">Build · Test · Migrate</span><span data-en="Train · Go Live · Improve">Train · Go Live · Improve</span></div>
+      <div data-ff></div>
+    </div>
+  </div>
+</section>
+<main class="wrap ds" id="page"></main>
 <script src="../assets/js/jfos-config.js"></script>
 <script src="../assets/js/jfos-ds.js"></script>
 <script src="../assets/js/jfos-access.js"></script>
@@ -76,39 +82,12 @@
 <script src="../assets/js/jfos-go-data.js"></script>
 <script src="../assets/js/jfos-go.js"></script>
 <script>if (window.JFGO) JFGO.install(JFOS, JFACCESS, JFPERF, JFCOMM, JFLOG, JFPROD, JFDLV, JFFIN, window.JFCLP, window.JFSYS, window.JFIMP);</script>
-<script src="data.js"></script>
-<script src="app.js"></script>
-<script src="screens-ops.js"></script>
-<script src="screens-mgmt.js"></script>
-<script src="screens-access.js"></script>
-<script src="screens-perf.js"></script>
-<script src="screens-perf2.js"></script>
-<script src="screens-perf3.js"></script>
-<script src="screens-comm.js"></script>
-<script src="screens-comm2.js"></script>
-<script src="screens-comm3.js"></script>
-<script src="screens-logi.js"></script>
-<script src="screens-logi2.js"></script>
-<script src="screens-logi3.js"></script>
-<script src="screens-prod.js"></script>
-<script src="screens-prod2.js"></script>
-<script src="screens-prod3.js"></script>
-<script src="screens-dlv.js"></script>
-<script src="screens-dlv2.js"></script>
-<script src="screens-dlv3.js"></script>
-<script src="screens-fin.js"></script>
-<script src="screens-fin-acc.js"></script>
-<script src="screens-fin-ap.js"></script>
-<script src="screens-fin-sup.js"></script>
-<script src="screens-fin-cfo.js"></script>
-<script src="screens-clp.js"></script>
-<script src="screens-sys.js"></script>
-<script src="screens-sys2.js"></script>
-<script src="screens-help.js"></script>
-<script src="screens-imp.js"></script>
-<script src="screens-imp2.js"></script>
-<script src="screens-go.js"></script>
-<script src="screens-go2.js"></script>
-<script>JFAPP.start();</script>
+<script>JFACCESS.registerScreens(JFOS);</script>
+<script src="../assets/js/jfos-p12-docs.js"></script>
+<script src="../phase3/phase3.js"></script>
+<script src="phase12.js"></script>
+<script src="screens.page.js"></script>
+<script src="../assets/js/jfresh.js"></script>
+<script>JFDS.boot();</script>
 </body>
 </html>
