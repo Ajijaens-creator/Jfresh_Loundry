@@ -326,8 +326,8 @@
         }).join('') + '</ul>' : A.stateCard('empty', f === 'pending' ? L('Tidak ada yang menunggu persetujuan.', 'Nothing is waiting for approval.') : L('Belum ada keputusan persetujuan.', 'No approval decisions yet.')));
     },
     act: {
-      dec: function (val) {
-        var p = String(val).split('|'), id = p[0], ok = p[1] === '1', c = cx();
+      dec: function (el) {
+        var p = String(el.getAttribute('data-val')).split('|'), id = p[0], ok = p[1] === '1', c = cx();
         dlg({ title: ok ? L('Setujui permintaan', 'Approve request') : L('Tolak permintaan', 'Reject request'), body: fld(ok ? L('Catatan (opsional)', 'Note (optional)') : L('Alasan penolakan', 'Reason for rejecting'), area('note', ''), { req: !ok }), ok: ok ? L('Setujui', 'Approve') : L('Tolak', 'Reject'), icon: ok ? 'check' : 'x',
           onOk: function (v) { var r = P.approvalDecide(c, id, ok, v.note); if (!r.ok) return r.msg; after(ok ? L('Disetujui dan diterapkan.', 'Approved and applied.') : L('Permintaan ditolak.', 'Request rejected.')); return true; } });
       }

@@ -109,6 +109,26 @@ Code:
 
 §81–§97 are built: audit of every change with who, when, old/new value, reason and approval; one approval queue (manual KPI actual, financial adjustment, KPI version, scorecard, reflection, STRACON, decision); data freshness with stale warnings; Personal Score privacy by role, hierarchy, HR grant and team scope; KPI builder per device; R2RE priority order; the six Reflection steps; specific empty and error states.
 
+## Phase 6 — Client & Commercial (NP 1.0)
+
+Sign in as `ayu` (sales / account manager) or `aji` (owner). Finance (`budi`) sees terms, credit, AR and profitability; the supervisor (`saras`) sees properties, services and the SLA clock without pricing or margin; the clients `sari.grandvista` and `nia.hotelabc` see only their own services, contract, SLA and documents. Password `jfresh123`.
+
+| Page | File |
+|---|---|
+| 29 screens (CLIENT-001…003, PROPERTY-001…003, CONTACT-001/002, SERVICE-001/002, CONTRACT-001…004, RATE-001…003, SLA-001/002, DOC-001, HISTORY-001, RENEW-001/002, APPROVAL-001, COM-ALERT-001, HEALTH-001, OPP-001/002, CLT-COM-001) | `app/index.html` |
+| Phase 6 overview (lifecycle, NP-01 to NP-09, demo accounts, §77 rules, §76 Definition of Done, visuals) | `phase6/index.html` |
+| Screen specifications (18 §65 fields per screen) | `phase6/screens.html` |
+| Test cases run in the browser + responsive checklist | `phase6/tests.html` |
+
+Code:
+
+- `assets/js/jfos-comm.js` — `JFCOMM`, the one commercial engine: clients and properties, contacts with scope and smart recommendation, service catalog vs client configuration, versioned contracts and comparison, Rate Cards with effective dates and historical invoice pricing, SLA rules with precedence and the SLA clock, documents with versions, the commercial timeline and audit, renewals, the approval inbox, alerts, Client Health, profitability, growth, risk and opportunities. AR is read from the Phase 5 ledger, never copied. `install()` joins its permissions, screens and menus to the shared config.
+- `assets/js/jfos-comm-data.js` — sample data (Jaens Spa Group with four properties and eleven more clients; no server yet).
+- `app/screens-comm.js`, `app/screens-comm2.js`, `app/screens-comm3.js`, `app/comm.css` — the screens.
+- `assets/js/jfos-comm-tests.js` — 50 test cases. Run `node tools/test-comm.js`.
+- `assets/js/jfos-comm-docs.js` — data for the Phase 6 pages.
+- `assets/brand/phase6/` — reference visuals NV-01 to NV-09.
+
 ## Three form factors
 
 Each page changes its layout, not just its size:

@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="access.css">
 <link rel="stylesheet" href="perf.css">
+<link rel="stylesheet" href="comm.css">
 </head>
 <body class="app">
 <div id="app" aria-live="off"></div>
@@ -26,6 +27,9 @@
 <script src="../assets/js/jfos-perf-data.js"></script>
 <script src="../assets/js/jfos-perf.js"></script>
 <script>JFPERF.install(JFOS, JFACCESS);</script>
+<script src="../assets/js/jfos-comm-data.js"></script>
+<script src="../assets/js/jfos-comm.js"></script>
+<script>JFCOMM.install(JFOS, JFACCESS, JFPERF);</script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 <script src="screens-ops.js"></script>
@@ -34,6 +38,9 @@
 <script src="screens-perf.js"></script>
 <script src="screens-perf2.js"></script>
 <script src="screens-perf3.js"></script>
+<script src="screens-comm.js"></script>
+<script src="screens-comm2.js"></script>
+<script src="screens-comm3.js"></script>
 <script>JFAPP.start();</script>
 </body>
 </html>
