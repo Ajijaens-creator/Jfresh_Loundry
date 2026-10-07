@@ -191,6 +191,8 @@
     if (window.JFLOG) { var lr = window.JFLOG.recordOf(rec); if (lr) return lr; }
     if (window.JFCOMM) { var mr = window.JFCOMM.recordOf(rec); if (mr) return mr; }
     // Phase 11: client portal records (cases, requests, client users, documents) carry their client for the isolation check.
+    // Phase 12: go-live records (MGB-, RCN-, UT-, USB-, RSB-…) are staff-only ids that no other engine uses.
+    if (window.JFGO) { var gr = window.JFGO.recordOf(rec); if (gr) return gr; }
     if (window.JFCLP) return window.JFCLP.recordOf(rec);
     return null;
   }
