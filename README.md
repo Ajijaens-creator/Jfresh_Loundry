@@ -87,6 +87,28 @@ Code:
 
 There is no server yet: the access rules run in the browser and prove behaviour, not security. A backend must repeat `authorize()` on every API call, store hashed passwords and keep sessions and the audit on the server.
 
+## Phase 5 — Executive, Financial & Ambidex Performance OS (NP 1.0)
+
+Sign in as `aji` (owner) to land on Executive Business Health. Every role gets the Phase 5 menus its permissions allow; frontline roles get a simple My Performance screen. Two Phase 5 demo roles: `wulan` (HR) and `nengah` (Race Leader, own R2RE scope only). Password `jfresh123`.
+
+| Page | File |
+|---|---|
+| 41 screens (full §89 inventory: EXEC-001, FIN-001…006, GOAL-001/002, KPI-001…004, XSCORE-001/002, TEAM-001/002, PERSON-001, RACE-001…004, REFL-001…006, DI-001…005, REPORT-001, plus approvals and audit) | `app/index.html` |
+| Phase 5 overview (NP-01 to NP-10, five scores, demo accounts, rules, Definition of Done, visuals) | `phase5/index.html` |
+| Screen specifications | `phase5/screens.html` |
+| Test cases run in the browser + responsive checklist | `phase5/tests.html` |
+
+Code:
+
+- `assets/js/jfos-perf.js` — `JFPERF`, the one performance engine: Business Health, Financial Health, XScore, Teamwork Score, Personal Score, goal progress, KPI lifecycle and versions, 100% weight validation, R2RE, monthly reflection with normalised weights, insights, decisions and the audit. `install()` joins its permissions, screens and menus to the shared config.
+- `assets/js/jfos-perf-data.js` — sample data (no server yet).
+- `app/screens-perf.js`, `app/screens-perf2.js`, `app/screens-perf3.js` (NV-02 Financial Health, KPI version history, XScore dimension, alerts, recommendations, approvals, audit), `app/perf.css` — the screens.
+- `assets/js/jfos-perf-tests.js` — 80 test cases. Run `node tools/test-perf.js`.
+- `assets/js/jfos-perf-docs.js` — data for the Phase 5 pages.
+- `assets/brand/phase5/` — reference visuals NV-01 to NV-10.
+
+§81–§97 are built: audit of every change with who, when, old/new value, reason and approval; one approval queue (manual KPI actual, financial adjustment, KPI version, scorecard, reflection, STRACON, decision); data freshness with stale warnings; Personal Score privacy by role, hierarchy, HR grant and team scope; KPI builder per device; R2RE priority order; the six Reflection steps; specific empty and error states.
+
 ## Three form factors
 
 Each page changes its layout, not just its size:

@@ -27,8 +27,16 @@
     { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi layar AUTH, SHELL, USER, NOTIF, LAND', en: 'AUTH, SHELL, USER, NOTIF, LAND screen specs', ic: 'file' },
     { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji login, akses, landing, responsif', en: 'Login, access, landing and responsive test cases', ic: 'checkc' }
   ];
-  var PAGES = PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
-  var CH = PHASE === 4 ? {
+  // Phase 5 pages (Executive & Performance OS): overview + screen specs + tests
+  var P5 = [
+    { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 41 layar inventaris §89', en: 'Specs for the 41 §89 inventory screens', ic: 'file' },
+    { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine skor dan checklist responsif', en: 'Score engine test cases and responsive checklist', ic: 'checkc' }
+  ];
+  var PAGES = PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
+  var CH = PHASE === 5 ? {
+    dir: 'phase5/', home: 'phase5/index.html', sub: ['Fase 5 · Executive & Performance OS', 'Phase 5 · Executive & Performance OS'], ov: ['Ringkasan Fase 5', 'Phase 5 overview'],
+    menu: ['Fase 5', 'Phase 5'], all: ['Ringkasan Fase 5', 'Phase 5 overview'], foot: ['Fase 5 Executive, Financial & Ambidex Performance OS · NP Versi 1.0', 'Phase 5 Executive, Financial & Ambidex Performance OS · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
+  } : PHASE === 4 ? {
     dir: 'phase4/', home: 'phase4/index.html', sub: ['Fase 4 · Akses & App Shell', 'Phase 4 · Access & App Shell'], ov: ['Ringkasan Fase 4', 'Phase 4 overview'],
     menu: ['Fase 4', 'Phase 4'], all: ['Ringkasan Fase 4', 'Phase 4 overview'], foot: ['Fase 4 Akses & App Shell · NP Versi 1.0', 'Phase 4 Access & App Shell · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
   } : PHASE === 3 ? {
@@ -80,7 +88,8 @@
       (PHASE !== 1 ? '<a class="home" href="' + ROOT + 'index.html">' + ic('layers') + '<span data-en="Phase 1 Business Foundation">Fase 1 Fondasi Bisnis</span></a>' : '') +
       (PHASE !== 2 ? '<a class="home" href="' + ROOT + 'phase2/index.html">' + ic('layers') + '<span data-en="Phase 2 Structure &amp; Navigation">Fase 2 Struktur &amp; Navigasi</span></a>' : '') +
       (PHASE !== 3 ? '<a class="home" href="' + ROOT + 'phase3/index.html">' + ic('palette') + '<span data-en="Phase 3 Design System">Fase 3 Design System</span></a>' : '') +
-      (PHASE !== 4 ? '<a class="home" href="' + ROOT + 'phase4/index.html">' + ic('lock') + '<span data-en="Phase 4 Access &amp; App Shell">Fase 4 Akses &amp; App Shell</span></a>' : '');
+      (PHASE !== 4 ? '<a class="home" href="' + ROOT + 'phase4/index.html">' + ic('lock') + '<span data-en="Phase 4 Access &amp; App Shell">Fase 4 Akses &amp; App Shell</span></a>' : '') +
+      (PHASE !== 5 ? '<a class="home" href="' + ROOT + 'phase5/index.html">' + ic('gauge') + '<span data-en="Phase 5 Executive &amp; Performance OS">Fase 5 Executive &amp; Performance OS</span></a>' : '');
     PAGES.forEach(function (v) {
       items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">' + CH.num(v) + '</span><span>' + esc(v.t) + '</span></a>';
     });

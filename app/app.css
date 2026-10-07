@@ -67,6 +67,26 @@ body.app { background: var(--bg); min-height: 100vh; }
 .os.sb-c .sb-me { justify-content: center; padding-inline: 0; }
 .sb-scrim { display: none; }
 
+/* Phase 5: menu groups. Expanded sidebar shows a header + sub-list; the rail shows sub icons only. */
+.sb-gh { width: 100%; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
+.sb-gc { width: 18px; height: 18px; margin-left: auto; flex: none; transition: transform .15s; }
+.sb-g.open .sb-gc { transform: rotate(180deg); }
+.sb-g.here:not(.open) > .sb-gh { background: rgba(255,255,255,.1); color: var(--white); }
+.sb-sub { display: none; flex-direction: column; gap: 2px; margin: 2px 0 6px 23px; padding-left: 10px; border-left: 1px solid rgba(255,255,255,.18); }
+.sb-g.open .sb-sub { display: flex; }
+.sb-sa { min-height: 44px; font-size: 14.5px; font-weight: 600; gap: 10px; }
+.sb-sa .ni .i { width: 20px; height: 20px; }
+.sb-sub .sb-a.on::before { display: none; }
+.os.sb-c .sb-gh { display: none; }
+.os.sb-c .sb-sub { display: flex; margin: 4px 0; padding: 4px 0 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.16); }
+.os.sb-c .sb-sa { min-height: 48px; }
+.sheet-cap { padding: 14px 12px 4px; font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+@media (min-width: 700px) and (max-width: 1239px) {
+  .os:not(.sb-o) .sb-gh { display: none; }
+  .os:not(.sb-o) .sb-sub { display: flex; margin: 4px 0; padding: 4px 0 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.16); }
+  .os:not(.sb-o) .sb-sa { min-height: 52px; }
+}
+
 @media (min-width: 700px) and (max-width: 1239px) {
   .os, .os.sb-c { --sbw: 84px; }
   .os .sb { padding-inline: 12px; }

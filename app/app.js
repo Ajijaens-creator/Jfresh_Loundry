@@ -17,9 +17,10 @@
   var AX = { ctx: null, R: null, denied: null, warned: false, lastTouch: 0 };
   var MQ_M = window.matchMedia('(max-width: 699px)');
   var MQ_T = window.matchMedia('(min-width: 700px) and (max-width: 1239px)');
-  var S = { role: 'operator', screen: null, rec: null, q: {}, force: null, lang: 'id', sbCollapsed: false, sbOpen: false, sheet: false, timer: null, cur: null };
+  var S = { role: 'operator', screen: null, rec: null, q: {}, force: null, lang: 'id', sbCollapsed: false, sbOpen: false, sheet: false, timer: null, cur: null, grp: {} };
   try { S.lang = localStorage.getItem('jfresh-lang') === 'en' ? 'en' : 'id'; } catch (e) {}
   try { S.sbCollapsed = localStorage.getItem('jfos-sb') === '1'; } catch (e) {}
+  try { S.grp = JSON.parse(localStorage.getItem('jfos-grp') || '{}') || {}; } catch (e) {}
   // Phase 3 components (JFDS) read the language from JF.lang().
   if (!window.JF) window.JF = { lang: function () { return S.lang; }, onLang: function () {} };
 
@@ -131,7 +132,9 @@
     'LOG-FLT-001': ['RPT-LIB-001'], 'APR-INB-001': [], 'OPS-ISS-001': [],
     'NOTIF-002': ['NOTIF-001'], 'NOTIF-003': ['NOTIF-001'], 'USER-002': ['USER-001'], 'USER-003': ['USER-001'], 'USER-004': ['USER-001']
   };
-  function navItems(r) { return r.nav.concat(r.extra || []); }
+  // Phase 5: a menu item may be a group ({ sub: [...] }); routing works on the flat list.
+  function flat(items) { var out = []; (items || []).forEach(function (n) { if (n.sub) out = out.concat(n.sub); else out.push(n); }); return out; }
+  function navItems(r) { return flat(r.nav).concat(r.extra || []); }
   function isRoot(id) { var r = R(); return navItems(r).concat(r.mnav).some(function (n) { return n.s === id || (n.also || []).indexOf(id) >= 0; }); }
   function parentOf(id) {
     if (isRoot(id)) return null;
@@ -284,7 +287,7 @@
   ];
   function demoBar() {
     var st = STATE_OPTS.map(function (k) { var x = k === 'default' ? C.STATES['default'] : C.STATES[k]; return '<option value="' + k + '"' + ((S.force || 'default') === k ? ' selected' : '') + '>' + t(x.t) + '</option>'; }).join('');
-    var sc = C.screen(S.screen), spec = sc && sc.p4 ? '../phase4/screens.html#' + esc(S.screen) : '../phase2/np06-screen-framework.html#' + esc(S.screen);
+    var sc = C.screen(S.screen), spec = sc && sc.p5 ? '../phase5/screens.html#' + esc(S.screen) : sc && sc.p4 ? '../phase4/screens.html#' + esc(S.screen) : '../phase2/np06-screen-framework.html#' + esc(S.screen);
     var ctx = AX.ctx, sims = SIMS.filter(function (x) { return !(x[0] === 'plant' && ctx && ctx.client); });
     return '<div class="demo" role="region" aria-label="Demo">' +
       '<span class="demo-tag">' + ic('monitor') + '<span>' + t(L('Demo', 'Demo')) + '</span></span>' +
@@ -314,8 +317,22 @@
   function navLink(n, cls) {
     var on = n.k === activeNav(S.screen);
     var badge = n.k === 'apr' ? aprCount() : n.k === 'issue' || n.k === 'issues' ? issueCount() : 0;
-    return '<a class="' + cls + (on ? ' on' : '') + '" href="' + (n.s ? href(n.s) : '#') + '"' + (on ? ' aria-current="page"' : '') + (n.k === 'menu' ? ' data-sheet="1"' : '') + '>' +
+    return '<a class="' + cls + (on ? ' on' : '') + '" href="' + (n.s ? href(n.s) : '#') + '"' + (on ? ' aria-current="page"' : '') + (cls.indexOf('sb-a') === 0 ? ' title="' + t(n.l) + '"' : '') + (n.k === 'menu' ? ' data-sheet="1"' : '') + '>' +
       '<span class="ni">' + ic(n.i) + (badge ? '<b class="nb">' + badge + '</b>' : '') + '</span><span class="nl">' + t(n.l) + '</span></a>';
+  }
+  // Sidebar group: opens by itself when it holds the current page; otherwise remembers the user's choice.
+  function navGroup(g) {
+    var act = activeNav(S.screen), here = g.sub.some(function (n) { return n.k === act; }), open = here || !!S.grp[g.k];
+    return '<div class="sb-g' + (open ? ' open' : '') + (here ? ' here' : '') + '"><button type="button" class="sb-a sb-gh" data-grp="' + esc(g.k) + '" aria-expanded="' + open + '" title="' + t(g.l) + '"><span class="ni">' + ic(g.i) + '</span><span class="nl">' + t(g.l) + '</span>' + ic('chevd', 'sb-gc') + '</button>' +
+      '<div class="sb-sub">' + g.sub.map(function (n) { return navLink(n, 'sb-a sb-sa'); }).join('') + '</div></div>';
+  }
+  function sheetNav(r) {
+    function inM(n) { return r.mnav.some(function (x) { return x.s === n.s || (x.also || []).indexOf(n.s) >= 0; }); }
+    var plain = r.nav.filter(function (n) { return !n.sub; }).concat(r.extra || []).filter(function (n) { return !inM(n); });
+    return plain.map(function (n) { return navLink(n, 'sheet-a'); }).join('') + r.nav.filter(function (n) { return n.sub; }).map(function (g) {
+      var subs = g.sub.filter(function (n) { return !inM(n); });
+      return subs.length ? '<div class="sheet-cap">' + t(g.l) + '</div>' + subs.map(function (n) { return navLink(n, 'sheet-a'); }).join('') : '';
+    }).join('');
   }
   function aprCount() { return can('apr.view') ? db().approvals.filter(function (a) { return a.status === 'wait' && can(a.perm); }).length : 0; }
   function issueCount() { return db().issues.filter(function (i) { return i.status === 'open' || i.status === 'review'; }).length; }
@@ -327,7 +344,7 @@
       '<div class="sb-top"><a class="sb-logo" href="' + href(r.nav[0].s) + '"><img src="../assets/brand/jfresh-logo.png" alt="J\'Fresh Laundry" width="605" height="373"></a>' +
       '<button type="button" class="sb-tg" id="sb-toggle" aria-label="' + t(L('Ciutkan / buka menu', 'Collapse / expand menu')) + '">' + ic('sidebar') + '</button></div>' +
       '<div class="sb-os">JFRESH <b>OS</b></div>' +
-      '<nav class="sb-nav">' + r.nav.map(function (n) { return navLink(n, 'sb-a'); }).join('') + '</nav>' +
+      '<nav class="sb-nav">' + r.nav.map(function (n) { return n.sub ? navGroup(n) : navLink(n, 'sb-a'); }).join('') + '</nav>' +
       '<div class="sb-foot">' +
         '<a class="sb-a' + (S.screen === 'HELP-001' ? ' on' : '') + '" href="' + href('HELP-001') + '"><span class="ni">' + ic('help') + '</span><span class="nl">' + t(L('Bantuan', 'Help')) + '</span></a>' +
         '<a class="sb-a' + (S.screen === 'USER-001' ? ' on' : '') + '" href="' + href('USER-001') + '"><span class="ni">' + ic('user') + '</span><span class="nl">' + t(L('Profil', 'Profile')) + '</span></a>' +
@@ -336,11 +353,10 @@
       '<a class="sb-me" href="' + href('USER-001') + '"><span class="av">' + esc(r.person.charAt(0)) + '</span><span class="sb-me-t"><b>' + esc(r.person) + '</b><small>' + t(r.title) + ' · ' + esc(r.site) + '</small></span></a>' +
       '</aside>';
     var bottom = '<nav class="bn" aria-label="' + t(L('Navigasi bawah', 'Bottom navigation')) + '">' + r.mnav.map(function (n) { return navLink(n, 'bn-a'); }).join('') + '</nav>';
-    var sheetItems = navItems(r).filter(function (n) { return !r.mnav.some(function (x) { return x.s === n.s || (x.also || []).indexOf(n.s) >= 0; }); });
     var sheet = '<div class="sheet" id="sheet" hidden><div class="sheet-bg" data-sheet="0"></div><div class="sheet-p" role="dialog" aria-label="Menu">' +
       '<div class="sheet-h"><b>' + t(L('Menu', 'Menu')) + '</b><button type="button" class="ib" data-sheet="0" aria-label="' + t(L('Tutup', 'Close')) + '">' + ic('x') + '</button></div>' +
       '<a class="sheet-me" href="' + href('USER-001') + '"><span class="av">' + esc(r.person.charAt(0)) + '</span><span><b>' + esc(r.person) + '</b><small>' + t(r.title) + ' · ' + esc(r.site) + '</small></span></a>' +
-      '<nav class="sheet-nav">' + sheetItems.map(function (n) { return navLink(n, 'sheet-a'); }).join('') + meItems(true) + '</nav>' +
+      '<nav class="sheet-nav">' + sheetNav(r) + (r.nav.some(function (n) { return n.sub; }) ? '<div class="sheet-cap">' + t(L('Akun', 'Account')) + '</div>' : '') + meItems(true) + '</nav>' +
       '<div class="sheet-row"><span>' + t(L('Bahasa', 'Language')) + '</span>' + langSw() + '</div>' +
       '<button type="button" class="sheet-a danger" data-act="logout"><span class="ni">' + ic('logout') + '</span><span class="nl">' + t(L('Keluar', 'Sign Out')) + '</span></button>' +
       '<div class="sheet-row"><span>' + t(L('State layar (demo)', 'Screen state (demo)')) + '</span><select id="demo-state-m">' + STATE_OPTS.map(function (k) { return '<option value="' + k + '"' + ((S.force || 'default') === k ? ' selected' : '') + '>' + t(C.STATES[k].t) + '</option>'; }).join('') + '</select></div>' +
@@ -436,7 +452,7 @@
     if (S.force === 'loading') return;
     S.timer = setTimeout(function () {
       try { view.innerHTML = '<div class="pg pg-' + s.a + '">' + S.cur.render({ rec: S.rec, q: S.q, s: s }) + '</div>'; }
-      catch (e) { console.error(e); view.innerHTML = '<div class="pg">' + stateCard('error', s.err) + '</div>'; }
+      catch (e) { console.error(e); view.innerHTML = '<div class="pg">' + stateCard('error', s.err, btn('blue', L('Coba Lagi', 'Try Again'), 'refresh', { act: 'retry' }) + backBtn('ghost')) + '</div>'; }
       if (S.cur.after) S.cur.after({ rec: S.rec, q: S.q, s: s });
       if (window.JFDS && view.querySelector('.ds')) window.JFDS.lang(view);
       if (!first) view.focus({ preventScroll: true });
@@ -467,7 +483,7 @@
   function section(title, body, o) {
     o = o || {};
     return '<section class="card' + (o.cls ? ' ' + o.cls : '') + '"><div class="card-h"><h2>' + (o.icon ? ic(o.icon) : '') + '<span>' + t(title) + '</span></h2>' + (o.count != null ? '<span class="cnt num">' + o.count + '</span>' : '') +
-      (o.link ? '<a class="card-l" href="' + href(o.link[0], o.link[2]) + '">' + t(o.link[1]) + ic('chevr') + '</a>' : '') + '</div>' + body + '</section>';
+      (o.link ? '<a class="card-l" href="' + href(o.link[0], o.link[2]) + '">' + t(o.link[1]) + ic('chevr') + '</a>' : '') + (o.right || '') + '</div>' + body + '</section>';
   }
   function rowLink(o) {
     return '<a class="rl' + (o.tone ? ' rl-' + o.tone : '') + '" href="' + o.href + '"><span class="rl-ic">' + ic(o.icon || 'file') + '</span><span class="rl-t"><b>' + o.t + '</b>' + (o.s ? '<span>' + o.s + '</span>' : '') + '</span>' +
@@ -618,6 +634,12 @@
       else document.getElementById('os').classList.toggle('sb-o');
       return;
     }
+    if ((el = e.target.closest('[data-grp]'))) {
+      var gk = el.getAttribute('data-grp'), box = el.parentNode, open = !box.classList.contains('open');
+      box.classList.toggle('open', open); el.setAttribute('aria-expanded', String(open)); S.grp[gk] = open;
+      try { localStorage.setItem('jfos-grp', JSON.stringify(S.grp)); } catch (x) {}
+      return;
+    }
     if ((el = e.target.closest('#sb-open'))) { document.getElementById('os').classList.add('sb-o'); return; }
     if ((el = e.target.closest('#sb-scrim'))) { document.getElementById('os').classList.remove('sb-o'); return; }
     if ((el = e.target.closest('tr[data-href]'))) { location.hash = el.getAttribute('data-href'); return; }
@@ -667,7 +689,7 @@
     btn: btn, pbtn: pbtn, backBtn: backBtn, pageHead: pageHead, attn: attn, section: section, rowLink: rowLink, empty: empty, toast: toast, stepper: stepper,
     submit: submit, success: success, list: list, filters: filters, applyFilters: applyFilters, barChart: barChart, lineChart: lineChart, hbars: hbars,
     stateCard: stateCard, greet: greet, rerender: rerender, parentOf: parentOf, aprCount: aprCount, issueCount: issueCount,
-    toLogin: toLogin, logout: logout, ctx: function () { return AX.ctx; }, sessionSwitch: sessionSwitch, buildR: buildR,
+    toLogin: toLogin, logout: logout, addParents: function (m) { Object.keys(m || {}).forEach(function (k) { PARENT[k] = m[k]; }); }, ctx: function () { return AX.ctx; }, sessionSwitch: sessionSwitch, buildR: buildR,
     start: function () {
       document.documentElement.lang = S.lang;
       if (X) {
