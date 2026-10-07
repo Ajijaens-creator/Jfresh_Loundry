@@ -189,7 +189,9 @@
     if (window.JFDLV) { var dr = window.JFDLV.recordOf(rec); if (dr) return dr; }
     if (window.JFPROD) { var pr = window.JFPROD.recordOf(rec); if (pr) return pr; }
     if (window.JFLOG) { var lr = window.JFLOG.recordOf(rec); if (lr) return lr; }
-    if (window.JFCOMM) return window.JFCOMM.recordOf(rec);
+    if (window.JFCOMM) { var mr = window.JFCOMM.recordOf(rec); if (mr) return mr; }
+    // Phase 11: client portal records (cases, requests, client users, documents) carry their client for the isolation check.
+    if (window.JFCLP) return window.JFCLP.recordOf(rec);
     return null;
   }
   function guard() {
