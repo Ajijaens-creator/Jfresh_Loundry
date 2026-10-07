@@ -42,8 +42,16 @@
     { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 27 layar inventaris §84', en: 'Specs for the 27 §84 inventory screens', ic: 'file' },
     { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine logistik dan checklist responsif', en: 'Logistics engine test cases and responsive checklist', ic: 'checkc' }
   ];
-  var PAGES = PHASE === 7 ? P7 : PHASE === 6 ? P6 : PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
-  var CH = PHASE === 7 ? {
+  // Phase 8 pages (Laundry Production): overview + screen specs + tests
+  var P8 = [
+    { n: 1, f: 'screens.html', t: 'Screen Specifications', code: 'SPEC', id: 'Spesifikasi 45 layar inventaris §86', en: 'Specs for the 45 §86 inventory screens', ic: 'file' },
+    { n: 2, f: 'tests.html', t: 'Test Cases & Results', code: 'TEST', id: 'Kasus uji engine produksi dan checklist responsif', en: 'Production engine test cases and responsive checklist', ic: 'checkc' }
+  ];
+  var PAGES = PHASE === 8 ? P8 : PHASE === 7 ? P7 : PHASE === 6 ? P6 : PHASE === 5 ? P5 : PHASE === 4 ? P4 : PHASE === 3 ? DSP : (PHASE === 2 ? NP : VISUALS);
+  var CH = PHASE === 8 ? {
+    dir: 'phase8/', home: 'phase8/index.html', sub: ['Fase 8 · Produksi Laundry', 'Phase 8 · Laundry Production'], ov: ['Ringkasan Fase 8', 'Phase 8 overview'],
+    menu: ['Fase 8', 'Phase 8'], all: ['Ringkasan Fase 8', 'Phase 8 overview'], foot: ['Fase 8 Produksi Laundry · NP Versi 1.0', 'Phase 8 Laundry Production · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
+  } : PHASE === 7 ? {
     dir: 'phase7/', home: 'phase7/index.html', sub: ['Fase 7 · Order, Pickup, Delivery & Live Logistics', 'Phase 7 · Order, Pickup, Delivery & Live Logistics'], ov: ['Ringkasan Fase 7', 'Phase 7 overview'],
     menu: ['Fase 7', 'Phase 7'], all: ['Ringkasan Fase 7', 'Phase 7 overview'], foot: ['Fase 7 Order, Pickup, Delivery & Live Logistics · NP Versi 1.0', 'Phase 7 Order, Pickup, Delivery & Live Logistics · NP Version 1.0'], num: function (v) { return v.n === 1 ? 'S' : 'T'; }
   } : PHASE === 6 ? {
@@ -107,7 +115,8 @@
       (PHASE !== 4 ? '<a class="home" href="' + ROOT + 'phase4/index.html">' + ic('lock') + '<span data-en="Phase 4 Access &amp; App Shell">Fase 4 Akses &amp; App Shell</span></a>' : '') +
       (PHASE !== 5 ? '<a class="home" href="' + ROOT + 'phase5/index.html">' + ic('gauge') + '<span data-en="Phase 5 Executive &amp; Performance OS">Fase 5 Executive &amp; Performance OS</span></a>' : '') +
       (PHASE !== 6 ? '<a class="home" href="' + ROOT + 'phase6/index.html">' + ic('users') + '<span data-en="Phase 6 Client &amp; Commercial">Fase 6 Client &amp; Commercial</span></a>' : '') +
-      (PHASE !== 7 ? '<a class="home" href="' + ROOT + 'phase7/index.html">' + ic('truck') + '<span data-en="Phase 7 Order, Pickup, Delivery &amp; Live Logistics">Fase 7 Order, Pickup, Delivery &amp; Live Logistics</span></a>' : '');
+      (PHASE !== 7 ? '<a class="home" href="' + ROOT + 'phase7/index.html">' + ic('truck') + '<span data-en="Phase 7 Order, Pickup, Delivery &amp; Live Logistics">Fase 7 Order, Pickup, Delivery &amp; Live Logistics</span></a>' : '') +
+      (PHASE !== 8 ? '<a class="home" href="' + ROOT + 'phase8/index.html">' + ic('factory') + '<span data-en="Phase 8 Laundry Production">Fase 8 Produksi Laundry</span></a>' : '');
     PAGES.forEach(function (v) {
       items += '<a href="' + href(v) + '"' + (v.n === CURRENT ? ' aria-current="page"' : '') + '><span class="vn">' + CH.num(v) + '</span><span>' + esc(v.t) + '</span></a>';
     });
