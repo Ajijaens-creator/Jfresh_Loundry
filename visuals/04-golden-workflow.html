@@ -96,7 +96,7 @@
       <li class="step"><span class="n">9</span><span class="ic"><i data-icon="shield"></i></span><b>QC</b></li>
       <li class="step"><span class="n">10</span><span class="ic"><i data-icon="package"></i></span><b>Packing</b></li>
       <li class="step"><span class="n">11</span><span class="ic"><i data-icon="checkc"></i></span><b data-en="Ready for Delivery">Siap Dikirim</b></li>
-      <li class="step"><span class="n">12</span><span class="ic"><i data-icon="truck"></i></span><b>Delivery &amp; POD</b></li>
+      <li class="step"><span class="n">12</span><span class="ic"><i data-icon="truck"></i></span><b data-en="Delivery / Collect">Delivery / Ambil Sendiri</b></li>
       <li class="step"><span class="n">13</span><span class="ic"><i data-icon="invoice"></i></span><b>Billing &amp; Invoice</b></li>
       <li class="step o"><span class="n">14</span><span class="ic"><i data-icon="card"></i></span><b data-en="Payment">Pembayaran</b></li>
     </ol>
@@ -106,7 +106,7 @@
     <div class="panel-h">
       <span class="ico"><i data-icon="layers"></i></span>
       <div class="ttl"><h2 data-en="Swimlane: who does what">Swimlane: siapa mengerjakan apa</h2>
-        <p class="desc" data-en="Main path in blue. A client who brings laundry to the plant (teal) goes straight to Receiving. Exception branches in amber and red. The management system watches every step.">Jalur utama berwarna biru. Klien yang antar sendiri ke plant (hijau toska) langsung masuk Receiving. Cabang masalah berwarna kuning dan merah. Sistem manajemen memantau setiap langkah.</p></div>
+        <p class="desc" data-en="Main path in blue. A client who brings laundry to the plant (teal) goes straight to Receiving and can collect it there too. Exception branches in amber and red. The management system watches every step.">Jalur utama berwarna biru. Klien yang antar sendiri ke plant (hijau toska) langsung masuk Receiving, dan bisa mengambilnya sendiri di plant. Cabang masalah berwarna kuning dan merah. Sistem manajemen memantau setiap langkah.</p></div>
     </div>
     <div class="diagram" id="swimlane"></div>
   </section>
@@ -130,7 +130,7 @@
         <ul><li>Quality check</li><li data-en="Rewash if needed">Rewash (jika perlu)</li><li>Packing</li></ul>
         <span class="exc chip crit hide-t"><i data-icon="xc"></i><span data-en="QC fail: rewash, then QC again">QC gagal: rewash, lalu QC ulang</span></span></li>
       <li class="phase"><span class="n">5</span><h3><i data-icon="pin"></i><span>Delivery</span></h3>
-        <ul><li data-en="Ready for delivery">Siap dikirim</li><li data-en="Delivery &amp; proof of delivery">Delivery &amp; bukti pengiriman</li></ul>
+        <ul><li data-en="Ready for delivery">Siap dikirim</li><li data-en="Delivery &amp; proof of delivery">Delivery &amp; bukti pengiriman</li><li data-en="Or the client collects at the plant (signed receipt)">Atau klien ambil sendiri di plant (tanda terima)</li></ul>
         <span class="exc chip warn hide-t"><i data-icon="alert"></i><span data-en="Issue: follow-up &amp; reschedule">Kendala: follow-up &amp; jadwal ulang</span></span></li>
       <li class="phase o"><span class="n">6</span><h3><i data-icon="card"></i><span>Finance</span></h3>
         <ul><li>Billing &amp; invoice</li><li data-en="Payment received">Pembayaran diterima</li></ul></li>
@@ -249,6 +249,7 @@ JF.diagram('#swimlane', function (lang, S) {
   node('pack', 4, 10, 'Packing');
   node('rdy', 5, 11, ['Siap\nDikirim', 'Ready for\nDelivery']);
   node('del', 5, 12, ['Delivery\n& POD', 'Delivery\n& POD']);
+  node('self', 0, 11, ['Ambil sendiri\ndi plant', 'Collects at\nthe plant'], { tone: 'teal', w: 86 });
   node('rcvc', 0, 12, ['Terima barang\nbersih & POD', 'Receives clean\nitems & POD'], { tone: 'ok' });
   node('inv', 6, 13, ['Billing &\nInvoice', 'Billing &\nInvoice']);
   node('pay', 6, 14, ['Pembayaran\nditerima', 'Payment\nreceived'], { tone: 'ok' });
@@ -270,6 +271,8 @@ JF.diagram('#swimlane', function (lang, S) {
   out += S.pill((N.qc.x + N.qc.w + N.pack.x) / 2, N.qc.cy - 16, ['Lulus', 'Pass'], { tone: 'ok', size: 10.5 });
   out += S.line([Bt('pack'), [N.pack.cx, N.rdy.cy], Lf('rdy')], b);
   out += elbow('rdy', 'del', b);
+  out += S.line([Tp('rdy'), Bt('self')], { tone: 'teal', sw: 1.8 });
+  out += S.pill(N.self.cx, cy(2), ['tanpa delivery', 'no delivery'], { tone: 'teal', size: 10.5 });
   out += S.line([Tp('del'), Bt('rcvc')], { tone: 'ok', sw: 1.6, dash: '2 4' });
   out += S.line([Bt('del'), [N.del.cx, N.inv.cy], Lf('inv')], b);
   out += elbow('inv', 'pay', b);
