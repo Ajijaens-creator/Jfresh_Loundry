@@ -625,18 +625,159 @@
   };
 
   /* ================= T02 History, route ================= */
+  // One list for the screen and for the export (NP-JF-OPS-HIS-001), so both always match.
+  function hisRows() {
+    var me = A.R().person, mine = A.S.role === 'operator' || A.S.role === 'driver';
+    var rows = A.db().audit.filter(function (a) { return (!mine || a.by === me) && a.ev !== 'AUTH.LOGIN'; }).slice(0, 40);
+    var tab = A.S.q.tab === '7' ? '7' : 'd', td = new Date(); td.setHours(0, 0, 0, 0);
+    return { mine: mine, tab: tab, shown: rows.filter(function (a) { return tab === '7' || a.at >= td.getTime(); }) };
+  }
+  // Export buttons are for the Receiving Operator only (approved scope); other roles keep the page as it was.
+  function hisCanExport() { var c = A.ctx(); return c ? c.roleKey === 'operator' : A.S.role === 'operator'; }
+  function hisExportBtn(act, label, icon, off) {
+    return '<button type="button" class="btn btn-outline his-x" data-act="' + act + '"' + (off ? ' disabled aria-disabled="true" title="' + t(L('Tidak ada data untuk diexport', 'No data to export')) + '"' : '') + '>' + ic(icon) + '<span>' + t(label) + '</span></button>';
+  }
+  var HIS_LIB = {};
+  function hisLoad(src) {
+    if (!HIS_LIB[src]) HIS_LIB[src] = new Promise(function (ok, fail) {
+      var s = document.createElement('script'); s.src = src; s.async = true;
+      s.onload = function () { ok(); }; s.onerror = function () { delete HIS_LIB[src]; s.remove(); fail(new Error('load ' + src)); };
+      document.head.appendChild(s);
+    });
+    return HIS_LIB[src];
+  }
+  // Weight is stored inside the activity text of "Laundry received" (e.g. "118,2 kg" / "118.2 kg (menunggu persetujuan)").
+  function hisWeight(a) {
+    if (a.ev !== 'ORD.RECEIVE' || !a.to) return { kg: null, rest: a.to || '' };
+    var m = /^\s*([\d.,]+)\s*kg\b\s*(.*)$/i.exec(String(a.to));
+    if (!m) return { kg: null, rest: a.to };
+    var s = m[1];
+    if (s.indexOf(',') >= 0) s = s.replace(/\./g, '').replace(',', '.');
+    else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');
+    var n = Number(s), rest = m[2].replace(/^\((.*)\)$/, '$1').trim();
+    return isNaN(n) ? { kg: null, rest: a.to } : { kg: n, rest: rest };
+  }
+  function hisData() {
+    var h = hisRows(), en = A.S.lang === 'en';
+    var recs = h.shown.map(function (a) {
+      var o = DB.order(a.rec), w = hisWeight(a);
+      return { act: T(C.AUDIT[a.ev]) || a.ev, client: o ? A.cname(o.cl) : '', rec: a.rec || '', kg: w.kg, status: w.rest || '', at: a.at };
+    });
+    var c = A.ctx(), X = window.JFACCESS;
+    return {
+      recs: recs, tab: h.tab, en: en,
+      period: h.tab === '7' ? T(L('7 hari', '7 days')) : T(L('Hari ini', 'Today')) + ' (' + fmt.date(Date.now()) + ')',
+      file: 'JFRESH_Receiving_History_' + (h.tab === '7' ? (en ? '7Days' : '7Hari') : (en ? 'Today' : 'HariIni')),
+      operator: A.R().person || '',
+      plant: c && X ? T(X.plantName(c.plant)) : (A.R().site || ''),
+      title: T(L('Riwayat Aktivitas Receiving', 'Receiving Activity History')),
+      head: [L('Aktivitas', 'Activity'), L('Klien', 'Client'), L('No. Order / Record', 'Order / Record No.'), L('Berat (kg)', 'Weight (kg)'), L('Status / Keterangan', 'Status / Details'), L('Waktu', 'Time')].map(T),
+      note: T(L('Sama dengan daftar di layar Riwayat: maksimal 40 aktivitas terbaru.', 'Same as the list on the History screen: at most the 40 most recent activities.')),
+      made: fmt.date(Date.now()) + ' ' + fmt.time(Date.now())
+    };
+  }
+  // Excel serial number from local wall-clock time (same clock the screen shows).
+  function hisSerial(ts) { var d = new Date(ts); return (Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()) - Date.UTC(1899, 11, 30)) / 864e5; }
+  function hisXlsx(d) {
+    var X = window.XLSX, ws = {}, R = d.recs.length;
+    // Every text value is written as a plain string cell (type 's'), never as a formula.
+    function sc(v) { return { t: 's', v: String(v == null ? '' : v) }; }
+    d.head.forEach(function (h, i) { ws[X.utils.encode_cell({ r: 0, c: i })] = sc(h); });
+    d.recs.forEach(function (r, i) {
+      var row = i + 1;
+      ws[X.utils.encode_cell({ r: row, c: 0 })] = sc(r.act);
+      ws[X.utils.encode_cell({ r: row, c: 1 })] = sc(r.client);
+      ws[X.utils.encode_cell({ r: row, c: 2 })] = sc(r.rec);
+      if (r.kg != null) ws[X.utils.encode_cell({ r: row, c: 3 })] = { t: 'n', v: r.kg, z: '0.0' };
+      ws[X.utils.encode_cell({ r: row, c: 4 })] = sc(r.status);
+      ws[X.utils.encode_cell({ r: row, c: 5 })] = { t: 'n', v: hisSerial(r.at), z: 'dd/mm/yyyy hh:mm' };
+    });
+    ws['!ref'] = X.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: R, c: 5 } });
+    ws['!cols'] = [{ wch: 22 }, { wch: 26 }, { wch: 20 }, { wch: 12 }, { wch: 34 }, { wch: 18 }];
+    ws['!autofilter'] = { ref: ws['!ref'] };
+    var info = X.utils.aoa_to_sheet([
+      ['JFRESH OS'], [d.title],
+      [T(L('Periode', 'Period')), d.period], [T(L('Operator', 'Operator')), d.operator], [T(L('Plant', 'Plant')), d.plant],
+      [T(L('Jumlah aktivitas', 'Activities')), R], [T(L('Dibuat', 'Generated')), d.made], [T(L('Catatan', 'Note')), d.note]
+    ]);
+    info['!cols'] = [{ wch: 18 }, { wch: 60 }];
+    var wb = X.utils.book_new();
+    X.utils.book_append_sheet(wb, ws, d.en ? 'History' : 'Riwayat');
+    X.utils.book_append_sheet(wb, info, 'Info');
+    X.writeFile(wb, d.file + '.xlsx', { compression: true });
+  }
+  function hisLogo() {
+    return fetch('../assets/brand/jfresh-logo.png').then(function (r) { if (!r.ok) throw new Error('logo'); return r.blob(); }).then(function (b) {
+      return new Promise(function (ok, fail) {
+        var fr = new FileReader(); fr.onerror = fail;
+        fr.onload = function () { var im = new Image(); im.onload = function () { ok({ src: fr.result, w: im.naturalWidth, h: im.naturalHeight }); }; im.onerror = fail; im.src = fr.result; };
+        fr.readAsDataURL(b);
+      });
+    }).catch(function () { return null; });
+  }
+  function hisPdf(d) {
+    return hisLogo().then(function (logo) {
+      var doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 12, TOTAL = '{total_pages_count_string}';
+      var BLUE = [7, 84, 166];
+      function header() {
+        var x = M;
+        if (logo) { var lh = 14, lw = lh * logo.w / logo.h; doc.addImage(logo.src, 'PNG', M, 8, lw, lh); x = M + lw + 5; }   // original logo, aspect ratio kept
+        doc.setTextColor(BLUE[0], BLUE[1], BLUE[2]); doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.text(d.title, x, 13);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(60, 60, 60);
+        doc.text(T(L('Periode', 'Period')) + ': ' + d.period + '   |   ' + T(L('Operator', 'Operator')) + ': ' + d.operator + '   |   ' + T(L('Plant', 'Plant')) + ': ' + d.plant, x, 19);
+        doc.setDrawColor(BLUE[0], BLUE[1], BLUE[2]); doc.setLineWidth(0.4); doc.line(M, 25, W - M, 25);
+      }
+      doc.autoTable({
+        head: [d.head],
+        body: d.recs.map(function (r) { return [r.act, r.client, r.rec, r.kg == null ? '' : fmt.num(r.kg, 1), r.status, fmt.date(r.at) + ' ' + fmt.time(r.at)]; }),
+        startY: 29, margin: { top: 29, left: M, right: M, bottom: 16 }, showHead: 'everyPage', theme: 'grid',
+        styles: { font: 'helvetica', fontSize: 9, cellPadding: 2, overflow: 'linebreak', valign: 'top' },
+        headStyles: { fillColor: BLUE, textColor: 255, fontStyle: 'bold' },
+        alternateRowStyles: { fillColor: [245, 248, 252] },
+        columnStyles: { 0: { cellWidth: 45 }, 1: { cellWidth: 50 }, 2: { cellWidth: 38 }, 3: { cellWidth: 22, halign: 'right' }, 4: { cellWidth: 'auto' }, 5: { cellWidth: 34 } },
+        didDrawPage: function (dp) {
+          header();
+          doc.setFontSize(8); doc.setTextColor(110, 110, 110);
+          doc.text('JFRESH OS · ' + d.note + ' · ' + T(L('Dibuat', 'Generated')) + ' ' + d.made, M, H - 7);
+          var pg = T(L('Halaman ', 'Page ')) + dp.pageNumber + T(L(' dari ', ' of ')) + TOTAL;
+          doc.text(pg, W - M, H - 7, { align: 'right' });
+        }
+      });
+      if (typeof doc.putTotalPages === 'function') doc.putTotalPages(TOTAL);
+      doc.save(d.file + '.pdf');
+    });
+  }
+  function hisExport(kind, el) {
+    var bs = document.querySelectorAll('[data-act="hisxlsx"],[data-act="hispdf"]');
+    if (el.disabled || el.getAttribute('aria-busy') === 'true') return;   // no double requests
+    var d = hisData();
+    if (!d.recs.length) { A.toast(L('Tidak ada data untuk diexport.', 'No data to export.'), 'warn'); return; }
+    var sp = el.querySelector('span'), lbl = sp ? sp.textContent : '';
+    bs.forEach(function (b) { b.disabled = true; }); el.setAttribute('aria-busy', 'true'); el.classList.add('busy'); if (sp) sp.textContent = T(L('Menyiapkan…', 'Preparing…'));
+    function done() { bs.forEach(function (b) { b.disabled = false; }); el.removeAttribute('aria-busy'); el.classList.remove('busy'); if (sp) sp.textContent = lbl; }
+    var V0 = '../assets/vendor/';
+    var job = kind === 'xlsx'
+      ? hisLoad(V0 + 'xlsx-0.18.5.mini.min.js').then(function () { hisXlsx(d); })
+      : hisLoad(V0 + 'jspdf-2.5.1.umd.min.js').then(function () { return hisLoad(V0 + 'jspdf-autotable-3.8.2.min.js'); }).then(function () { return hisPdf(d); });
+    job.then(function () { done(); A.toast(kind === 'xlsx' ? L('File Excel diunduh.', 'Excel file downloaded.') : L('File PDF diunduh.', 'PDF file downloaded.')); },
+      function (err) { done(); if (window.console) console.error('[OPS-HIS-001 export]', err); A.toast(L('Export gagal. Periksa koneksi lalu coba lagi.', 'Export failed. Check your connection and try again.'), 'crit'); });
+  }
+
   V['OPS-HIS-001'] = {
     render: function () {
-      var me = A.R().person, mine = A.S.role === 'operator' || A.S.role === 'driver';
-      var rows = A.db().audit.filter(function (a) { return (!mine || a.by === me) && a.ev !== 'AUTH.LOGIN'; }).slice(0, 40);
-      var tab = A.S.q.tab === '7' ? '7' : 'd', td = new Date(); td.setHours(0, 0, 0, 0);
-      var shown = rows.filter(function (a) { return tab === '7' || a.at >= td.getTime(); });
-      return A.pageHead(null, mine ? t(L('Aktivitas Anda', 'Your activity')) : t(L('Aktivitas tim', 'Team activity'))) +
+      var h = hisRows(), mine = h.mine, tab = h.tab, shown = h.shown;
+      var exp = hisCanExport() ? hisExportBtn('hisxlsx', L('Excel', 'Excel'), 'grid', !shown.length) + hisExportBtn('hispdf', L('PDF', 'PDF'), 'file', !shown.length) : null;
+      return A.pageHead(null, mine ? t(L('Aktivitas Anda', 'Your activity')) : t(L('Aktivitas tim', 'Team activity')), exp) +
         '<div class="tabs"><a href="' + href('OPS-HIS-001') + '" aria-selected="' + (tab === 'd') + '">' + t(L('Hari ini', 'Today')) + '</a><a href="' + href('OPS-HIS-001', null, { tab: '7' }) + '" aria-selected="' + (tab === '7') + '">' + t(L('7 hari', '7 days')) + '</a></div>' +
         (shown.length ? '<div class="rls">' + shown.map(function (a) {
           var o = DB.order(a.rec);
           return A.rowLink({ href: o ? href('OPS-TRK-001', o.id) : '#', icon: a.ev === 'ISS.CREATE' ? 'alert' : a.ev === 'DLV.POD' ? 'filecheck' : 'checkc', t: t(C.AUDIT[a.ev]) + (o ? ' · ' + esc(A.cname(o.cl)) : ''), s: esc(a.rec) + (a.to ? ' · ' + esc(a.to) : '') + ' · ' + esc(fmt.when(a.at)), tone: a.ev === 'ISS.CREATE' ? 'warn' : '' });
         }).join('') + '</div>' : A.empty(C.screen('OPS-HIS-001').emp));
+    },
+    act: {
+      hisxlsx: function (el) { if (hisCanExport()) hisExport('xlsx', el); },
+      hispdf: function (el) { if (hisCanExport()) hisExport('pdf', el); }
     }
   };
   V['LOG-RTE-001'] = {
