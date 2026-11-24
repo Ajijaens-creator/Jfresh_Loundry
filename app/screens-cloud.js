@@ -17,15 +17,9 @@
 (function () {
   var A = window.JFAPP, X = window.JFACCESS, DS = window.JFDS, CL = window.JFCLOUD, V = A.V;
   var T = A.T, L = A.L, t = A.t, esc = A.esc, ic = A.ic;
-<<<<<<< HEAD
   A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [], 'MD-PLT-001': [], 'MD-CLT-001': [] });
   if (!CL || !CL.on) {
     ['USER-000', 'USER-010', 'USER-011', 'MD-PLT-001', 'MD-CLT-001'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
-=======
-  A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [], 'MD-PLT-001': [] });
-  if (!CL || !CL.on) {
-    ['USER-000', 'USER-010', 'USER-011', 'MD-PLT-001'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
->>>>>>> origin/beta
     return;
   }
   var sb = CL.sb;
@@ -176,11 +170,7 @@
       var c = A.ctx(), short = [];
       if (X.can(c, 'hr.manage') || X.can(c, 'sys.users')) short.push(A.btn('primary', L('Data Karyawan', 'Employees'), 'idcard', { go: 'USER-011' }));
       if (X.can(c, 'sys.users')) short.push(A.btn('ghost', L('Akun & Akses', 'Accounts & Access'), 'shield', { go: 'USER-010' }));
-<<<<<<< HEAD
       if (X.can(c, 'sys.master')) short.push(A.btn('ghost', L('Klien & Properti', 'Clients & Properties'), 'hotel', { go: 'MD-CLT-001' }), A.btn('ghost', L('Plant', 'Plants'), 'building', { go: 'MD-PLT-001' }));
-=======
-      if (X.can(c, 'sys.master')) short.push(A.btn('ghost', L('Master Data Plant', 'Plant Master Data'), 'building', { go: 'MD-PLT-001' }));
->>>>>>> origin/beta
       short.push(A.btn('ghost', L('Profil Saya', 'My Profile'), 'user', { go: 'USER-001' }));
       return '<div class="acc">' +
         '<div class="acc-r"><div class="acc-n"><h1 class="acc-hi">' + t(L('Halo, ', 'Hello, ')) + esc(c.name) + '</h1>' +
@@ -508,7 +498,6 @@
     else if (el.getAttribute('data-x') === 'reload') { P.rows = null; pltPaint(); loadPlants().then(pltPaint); }
   });
 
-<<<<<<< HEAD
   /* =====================================================================
      MD-CLT-001 Master Data · Klien & Properti (sys.master)
      Client = the company J'Fresh bills. Property = each place J'Fresh picks
@@ -683,8 +672,6 @@
     else if (el.getAttribute('data-x') === 'reload') { K.rows = null; cltPaint(); loadClients().then(cltPaint); }
   });
 
-=======
->>>>>>> origin/beta
   document.addEventListener('click', function (e) {
     var el = e.target.closest('#acc-root [data-x], #emp-root [data-x], #emp-root [data-e]'); if (!el) return;
     var x = el.getAttribute('data-x'), ex = el.getAttribute('data-e'), id = el.getAttribute('data-id');
