@@ -188,6 +188,8 @@ body.app { background: var(--bg); min-height: 100vh; }
 .lnk-b { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-weight: 700; color: var(--blue); min-height: 44px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 699px) { .btn-sm { width: auto; } .row2 .btn { font-size: 16px; padding: 0 12px; } }
+/* OPS-HIS-001 export buttons: side by side on phones */
+@media (max-width: 699px) { .ph-a:has(.his-x) { width: 100%; flex-wrap: nowrap; } .ph-a .his-x { flex: 1 1 0; width: auto; min-width: 0; } }
 
 /* ---------- Cards / sections ---------- */
 .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; min-width: 0; box-shadow: 0 1px 2px rgba(11,61,120,.04); }
