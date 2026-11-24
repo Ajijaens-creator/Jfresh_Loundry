@@ -365,6 +365,7 @@
     // hidden until each one is connected to the server (tahap 3).
     if (X.isCloud()) {
       var md = [{ k: 'md', l: L('Master Data', 'Master Data'), i: 'database', sub: [
+        { k: 'mdclt', l: L('Klien & Properti', 'Clients & Properties'), i: 'hotel', s: 'MD-CLT-001' },
         { k: 'mdplt', l: L('Plant', 'Plants'), i: 'building', s: 'MD-PLT-001' }
       ].filter(function (n) { return X.canScreen(ctx, n.s); }) }].filter(function (g) { return g.sub.length; });
       team = team.concat(md);
@@ -598,7 +599,8 @@
     { id: 'HELP-001', n: L('Bantuan', 'Help'), a: 'T03', p4: true, icon: 'help' },
     { id: 'USER-010', n: L('Akun & Akses', 'Accounts & Access'), a: 'T02', p4: 'sys.users', icon: 'users', cloud: true },
     { id: 'USER-011', n: L('Data Karyawan', 'Employees'), a: 'T02', p4: ['hr.manage', 'sys.users'], icon: 'idcard', cloud: true },
-    { id: 'MD-PLT-001', n: L('Plant', 'Plants'), a: 'T02', p4: 'sys.master', icon: 'building', cloud: true }
+    { id: 'MD-PLT-001', n: L('Plant', 'Plants'), a: 'T02', p4: 'sys.master', icon: 'building', cloud: true },
+    { id: 'MD-CLT-001', n: L('Klien & Properti', 'Clients & Properties'), a: 'T02', p4: 'sys.master', icon: 'hotel', cloud: true }
   ].map(function (s) {
     return Object.assign({ p: null, dom: 'user', lvl: 2, bf: ['BF-03'], nb: [], emp: L('Belum ada data.', 'Nothing here yet.'), err: L('Data belum berhasil dimuat. Coba lagi.', 'Could not load the data. Try again.'), warn: L('Perlu perhatian.', 'Needs attention.'), ok: L('Tersimpan.', 'Saved.') }, s);
   });

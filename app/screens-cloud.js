@@ -17,9 +17,9 @@
 (function () {
   var A = window.JFAPP, X = window.JFACCESS, DS = window.JFDS, CL = window.JFCLOUD, V = A.V;
   var T = A.T, L = A.L, t = A.t, esc = A.esc, ic = A.ic;
-  A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [], 'MD-PLT-001': [] });
+  A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [], 'MD-PLT-001': [], 'MD-CLT-001': [] });
   if (!CL || !CL.on) {
-    ['USER-000', 'USER-010', 'USER-011', 'MD-PLT-001'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
+    ['USER-000', 'USER-010', 'USER-011', 'MD-PLT-001', 'MD-CLT-001'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
     return;
   }
   var sb = CL.sb;
@@ -160,7 +160,7 @@
      (the team and accounts) and the modules that are still being connected.
      ===================================================================== */
   var SOON = [
-    [L('Klien & Properti', 'Clients & Properties'), 'building'], [L('Order & Pickup', 'Orders & Pickup'), 'truck'],
+    [L('Order & Pickup', 'Orders & Pickup'), 'truck'],
     [L('Produksi Laundry', 'Laundry Production'), 'shirt'], [L('Pengiriman', 'Delivery'), 'route'],
     [L('Invoice & Keuangan', 'Invoices & Finance'), 'coins'], [L('Laporan', 'Reports'), 'chart']
   ];
@@ -170,7 +170,7 @@
       var c = A.ctx(), short = [];
       if (X.can(c, 'hr.manage') || X.can(c, 'sys.users')) short.push(A.btn('primary', L('Data Karyawan', 'Employees'), 'idcard', { go: 'USER-011' }));
       if (X.can(c, 'sys.users')) short.push(A.btn('ghost', L('Akun & Akses', 'Accounts & Access'), 'shield', { go: 'USER-010' }));
-      if (X.can(c, 'sys.master')) short.push(A.btn('ghost', L('Master Data Plant', 'Plant Master Data'), 'building', { go: 'MD-PLT-001' }));
+      if (X.can(c, 'sys.master')) short.push(A.btn('ghost', L('Klien & Properti', 'Clients & Properties'), 'hotel', { go: 'MD-CLT-001' }), A.btn('ghost', L('Plant', 'Plants'), 'building', { go: 'MD-PLT-001' }));
       short.push(A.btn('ghost', L('Profil Saya', 'My Profile'), 'user', { go: 'USER-001' }));
       return '<div class="acc">' +
         '<div class="acc-r"><div class="acc-n"><h1 class="acc-hi">' + t(L('Halo, ', 'Hello, ')) + esc(c.name) + '</h1>' +
@@ -496,6 +496,180 @@
     else if (x === 'off') pltActive(id, false);
     else if (x === 'on') pltActive(id, true);
     else if (el.getAttribute('data-x') === 'reload') { P.rows = null; pltPaint(); loadPlants().then(pltPaint); }
+  });
+
+  /* =====================================================================
+     MD-CLT-001 Master Data · Klien & Properti (sys.master)
+     Client = the company J'Fresh bills. Property = each place J'Fresh picks
+     up from and delivers to. Never deleted, only switched off.
+     ===================================================================== */
+  var TYPES = [['hotel', L('Hotel', 'Hotel')], ['resort', L('Resort', 'Resort')], ['villa', L('Villa', 'Villa')], ['spa', L('Spa & wellness', 'Spa & wellness')], ['fnb', L('Restoran / F&B', 'Restaurant / F&B')], ['personal', L('Pelanggan pribadi', 'Personal customer')], ['other', L('Lainnya', 'Other')]];
+  var CST = { prospect: ['info', L('Prospek', 'Prospect'), 'star'], active: ['ok', L('Aktif', 'Active'), 'checkc'], onhold: ['warn', L('Ditahan', 'On hold'), 'pause'], inactive: ['mute', L('Nonaktif', 'Inactive'), 'ban'] };
+  var K = { view: 'list', id: null, pid: null, rows: null, props: null, err: null, q: '', loadErr: false };
+  function typeName(k) { var x = TYPES.filter(function (t2) { return t2[0] === k; })[0]; return x ? x[1] : L(k || '—', k || '—'); }
+  function loadClients() {
+    K.loadErr = false;
+    return Promise.all([loadRef(),
+      sb.from('clients').select('id,name,legal_name,client_type,tax_id,billing_address,city,plant_id,contact_name,contact_phone,contact_email,payment_terms_days,notes,status').order('id'),
+      sb.from('properties').select('id,client_id,name,property_type,address,city,plant_id,contact_name,contact_phone,pickup_schedule,delivery_schedule,instructions,status').order('id')
+    ]).then(function (r) {
+      if (r[1].error) throw r[1].error;
+      if (r[2].error) throw r[2].error;
+      K.rows = r[1].data || []; K.props = r[2].data || [];
+    }).catch(function () { K.loadErr = true; });
+  }
+  function nextCode(rows, re, fmt) { var n = 0; rows.forEach(function (x) { var m = re.exec(x.id); if (m) n = Math.max(n, +m[1]); }); return fmt(n + 1); }
+  function nextClientId() { return nextCode(K.rows, /^CL-(\d+)$/, function (n) { return 'CL-' + String(n).padStart(2, '0'); }); }
+  function nextPropId(cid) {
+    var mine = K.props.filter(function (p) { return p.client_id === cid; }), base = cid.replace(/^CL-/, 'PR-'), used = mine.map(function (p) { return p.id; });
+    for (var i = 0; i < 26; i++) { var id = base + String.fromCharCode(65 + i); if (used.indexOf(id) < 0 && !K.props.some(function (p) { return p.id === id; })) return id; }
+    return base + '-' + (mine.length + 1);
+  }
+  function propsOf(cid) { return K.props.filter(function (p) { return p.client_id === cid; }); }
+  function area(nm, v, ph) { return '<div class="ds-control"><textarea name="' + nm + '" rows="2" maxlength="500"' + (ph ? ' placeholder="' + esc(T(ph)) + '"' : '') + '>' + esc(v || '') + '</textarea></div>'; }
+  function cltList() {
+    var q = K.q.trim().toLowerCase();
+    var rows = K.rows.filter(function (c) { return !q || [c.id, c.name, c.legal_name, c.city, c.contact_name].join(' ').toLowerCase().indexOf(q) >= 0; });
+    var list = rows.map(function (c) {
+      var st = CST[c.status] || CST.active, n = propsOf(c.id).filter(function (p) { return p.status === 'active'; }).length;
+      return '<article class="acc-r"><div class="acc-h"><span class="av">' + esc((c.name || '?').charAt(0).toUpperCase()) + '</span><div class="acc-n"><b>' + esc(c.name) + '</b><small>' + esc(c.id) + ' · ' + t(typeName(c.client_type)) + (c.city ? ' · ' + esc(c.city) : '') + '</small></div>' + A.chip(st[0], st[1], st[2]) + '</div>' +
+        '<div class="acc-m"><span>' + ic('hotel') + t(L(n + ' properti aktif', n + ' active properties')) + '</span><span>' + ic('building') + esc(plantName(c.plant_id)) + '</span>' + (c.contact_name ? '<span>' + ic('user') + esc(c.contact_name) + (c.contact_phone ? ' · ' + esc(c.contact_phone) : '') + '</span>' : '') + '</div>' +
+        '<div class="acc-a">' + b('primary', L('Buka', 'Open'), 'arrow', 'data-k="open" data-id="' + esc(c.id) + '"') + b('ghost', L('Ubah', 'Edit'), 'edit', 'data-k="edit" data-id="' + esc(c.id) + '"') + '</div></article>';
+    }).join('');
+    return A.pageHead(null, t(L('Klien yang ditagih J\'Fresh, dan properti tempat pickup dan pengiriman.', 'Clients J\'Fresh bills, and the properties it picks up from and delivers to.')),
+        b('primary', L('Tambah Klien', 'Add Client'), 'plus', 'data-k="new"')) + errBox(K) +
+      '<div class="acc-tools">' + DS.Input.Search({ label: L('Cari klien', 'Search clients'), name: 'kq', value: K.q, placeholder: L('Nama, kota, kontak...', 'Name, city, contact...') }) + '<span class="hint">' + rows.length + ' ' + t(L('klien', 'clients')) + '</span></div>' +
+      (list ? '<div class="acc-list">' + list + '</div>' : A.empty(K.rows.length ? L('Tidak ada klien yang cocok.', 'No matching clients.') : L('Belum ada klien. Tekan Tambah Klien.', 'No clients yet. Press Add Client.')));
+  }
+  function cltForm(c) {
+    var isNew = !c; c = c || { id: nextClientId(), client_type: 'hotel', payment_terms_days: 30, status: 'active', plant_id: REF.plants.length === 1 ? REF.plants[0].id : '' };
+    return A.pageHead(isNew ? L('Tambah Klien', 'Add Client') : L('Ubah Klien', 'Edit Client'), t(L('Kode klien tidak bisa diubah setelah disimpan.', 'The client code cannot change after saving.'))) + errBox(K) +
+      '<form class="ds acc-f" id="clt-f" novalidate>' +
+        '<div class="acc-2">' + field(L('Kode klien', 'Client code'), '<div class="ds-control"><input name="id" type="text" value="' + esc(c.id) + '"' + (isNew ? '' : ' readonly') + '></div>') +
+          field(L('Jenis', 'Type'), select('client_type', TYPES, c.client_type)) + '</div>' +
+        field(L('Nama klien', 'Client name'), input('name', 'text', c.name, L('cth. Jaens Spa Group', 'e.g. Jaens Spa Group'))) +
+        '<div class="acc-2">' + field(L('Nama badan usaha (untuk invoice)', 'Legal name (for invoices)'), input('legal_name', 'text', c.legal_name, L('cth. PT Jaens Spa Indonesia', 'e.g. PT Jaens Spa Indonesia'))) +
+          field(L('NPWP', 'Tax ID'), input('tax_id', 'text', c.tax_id, '00.000.000.0-000.000')) + '</div>' +
+        field(L('Alamat penagihan', 'Billing address'), area('billing_address', c.billing_address)) +
+        '<div class="acc-2">' + field(L('Kota / area', 'City / area'), input('city', 'text', c.city, L('cth. Ubud', 'e.g. Ubud'))) +
+          field(L('Plant yang melayani', 'Serving plant'), select('plant_id', plantOpts(true), c.plant_id)) + '</div>' +
+        '<div class="acc-2">' + field(L('Nama kontak', 'Contact name'), input('contact_name', 'text', c.contact_name)) +
+          field(L('No. HP / WhatsApp kontak', 'Contact phone / WhatsApp'), input('contact_phone', 'tel', c.contact_phone, '08...')) + '</div>' +
+        '<div class="acc-2">' + field(L('Email kontak / tagihan', 'Contact / billing email'), input('contact_email', 'email', c.contact_email, L('nama@email.com', 'name@email.com'))) +
+          field(L('Jatuh tempo (hari)', 'Payment terms (days)'), input('payment_terms_days', 'number', String(c.payment_terms_days == null ? 30 : c.payment_terms_days)), L('0 = bayar tunai saat pengiriman.', '0 = cash on delivery.')) + '</div>' +
+        field(L('Status', 'Status'), select('status', Object.keys(CST).map(function (k) { return [k, CST[k][1]]; }), c.status)) +
+        field(L('Catatan', 'Notes'), area('notes', c.notes)) +
+        '<div class="row2">' + b('ghost', L('Batal', 'Cancel'), 'arrowl', 'data-k="' + (isNew ? 'back' : 'open') + '" data-id="' + esc(c.id) + '"') + '<button type="submit" class="btn btn-primary" id="acc-go">' + ic('check') + '<span>' + t(L('Simpan', 'Save')) + '</span></button></div>' +
+      '</form>';
+  }
+  function cltDetail(c) {
+    var st = CST[c.status] || CST.active, ps = propsOf(c.id);
+    var info = [[L('Badan usaha', 'Legal name'), c.legal_name], [L('NPWP', 'Tax ID'), c.tax_id], [L('Alamat penagihan', 'Billing address'), c.billing_address], [L('Plant', 'Plant'), plantName(c.plant_id)],
+      [L('Kontak', 'Contact'), [c.contact_name, c.contact_phone, c.contact_email].filter(Boolean).join(' · ')], [L('Jatuh tempo', 'Payment terms'), c.payment_terms_days ? T(L(c.payment_terms_days + ' hari', c.payment_terms_days + ' days')) : T(L('Tunai saat pengiriman', 'Cash on delivery'))], [L('Catatan', 'Notes'), c.notes]]
+      .filter(function (x) { return x[1]; }).map(function (x) { return '<div><dt>' + t(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('');
+    var plist = ps.map(function (p) {
+      return '<article class="acc-r"><div class="acc-h"><span class="av">' + ic('hotel') + '</span><div class="acc-n"><b>' + esc(p.name) + '</b><small>' + esc(p.id) + ' · ' + t(typeName(p.property_type)) + (p.city ? ' · ' + esc(p.city) : '') + '</small></div>' +
+        (p.status === 'active' ? A.chip('ok', L('Aktif', 'Active'), 'checkc') : A.chip('mute', L('Nonaktif', 'Inactive'), 'ban')) + '</div>' +
+        '<div class="acc-m">' + (p.address ? '<span>' + ic('pin') + esc(p.address) + '</span>' : '') + (p.pickup_schedule || p.delivery_schedule ? '<span>' + ic('clock') + esc([p.pickup_schedule && T(L('Pickup ', 'Pickup ')) + p.pickup_schedule, p.delivery_schedule && T(L('Antar ', 'Delivery ')) + p.delivery_schedule].filter(Boolean).join(' · ')) + '</span>' : '') +
+          (p.contact_name ? '<span>' + ic('user') + esc(p.contact_name) + (p.contact_phone ? ' · ' + esc(p.contact_phone) : '') + '</span>' : '') + '</div>' +
+        '<div class="acc-a">' + b('ghost', L('Ubah', 'Edit'), 'edit', 'data-k="pedit" data-id="' + esc(p.id) + '"') +
+          (p.status === 'active' ? b('ghost', L('Nonaktifkan', 'Deactivate'), 'ban', 'data-k="poff" data-id="' + esc(p.id) + '"') : b('ghost', L('Aktifkan', 'Activate'), 'check', 'data-k="pon" data-id="' + esc(p.id) + '"')) + '</div></article>';
+    }).join('');
+    return A.pageHead(c.name, t(c.id + ' · ' + T(typeName(c.client_type))), b('ghost', L('Semua Klien', 'All Clients'), 'arrowl', 'data-k="back"') + b('ghost', L('Ubah Klien', 'Edit Client'), 'edit', 'data-k="edit" data-id="' + esc(c.id) + '"')) + errBox(K) +
+      '<div class="acc-r"><div class="acc-h"><div class="acc-n"><b>' + t(L('Data klien', 'Client details')) + '</b></div>' + A.chip(st[0], st[1], st[2]) + '</div>' + (info ? '<dl class="md-dl">' + info + '</dl>' : '') + '</div>' +
+      '<div class="acc-tools"><h2 class="acc-hi2">' + t(L('Properti', 'Properties')) + ' (' + ps.length + ')</h2><span class="hd-sp"></span>' + b('primary', L('Tambah Properti', 'Add Property'), 'plus', 'data-k="pnew"') + '</div>' +
+      (plist ? '<div class="acc-list">' + plist + '</div>' : A.empty(L('Belum ada properti. Tambahkan minimal satu lokasi pickup.', 'No properties yet. Add at least one pickup location.')));
+  }
+  function propForm(c, p) {
+    var isNew = !p; p = p || { id: nextPropId(c.id), property_type: c.client_type, city: c.city, plant_id: c.plant_id };
+    return A.pageHead(isNew ? L('Tambah Properti', 'Add Property') : L('Ubah Properti', 'Edit Property'), t(c.name)) + errBox(K) +
+      '<form class="ds acc-f" id="prp-f" novalidate>' +
+        '<div class="acc-2">' + field(L('Kode properti', 'Property code'), '<div class="ds-control"><input name="id" type="text" value="' + esc(p.id) + '"' + (isNew ? '' : ' readonly') + '></div>') +
+          field(L('Jenis', 'Type'), select('property_type', TYPES, p.property_type)) + '</div>' +
+        field(L('Nama properti', 'Property name'), input('name', 'text', p.name, L('cth. Jaens Spa Ubud', 'e.g. Jaens Spa Ubud'))) +
+        field(L('Alamat pickup & pengiriman', 'Pickup & delivery address'), area('address', p.address)) +
+        '<div class="acc-2">' + field(L('Kota / area', 'City / area'), input('city', 'text', p.city)) +
+          field(L('Plant yang melayani', 'Serving plant'), select('plant_id', plantOpts(true), p.plant_id)) + '</div>' +
+        '<div class="acc-2">' + field(L('Kontak di lokasi', 'On-site contact'), input('contact_name', 'text', p.contact_name)) +
+          field(L('No. HP kontak', 'Contact phone'), input('contact_phone', 'tel', p.contact_phone, '08...')) + '</div>' +
+        '<div class="acc-2">' + field(L('Jadwal pickup', 'Pickup schedule'), input('pickup_schedule', 'text', p.pickup_schedule, L('cth. Setiap hari 07:00', 'e.g. Daily 07:00'))) +
+          field(L('Jadwal antar', 'Delivery schedule'), input('delivery_schedule', 'text', p.delivery_schedule, L('cth. Setiap hari 16:00', 'e.g. Daily 16:00'))) + '</div>' +
+        field(L('Instruksi untuk driver', 'Instructions for the driver'), area('instructions', p.instructions, L('cth. Masuk lewat pintu servis belakang.', 'e.g. Use the back service entrance.'))) +
+        '<div class="row2">' + b('ghost', L('Batal', 'Cancel'), 'arrowl', 'data-k="open" data-id="' + esc(c.id) + '"') + '<button type="submit" class="btn btn-primary" id="acc-go">' + ic('check') + '<span>' + t(L('Simpan', 'Save')) + '</span></button></div>' +
+      '</form>';
+  }
+  function cltPaint() {
+    var root = document.getElementById('clt-root'); if (!root) return;
+    if (K.loadErr) { root.innerHTML = loadErr(); return; }
+    if (!K.rows) { root.innerHTML = skel(); return; }
+    var c = K.id && K.rows.filter(function (x) { return x.id === K.id; })[0], p = K.pid && K.props.filter(function (x) { return x.id === K.pid; })[0];
+    root.innerHTML = K.view === 'new' ? cltForm(null) : K.view === 'edit' && c ? cltForm(c) : K.view === 'open' && c ? cltDetail(c) :
+      K.view === 'pnew' && c ? propForm(c, null) : K.view === 'pedit' && c && p ? propForm(c, p) : cltList();
+    DS.lang(root);
+    var q = root.querySelector('input[name="kq"]');
+    if (q) q.addEventListener('input', function () { K.q = this.value; var pos = this.selectionStart; cltPaint(); var n = document.querySelector('#clt-root input[name="kq"]'); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (x) {} } });
+    var f = root.querySelector('#clt-f'); if (f) f.addEventListener('submit', function (ev) { ev.preventDefault(); cltSave(f); });
+    var g = root.querySelector('#prp-f'); if (g) g.addEventListener('submit', function (ev) { ev.preventDefault(); propSave(g); });
+  }
+  function cltGo(view, id, pid) { K.view = view; K.id = id || null; K.pid = pid || null; K.err = null; cltPaint(); window.scrollTo(0, 0); }
+  function cltReload(view, id, msg) { loadClients().then(function () { cltGo(view, id); if (msg) A.toast(msg); }); }
+  function cltSave(f) {
+    var isNew = K.view === 'new', id = isNew ? val(f, 'id').toUpperCase() : K.id, terms = parseInt(val(f, 'payment_terms_days'), 10);
+    var row = { name: val(f, 'name'), legal_name: val(f, 'legal_name') || null, client_type: val(f, 'client_type'), tax_id: val(f, 'tax_id') || null, billing_address: val(f, 'billing_address') || null,
+      city: val(f, 'city') || null, plant_id: val(f, 'plant_id') || null, contact_name: val(f, 'contact_name') || null, contact_phone: val(f, 'contact_phone') || null,
+      contact_email: val(f, 'contact_email').toLowerCase() || null, payment_terms_days: isNaN(terms) ? 30 : terms, status: val(f, 'status'), notes: val(f, 'notes') || null };
+    if (isNew && !/^CL-\d{2,4}$/.test(id)) { K.err = T(L('Kode klien harus seperti CL-01.', 'The client code must look like CL-01.')); return cltPaint(); }
+    if (isNew && K.rows.some(function (x) { return x.id === id; })) { K.err = T(L('Kode klien ini sudah dipakai.', 'This client code is already used.')); return cltPaint(); }
+    if (!row.name) { K.err = T(L('Nama klien wajib diisi.', 'Client name is required.')); return cltPaint(); }
+    if (row.contact_email && !emailOk(row.contact_email)) { K.err = T(ERR.email); return cltPaint(); }
+    if (row.payment_terms_days < 0 || row.payment_terms_days > 180) { K.err = T(L('Jatuh tempo antara 0 dan 180 hari.', 'Payment terms must be 0 to 180 days.')); return cltPaint(); }
+    busy(true);
+    (isNew ? sb.from('clients').insert(Object.assign({ id: id }, row)) : sb.from('clients').update(row).eq('id', id)).then(function (r) {
+      busy(false);
+      if (r.error) { K.err = T(errMsg(null, r.error.message)); return cltPaint(); }
+      CL.log(isNew ? 'MD.CLIENT_CREATED' : 'MD.CLIENT_UPDATED', id, { name: row.name, status: row.status });
+      cltReload('open', id, isNew ? L('Klien ditambahkan. Sekarang tambahkan propertinya.', 'Client added. Now add its properties.') : L('Klien disimpan.', 'Client saved.'));
+    }, function () { busy(false); K.err = T(ERR.network); cltPaint(); });
+  }
+  function propSave(f) {
+    var isNew = K.view === 'pnew', cid = K.id, id = isNew ? val(f, 'id').toUpperCase() : K.pid;
+    var row = { name: val(f, 'name'), property_type: val(f, 'property_type'), address: val(f, 'address') || null, city: val(f, 'city') || null, plant_id: val(f, 'plant_id') || null,
+      contact_name: val(f, 'contact_name') || null, contact_phone: val(f, 'contact_phone') || null, pickup_schedule: val(f, 'pickup_schedule') || null, delivery_schedule: val(f, 'delivery_schedule') || null, instructions: val(f, 'instructions') || null };
+    if (isNew && !/^PR-[A-Z0-9-]{2,12}$/.test(id)) { K.err = T(L('Kode properti harus seperti PR-01A.', 'The property code must look like PR-01A.')); return cltPaint(); }
+    if (isNew && K.props.some(function (x) { return x.id === id; })) { K.err = T(L('Kode properti ini sudah dipakai.', 'This property code is already used.')); return cltPaint(); }
+    if (!row.name) { K.err = T(L('Nama properti wajib diisi.', 'Property name is required.')); return cltPaint(); }
+    if (!row.plant_id) { K.err = T(ERR.plant); return cltPaint(); }
+    busy(true);
+    (isNew ? sb.from('properties').insert(Object.assign({ id: id, client_id: cid, status: 'active' }, row)) : sb.from('properties').update(row).eq('id', id)).then(function (r) {
+      busy(false);
+      if (r.error) { K.err = T(errMsg(null, r.error.message)); return cltPaint(); }
+      CL.log(isNew ? 'MD.PROPERTY_CREATED' : 'MD.PROPERTY_UPDATED', id, { client: cid, name: row.name });
+      cltReload('open', cid, isNew ? L('Properti ditambahkan.', 'Property added.') : L('Properti disimpan.', 'Property saved.'));
+    }, function () { busy(false); K.err = T(ERR.network); cltPaint(); });
+  }
+  function propActive(id, on) {
+    sb.from('properties').update({ status: on ? 'active' : 'inactive' }).eq('id', id).then(function (r) {
+      if (r.error) { K.err = T(errMsg(null, r.error.message)); return cltPaint(); }
+      CL.log(on ? 'MD.PROPERTY_ON' : 'MD.PROPERTY_OFF', id, {});
+      cltReload('open', K.id, on ? L('Properti diaktifkan.', 'Property activated.') : L('Properti dinonaktifkan. Data lamanya tetap tersimpan.', 'Property deactivated. Its records are kept.'));
+    }, function () { K.err = T(ERR.network); cltPaint(); });
+  }
+  V['MD-CLT-001'] = {
+    render: function () { return '<div id="clt-root" class="acc"></div>'; },
+    after: function () { cltPaint(); if (!K.rows) loadClients().then(cltPaint); }
+  };
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('#clt-root [data-k], #clt-root [data-x]'); if (!el) return;
+    var k = el.getAttribute('data-k'), id = el.getAttribute('data-id');
+    if (k === 'new') cltGo('new');
+    else if (k === 'edit') cltGo('edit', id);
+    else if (k === 'open') cltGo('open', id);
+    else if (k === 'back') cltGo('list');
+    else if (k === 'pnew') cltGo('pnew', K.id);
+    else if (k === 'pedit') cltGo('pedit', K.id, id);
+    else if (k === 'poff') propActive(id, false);
+    else if (k === 'pon') propActive(id, true);
+    else if (el.getAttribute('data-x') === 'reload') { K.rows = null; cltPaint(); loadClients().then(cltPaint); }
   });
 
   document.addEventListener('click', function (e) {
