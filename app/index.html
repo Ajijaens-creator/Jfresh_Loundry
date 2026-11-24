@@ -113,6 +113,6 @@
 <script src="screens-imp2.js"></script>
 <script src="screens-go.js"></script>
 <script src="screens-go2.js"></script>
-<script>JFAPP.start(); if (JFCLOUD.on) JFCLOUD.watch(function (why) { location.replace('login.html#/sesi-berakhir?why=' + why); });</script>
+<script>JFAPP.start(); if (JFCLOUD.on) { JFCLOUD.watch(function (why) { location.replace('login.html#/sesi-berakhir?why=' + why); }); JFCLOUD.mustChange().then(function (m) { if (m && location.hash.indexOf('/USER-002') < 0) { location.hash = JFAPP.href('USER-002', null, { first: '1' }); } }); }</script>
 </body>
 </html>
