@@ -54,3 +54,19 @@ inside a transaction and rolls back. Run it on a local or preview database, not 
 ```sh
 psql "$DATABASE_URL" -f supabase/tests/access_rls_test.sql
 ```
+
+## Step 2 · Real login and team accounts (mode asli)
+
+Migration `20261124030000_access_real_login.sql`:
+- `my_access()` also returns email, all_plants and department.
+- `employees` gets `job_title`, `email`, `plant_id`, `note`, `created_by` and a generated id (`EMP-XXXXXX`).
+- HR (`hr.manage`) registers and edits employees; only user admins (`sys.users`) delete them.
+- `employees_overview()` lists employees with their account and roles (HR and user admins only).
+
+Edge Function `functions/admin-users` (deploy with the Supabase CLI or dashboard; it is not deployed by the GitHub integration):
+- `create`: creates the Auth user with the service role, then links / creates the employee and writes profile, roles and plants with the caller's token, so the guards above apply.
+- `set_password`: an admin sets a new password for a staff member (no reset email is needed).
+
+New staff flow: HR → Data Karyawan → "Menunggu akses" → admin → Akun & Akses → Buat Akun + tick roles.
+
+Tests: `supabase/tests/staff_onboarding_test.sql` (14 checks) next to `access_rls_test.sql`.

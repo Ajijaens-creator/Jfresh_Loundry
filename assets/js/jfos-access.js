@@ -119,6 +119,7 @@
     if (store) return store;
     try { var raw = ls ? ls.getItem(KEY) : mem[KEY]; store = raw ? JSON.parse(raw) : null; } catch (e) { store = null; }
     if (!store || store.v !== 1) store = blank();
+    mergeCloud(store);
     return store;
   }
   function save() { try { var s = JSON.stringify(store); if (ls) ls.setItem(KEY, s); else mem[KEY] = s; } catch (e) {} }
@@ -142,6 +143,69 @@
   }
   X.displayName = function (u) { var e = u.emp && X.employee(u.emp); return u.name || (e ? e.short : u.u); };
   X.fullName = function (u) { var e = u.emp && X.employee(u.emp); return u.name || (e ? e.n : u.u); };
+
+  /* ---------- Real accounts (mode asli · Supabase Auth) ----------
+     In mode asli the server (Supabase: profiles, user_roles, user_plants,
+     role_permissions) is the source of truth. JFCLOUD (assets/js/jfos-cloud.js)
+     signs in, reads my_access() and hands it to adoptCloud(); this engine keeps
+     a copy so the app can start without waiting for the network, and every
+     screen keeps using the same resolve() / authorize() path. The database
+     repeats every rule with row level security. */
+  X.isCloud = function () { return !!(root.JFSITE && root.JFSITE.cloud); };
+  function mergeCloud(s) {
+    var cu = s.cloud || {}, cp = s.cloudPlants;
+    if (cp && cp.length) X.PLANTS = cp.map(function (p) { return { id: p.id, n: L(p.name, p.name), short: p.short || p.name }; });
+    Object.keys(cu).forEach(function (id) {
+      var u = cu[id];
+      X.USERS = X.USERS.filter(function (x) { return x.id !== id; }).concat([u]);
+      if (u.emp && !X.employee(u.emp)) X.EMPLOYEES = X.EMPLOYEES.concat([u.empRec]);
+      else if (u.emp) X.EMPLOYEES = X.EMPLOYEES.map(function (e) { return e.id === u.emp ? u.empRec : e; });
+    });
+  }
+  // access = the jsonb from my_access(); plants = rows of public.plants the user may read.
+  X.adoptCloud = function (access, plants) {
+    var s = load();
+    if (plants && plants.length) s.cloudPlants = plants.map(function (p) { return { id: p.id, name: p.name, short: p.short_name || p.name }; });
+    var id = 'CU-' + String(access.user_id).slice(0, 8).toUpperCase();
+    var name = access.display_name || access.username || id;
+    var roles = (access.roles || []).filter(function (r) { return X.ROLES[r.key]; }).map(function (r) { return r['default'] ? { k: r.key, def: true } : { k: r.key }; });
+    if (roles.length && !roles.some(function (r) { return r.def; })) roles[0].def = true;
+    var u = {
+      id: id, cloud: true, uuid: access.user_id, u: access.username || String(access.email || name).split('@')[0].toLowerCase(), email: access.email || '',
+      name: name, emp: access.employee_id || ('EMP-' + id.slice(3)), client: access.client_id || undefined,
+      status: access.active ? 'active' : (access.status === 'active' ? 'locked' : access.status), roles: roles,
+      plants: access.full_access || access.all_plants ? [X.ALL] : (access.plants || []).slice(), defPlant: access.default_plant || undefined,
+      lang: access.lang || 'id', switchRole: !!access.can_switch_role || roles.length > 1, full: !!access.full_access, cloudPerms: (access.permissions || []).slice()
+    };
+    if (u.client) delete u.emp;
+    u.empRec = u.emp ? { id: u.emp, n: name, short: String(name).split(' ')[0], dept: L(access.department || '—', access.department || '—'), status: 'active' } : null;
+    s.cloud = s.cloud || {};
+    var sig = JSON.stringify([u.status, u.roles, u.plants, u.cloudPerms, u.full]);
+    var prev = s.acc[id];
+    s.cloud[id] = u;
+    mergeCloud(s);
+    if (!prev) s.acc[id] = { status: u.status, failed: 0, lockUntil: 0, pw: null, roles: u.roles, plants: u.plants, grant: [], deny: [], ver: 1, lang: u.lang, sig: sig };
+    else if (prev.sig !== sig) { prev.status = u.status; prev.roles = u.roles; prev.plants = u.plants; prev.sig = sig; prev.ver += 1; }
+    save();
+    return u;
+  };
+  // Start a local session for an account the server already authenticated.
+  X.startCloudSession = function (u, o) {
+    o = o || {};
+    var s = load(), a = acc(u), t = X.now();
+    if (a.status !== 'active') { X.audit('AUTH.LOGIN_FAIL', { uid: u.id, reason: a.status }); return { ok: false, code: a.status === 'locked' ? 'locked' : a.status }; }
+    var ctx = X.resolve(u.id, {});
+    if (!ctx.ok) { X.audit('AUTH.LOGIN_FAIL', { uid: u.id, reason: ctx.code }); return { ok: false, code: ctx.code, steps: ctx.steps }; }
+    var sid = 'SES-' + Math.random().toString(36).slice(2, 10).toUpperCase();
+    s.sessions[sid] = { id: sid, uid: u.id, role: ctx.roleKey, plant: ctx.plant, at: t, last: t, remember: !!o.remember, ver: a.ver, status: 'active', cloud: true };
+    s.current = sid;
+    s.remember = o.remember ? u.email : null;
+    save();
+    X.audit('AUTH.LOGIN_OK', { uid: u.id, sid: sid, to: X.ROLES[ctx.roleKey].n[0] + ' · ' + X.plantName(ctx.plant)[0] });
+    return { ok: true, sid: sid, steps: ctx.steps, landing: ctx.landing };
+  };
+  // Leaving mode asli (or a stale demo session in mode asli) must not leave a session behind.
+  X.dropCloud = function () { var s = load(); s.cloud = {}; s.cloudPlants = null; save(); };
 
   /* ---------- Security audit trail (§58) ---------- */
   X.EVENTS = {
@@ -204,6 +268,7 @@
     identifier = String(identifier || '').trim();
     if (!identifier) return { ok: false, code: 'empty_user', field: 'user' };
     if (!password) return { ok: false, code: 'empty_pass', field: 'pass' };
+    if (X.isCloud()) return { ok: false, code: 'invalid' };        // mode asli: only JFCLOUD signs in
     var net = X.net();
     if (net === 'offline') return { ok: false, code: 'network' };
     if (net === 'error') return { ok: false, code: 'system' };
@@ -268,7 +333,7 @@
     else if (all) plant = o.plant && (o.plant === X.ALL || X.plant(o.plant)) ? o.plant : X.ALL;
     else plant = plants.indexOf(o.plant) >= 0 ? o.plant : (u.defPlant && plants.indexOf(u.defPlant) >= 0 ? u.defPlant : plants[0]);
     if (!step('plant', role.group === 'client' ? !!u.client : !!plant, plant)) return fail('no_plant');
-    var perms = X.rolePerms(pick.k).concat(a.grant).filter(function (p, i, arr) { return arr.indexOf(p) === i && a.deny.indexOf(p) < 0; });
+    var perms = u.cloudPerms ? u.cloudPerms.slice() : X.rolePerms(pick.k).concat(a.grant).filter(function (p, i, arr) { return arr.indexOf(p) === i && a.deny.indexOf(p) < 0; });
     step('perms', true, perms.length);
     step('lang', true, a.lang);
     var ctx = {
@@ -296,7 +361,12 @@
       return main.concat(menu);
     }
     // Phase 5: a group (item with sub) keeps only the screens this user can open; empty groups drop out.
-    return R.nav.map(function (n) { return n.sub ? Object.assign({}, n, { sub: n.sub.filter(ok) }) : n; }).filter(function (n) { return n.sub ? n.sub.length > 0 : ok(n); });
+    // Mode asli: HR and user admins get "Tim & Akses" (employees, accounts and roles).
+    var team = X.isCloud() && device !== 'm' ? [{ k: 'team', l: L('Tim & Akses', 'Team & Access'), i: 'users', sub: [
+      { k: 'emp', l: L('Data Karyawan', 'Employees'), i: 'idcard', s: 'USER-011' },
+      { k: 'acc', l: L('Akun & Akses', 'Accounts & Access'), i: 'shield', s: 'USER-010' }
+    ].filter(function (n) { return X.canScreen(ctx, n.s); }) }].filter(function (g) { return g.sub.length; }) : [];
+    return R.nav.concat(team).map(function (n) { return n.sub ? Object.assign({}, n, { sub: n.sub.filter(ok) }) : n; }).filter(function (n) { return n.sub ? n.sub.length > 0 : ok(n); });
   };
   X.landing = function (ctx) {
     var want = ctx.role.landing;
@@ -306,7 +376,7 @@
   // Phase 4 screens join the Phase 2 screen index (registered by registerScreens)
   X.canScreen = function (ctx, id) {
     var sc = C.screen(id); if (!sc) return false;
-    if (sc.p4) return sc.p4 === true || X.can(ctx, sc.p4);
+    if (sc.p4) return sc.p4 === true || (Array.isArray(sc.p4) ? sc.p4.some(function (k) { return X.can(ctx, k); }) : X.can(ctx, sc.p4));
     return X.can(ctx, sc.p);
   };
   // Record scope (§13, §63): plant for staff, client for the client portal.
@@ -336,6 +406,7 @@
   X.validate = function () {
     var s = load(), ses = X.session();
     if (!ses) return { ok: false, code: 'none' };
+    if (!!ses.cloud !== X.isCloud()) { endSession(ses, 'ended'); return { ok: false, code: 'none' }; }
     if (ses.status === 'revoked') { endSession(ses, 'revoked'); return { ok: false, code: 'revoked' }; }
     if (X.now() > X.expiresAt(ses)) { X.audit('AUTH.SESSION_EXPIRED', { uid: ses.uid, sid: ses.id, actor: 'system' }); endSession(ses, 'expired'); return { ok: false, code: 'expired' }; }
     var a = X.account(ses.uid);
@@ -508,7 +579,9 @@
     { id: 'NOTIF-001', n: L('Notifikasi', 'Notifications'), a: 'T02', p4: true, icon: 'bell' },
     { id: 'NOTIF-002', n: L('Detail Notifikasi', 'Notification Detail'), a: 'T03', p4: true, icon: 'bell' },
     { id: 'NOTIF-003', n: L('Pengaturan Notifikasi', 'Notification Settings'), a: 'T06', p4: true, icon: 'cog' },
-    { id: 'HELP-001', n: L('Bantuan', 'Help'), a: 'T03', p4: true, icon: 'help' }
+    { id: 'HELP-001', n: L('Bantuan', 'Help'), a: 'T03', p4: true, icon: 'help' },
+    { id: 'USER-010', n: L('Akun & Akses', 'Accounts & Access'), a: 'T02', p4: 'sys.users', icon: 'users' },
+    { id: 'USER-011', n: L('Data Karyawan', 'Employees'), a: 'T02', p4: ['hr.manage', 'sys.users'], icon: 'idcard' }
   ].map(function (s) {
     return Object.assign({ p: null, dom: 'user', lvl: 2, bf: ['BF-03'], nb: [], emp: L('Belum ada data.', 'Nothing here yet.'), err: L('Data belum berhasil dimuat. Coba lagi.', 'Could not load the data. Try again.'), warn: L('Perlu perhatian.', 'Needs attention.'), ok: L('Tersimpan.', 'Saved.') }, s);
   });

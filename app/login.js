@@ -16,6 +16,8 @@
    ========================================================================== */
 (function () {
   var X = window.JFACCESS, DS = window.JFDS, L = DS.L, ic = DS.ic, esc = DS.esc;
+  var CL = window.JFCLOUD && window.JFCLOUD.on ? window.JFCLOUD : null;   // mode asli: real accounts (Supabase)
+  if (CL) { X.MSG.invalid = L('Email atau password belum benar.', 'Email or password is not correct.'); X.MSG.empty_user = L('Email wajib diisi.', 'Email is required.'); }
   var LANG = 'id';
   try { LANG = localStorage.getItem('jfresh-lang') === 'en' ? 'en' : 'id'; } catch (e) {}
   window.JF = window.JF || { lang: function () { return LANG; }, onLang: function () {} };
@@ -57,7 +59,7 @@
     if (r.q.pw === '1') alert = alertBox('success', L('Password berhasil diperbarui. Silakan masuk.', 'Password updated. Please sign in.'));
     paint(head(L('Selamat Datang di', 'Welcome to'), 'JFRESH OS', L('Masuk untuk melanjutkan', 'Sign in to continue')) + alert +
       '<form class="au-form" id="f-login" novalidate>' +
-      DS.Input.Text({ label: L('Username atau Email', 'Username or Email'), icon: 'user', placeholder: L('Username atau email', 'Username or email'), value: userVal, name: 'username', autocomplete: 'username', autocapitalize: 'none', spellcheck: 'false', req: true,
+      DS.Input.Text({ label: CL ? L('Email', 'Email') : L('Username atau Email', 'Username or Email'), icon: 'user', placeholder: CL ? L('nama@email.com', 'name@email.com') : L('Username atau email', 'Username or email'), value: userVal, name: 'username', autocomplete: CL ? 'email' : 'username', autocapitalize: 'none', spellcheck: 'false', req: true,
         state: userErr ? 'error' : null, help: userErr ? X.MSG[e.code] : null }).replace('<input ', '<input autofocus ') +
       DS.Input.Password({ label: L('Password', 'Password'), placeholder: L('Password', 'Password'), name: 'password', autocomplete: 'current-password', req: true, state: passErr ? 'error' : null, help: passErr ? X.MSG[e.code] : null }) +
       '<div class="au-row">' + DS.Input.Checkbox({ label: L('Ingat saya', 'Remember me'), checked: !!remembered }) + '</div>' +
@@ -67,7 +69,7 @@
     // icon after the label (visual 01: "Masuk →")
     var btn = card.querySelector('.au-cta'); btn.appendChild(btn.querySelector('svg'));
     // Links from the Phase 4 docs (#/?u=<demo account>) prefill the demo password too.
-    if (r.q.u && !state.user && X.DEMO.some(function (d) { return d.u === r.q.u; })) card.querySelector('input[name="password"]').value = X.DEMO_PASSWORD;
+    if (!CL && r.q.u && !state.user && X.DEMO.some(function (d) { return d.u === r.q.u; })) card.querySelector('input[name="password"]').value = X.DEMO_PASSWORD;
     var f = document.getElementById('f-login');
     f.addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -75,8 +77,7 @@
       var u = f.querySelector('input[name="username"]').value, p = f.querySelector('input[name="password"]').value, rem = f.querySelector('.ds-check input').checked;
       busy = true; btn.disabled = true; btn.classList.add('is-busy'); btn.setAttribute('aria-busy', 'true');
       btn.querySelector('span').textContent = T(L('Memproses...', 'Processing...'));
-      setTimeout(function () {
-        var res = X.login(u, p, { remember: rem });
+      function done(res) {
         busy = false;
         if (res.ok) return viewResolving(r, res);
         if (res.code === 'inactive') return go('nonaktif');
@@ -86,7 +87,9 @@
         viewLogin(r, { user: u, err: res });
         var bad = card.querySelector(res.field === 'pass' ? 'input[name="password"]' : 'input[name="username"]');
         if (bad && res.field) bad.focus();
-      }, 650);
+      }
+      if (CL) CL.signIn(u, p, { remember: rem }).then(done, function () { done({ ok: false, code: 'system' }); });
+      else setTimeout(function () { done(X.login(u, p, { remember: rem })); }, 650);
     });
   }
 
@@ -109,6 +112,13 @@
   /* ---------- AUTH-002 Forgot Password ---------- */
   function viewForgot(r, state) {
     state = state || {};
+    if (CL) {
+      paint(head(L('Lupa Password?', 'Forgot Password?'), null, null) +
+        stateBlock('info', 'key', L('Minta owner atau admin JFRESH OS untuk membuat password baru.', 'Ask the JFRESH OS owner or admin to set a new password.'),
+          L('Admin membuka menu Akun Tim, pilih nama Anda, lalu Atur Ulang Password. Setelah masuk, ganti password Anda di Profil.', 'The admin opens Team Accounts, picks your name, then Reset Password. After signing in, change your password in Profile.')) +
+        DS.Button.Primary({ label: L('Kembali ke Login', 'Back to Sign In'), icon: 'arrowl', href: '#/', size: 'lg', block: true }));
+      return;
+    }
     if (state.sent) {
       paint(head(L('Cek Email Anda', 'Check Your Email'), null, null) +
         '<div class="au-state">' + '<span class="au-state__ic is-success">' + ic('checkc') + '</span>' + '<p>' + t(X.MSG.reset_sent) + '</p>' +
@@ -196,6 +206,7 @@
   }
   function demo() {
     var el = document.getElementById('demo');
+    if (CL) { el.innerHTML = ''; el.hidden = true; return; }
     var mails = X.outbox().slice(0, 3), net = X.net();
     var open = (function () { try { return sessionStorage.getItem('jfos-demo-open') === '1'; } catch (e) { return false; } })();
     // A link from the documentation names a role: suggest the matching demo account.

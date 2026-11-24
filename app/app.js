@@ -367,10 +367,10 @@
       '<nav class="sheet-nav">' + sheetNav(r) + (r.nav.some(function (n) { return n.sub; }) ? '<div class="sheet-cap">' + t(L('Akun', 'Account')) + '</div>' : '') + meItems(true) + '</nav>' +
       '<div class="sheet-row"><span>' + t(L('Bahasa', 'Language')) + '</span>' + langSw() + '</div>' +
       '<button type="button" class="sheet-a danger" data-act="logout"><span class="ni">' + ic('logout') + '</span><span class="nl">' + t(L('Keluar', 'Sign Out')) + '</span></button>' +
-      '<div class="sheet-row"><span>' + t(L('State layar (demo)', 'Screen state (demo)')) + '</span><select id="demo-state-m">' + STATE_OPTS.map(function (k) { return '<option value="' + k + '"' + ((S.force || 'default') === k ? ' selected' : '') + '>' + t(C.STATES[k].t) + '</option>'; }).join('') + '</select></div>' +
-      '<button type="button" class="sheet-a" id="demo-reset-m"><span class="ni">' + ic('refresh') + '</span><span class="nl">' + t(L('Reset data demo', 'Reset demo data')) + '</span></button>' +
+      (window.JFCLOUD && window.JFCLOUD.on ? '' : '<div class="sheet-row"><span>' + t(L('State layar (demo)', 'Screen state (demo)')) + '</span><select id="demo-state-m">' + STATE_OPTS.map(function (k) { return '<option value="' + k + '"' + ((S.force || 'default') === k ? ' selected' : '') + '>' + t(C.STATES[k].t) + '</option>'; }).join('') + '</select></div>' +
+        '<button type="button" class="sheet-a" id="demo-reset-m"><span class="ni">' + ic('refresh') + '</span><span class="nl">' + t(L('Reset data demo', 'Reset demo data')) + '</span></button>') +
       '</div></div>';
-    document.getElementById('app').innerHTML = demoBar() +
+    document.getElementById('app').innerHTML = (window.JFCLOUD && window.JFCLOUD.on ? '' : demoBar()) +
       '<div class="os g-' + r.group + (S.sbCollapsed ? ' sb-c' : '') + (S.sbOpen ? ' sb-o' : '') + '" id="os">' + side + '<div class="sb-scrim" id="sb-scrim"></div>' +
       '<div class="os-main"><header class="hd" id="hd"></header><div id="banner"></div><main class="view" id="view" tabindex="-1"></main></div>' + bottom + sheet + '</div>' +
       '<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>' +
