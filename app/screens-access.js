@@ -20,6 +20,8 @@
       var acts = [A.btn('ghost', L('Ganti Password', 'Change Password'), 'key', { go: 'USER-002' })];
       if (c.roles.length > 1 && u.switchRole) acts.push(A.btn('ghost', L('Ganti Peran', 'Switch Role'), 'swap', { go: 'USER-003' }));
       if (!c.client && c.plants.length > 1) acts.push(A.btn('ghost', L('Ganti Plant', 'Switch Plant'), 'building', { go: 'USER-004' }));
+      if (window.JFCLOUD && window.JFCLOUD.on && (X.can(c, 'hr.manage') || X.can(c, 'sys.users'))) acts.push(A.btn('ghost', L('Data Karyawan', 'Employees'), 'idcard', { go: 'USER-011' }));
+      if (window.JFCLOUD && window.JFCLOUD.on && X.can(c, 'sys.users')) acts.push(A.btn('ghost', L('Akun & Akses', 'Accounts & Access'), 'shield', { go: 'USER-010' }));
       return A.pageHead(null, t(L('Data akun dan hak akses Anda', 'Your account and access'))) +
         '<div class="prof">' +
           '<div class="prof-side" style="display:grid;gap:var(--jf-space-4)">' +
@@ -63,13 +65,15 @@
       ev.preventDefault();
       var b = document.getElementById('pw-go'); if (b.disabled) return;
       b.disabled = true; b.classList.add('busy'); b.querySelector('span').textContent = T(L('Memproses...', 'Processing...'));
-      setTimeout(function () {
-        var res = X.changePassword(val(f, 'old'), val(f, 'p1'), val(f, 'p2'));
+      var CL = window.JFCLOUD && window.JFCLOUD.on ? window.JFCLOUD : null;
+      function done(res) {
         if (res.ok) { A.success(L('Password berhasil diperbarui.', 'Password updated.'), { l: L('Kembali ke Profil', 'Back to Profile'), go: 'USER-001', icon: 'user' }); return; }
         if (res.code && !res.field && !X.MSG[res.code]) { A.toLogin(res.code); return; }
         document.getElementById('pw-wrap').innerHTML = pwForm(res); bindPw();
         var bad = document.querySelector('#f-pw [name="' + res.field + '"]'); if (bad) bad.focus();
-      }, 500);
+      }
+      if (CL) CL.changePassword(val(f, 'old'), val(f, 'p1'), val(f, 'p2')).then(done, function () { done({ ok: false, code: 'system' }); });
+      else setTimeout(function () { done(X.changePassword(val(f, 'old'), val(f, 'p1'), val(f, 'p2'))); }, 500);
     });
   }
   V['USER-002'] = {
