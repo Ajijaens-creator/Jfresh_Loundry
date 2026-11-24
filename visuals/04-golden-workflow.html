@@ -86,7 +86,7 @@
     </div>
     <ol class="flow">
       <li class="step"><span class="n">1</span><span class="ic"><i data-icon="contract"></i></span><b data-en="Contract / Request">Kontrak / Request</b></li>
-      <li class="step"><span class="n">2</span><span class="ic"><i data-icon="truck"></i></span><b>Pickup</b></li>
+      <li class="step"><span class="n">2</span><span class="ic"><i data-icon="truck"></i></span><b data-en="Pickup / Client Drop">Pickup / Antar Klien</b></li>
       <li class="step"><span class="n">3</span><span class="ic"><i data-icon="factory"></i></span><b>Receiving</b></li>
       <li class="step o"><span class="n">4</span><span class="ic"><i data-icon="weight"></i></span><b data-en="Receive &amp; Weigh">Terima &amp; Timbang</b></li>
       <li class="step"><span class="n">5</span><span class="ic"><i data-icon="basket"></i></span><b>Sorting</b></li>
@@ -106,7 +106,7 @@
     <div class="panel-h">
       <span class="ico"><i data-icon="layers"></i></span>
       <div class="ttl"><h2 data-en="Swimlane: who does what">Swimlane: siapa mengerjakan apa</h2>
-        <p class="desc" data-en="Main path in blue. Exception branches in amber and red. The management system watches every step.">Jalur utama berwarna biru. Cabang masalah berwarna kuning dan merah. Sistem manajemen memantau setiap langkah.</p></div>
+        <p class="desc" data-en="Main path in blue. A client who brings laundry to the plant (teal) goes straight to Receiving. Exception branches in amber and red. The management system watches every step.">Jalur utama berwarna biru. Klien yang antar sendiri ke plant (hijau toska) langsung masuk Receiving. Cabang masalah berwarna kuning dan merah. Sistem manajemen memantau setiap langkah.</p></div>
     </div>
     <div class="diagram" id="swimlane"></div>
   </section>
@@ -120,9 +120,9 @@
     </div>
     <ol class="phases">
       <li class="phase"><span class="n">1</span><h3><i data-icon="truck"></i><span data-en="Request &amp; Pickup">Request &amp; Pickup</span></h3>
-        <ul><li data-en="Active contract or pickup request">Kontrak aktif atau permintaan pickup</li><li data-en="Pickup on schedule">Pickup sesuai jadwal</li></ul></li>
+        <ul><li data-en="Active contract or pickup request">Kontrak aktif atau permintaan pickup</li><li data-en="Pickup on schedule">Pickup sesuai jadwal</li><li data-en="Or the client brings it to the plant (walk-in)">Atau klien antar sendiri ke plant (walk-in)</li></ul></li>
       <li class="phase o"><span class="n">2</span><h3><i data-icon="basket"></i><span data-en="Receiving">Terima Cucian</span></h3>
-        <ul><li data-en="Goods arrive at the plant">Barang tiba di plant</li><li data-en="Receive &amp; weigh">Terima &amp; timbang</li></ul>
+        <ul><li data-en="Goods arrive at the plant (pickup or client drop)">Barang tiba di plant (pickup atau antar klien)</li><li data-en="Receive &amp; weigh">Terima &amp; timbang</li></ul>
         <span class="exc chip warn hide-t"><i data-icon="alert"></i><span data-en="If different: review &amp; correct">Jika selisih: review &amp; koreksi</span></span></li>
       <li class="phase"><span class="n">3</span><h3><i data-icon="washer"></i><span data-en="Production">Proses Laundry</span></h3>
         <ul><li>Sorting · Washing</li><li>Drying · Finishing</li></ul></li>
@@ -237,6 +237,8 @@ JF.diagram('#swimlane', function (lang, S) {
   // main path
   node('req', 0, 1, ['Kontrak aktif /\nRequest pickup', 'Active contract /\nPickup request']);
   node('pu', 1, 2, ['Pickup\nsesuai jadwal', 'Pickup\non schedule']);
+  // alternative start: the client brings the laundry to the plant (walk-in / drop-off, no pickup)
+  node('drop', 0, 3.15, ['Antar sendiri\nke plant', 'Brings laundry\nto the plant'], { tone: 'teal', w: 96 });
   node('rcv', 2, 3, ['Barang tiba\ndi plant', 'Goods arrive\nat plant']);
   node('tt', 2, 4, ['Terima &\nTimbang', 'Receive &\nWeigh'], { tone: 'orange' });
   node('srt', 3, 5, 'Sorting');
@@ -258,6 +260,8 @@ JF.diagram('#swimlane', function (lang, S) {
   var b = { tone: 'blue', sw: 1.8 };
   out += S.line([Bt('req'), [N.req.cx, N.pu.cy], Lf('pu')], b);
   out += S.line([Bt('pu'), [N.pu.cx, N.rcv.cy], Lf('rcv')], b);
+  out += S.line([Bt('drop'), [N.drop.cx, N.rcv.y]], { tone: 'teal', sw: 1.8 });
+  out += S.pill(N.drop.cx, cy(1), ['tanpa pickup', 'no pickup'], { tone: 'teal', size: 10.5 });
   out += elbow('rcv', 'tt', b);
   out += S.line([Bt('tt'), [N.tt.cx, N.srt.cy], Lf('srt')], b);
   out += elbow('srt', 'wsh', b); out += elbow('wsh', 'dry', b); out += elbow('dry', 'fin', b);
