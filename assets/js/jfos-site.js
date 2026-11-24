@@ -46,7 +46,7 @@
     b.setAttribute('role', 'note');
     b.textContent = text;
     var st = document.createElement('style');
-    st.textContent = '#jfsite-ribbon{bottom:12px}@media (max-width:699px){#jfsite-ribbon{bottom:auto;top:4px;left:50%;transform:translateX(-50%);font-size:11px!important;padding:3px 10px!important}}';
+    st.textContent = '#jfsite-ribbon{bottom:12px}@media (max-width:699px){#jfsite-ribbon{bottom:auto!important;top:4px;left:50%!important;transform:translateX(-50%);white-space:nowrap;font-size:11px!important;padding:3px 10px!important}}';
     document.head.appendChild(st);
     b.style.cssText = 'position:fixed;left:12px;z-index:99999;padding:6px 12px;border-radius:999px;' +
       'background:' + (S.trial ? '#0754A6;color:#fff' : '#F59E0B;color:#111827') + ';font:600 12px/1.2 Inter,system-ui,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.2);pointer-events:none';
