@@ -99,9 +99,11 @@
           { v: wait.length, k: L('Menunggu', 'Waiting'), icon: 'basket', tone: 'info', go: 'OPS-RCV-002' },
           { v: proc.length, k: L('Diproses', 'In Process'), icon: 'washer', tone: 'info', go: 'OPS-TSK-001' },
           { v: iss.length, k: L('Ada Masalah', 'Issues'), icon: 'alert', tone: iss.length ? 'warn' : 'ok', go: 'OPS-ISS-001' },
-          { v: ready.length, k: L('Siap Dikirim', 'Ready to Ship'), icon: 'truck', tone: late.length ? 'warn' : 'ok', d: late.length ? T(L(late.length + ' terlambat', late.length + ' late')) : '', go: 'OPS-TSK-001' }
+          { v: ready.length, k: L('Siap Dikirim', 'Ready to Ship'), icon: 'truck', tone: late.length ? 'warn' : 'ok', d: late.length ? T(L(late.length + ' terlambat', late.length + ' late')) : '', go: can('ops.deliver') ? 'OPS-DLV-002' : can('ops.receive') ? 'OPS-DLV-004' : 'OPS-TSK-001' }
         ].filter(function (x) { return can(C.screen(x.go).p); })) +
         (can('ops.receive') ? '<a class="cta" href="' + href('OPS-RCV-002') + '"><span class="cta-ic">' + ic('scale') + '</span><span class="cta-t"><b>' + t(L('Terima Cucian', 'Receive Laundry')) + '</b><small>' + t(L(wait.length + ' cucian menunggu · pilih lalu timbang', wait.length + ' loads waiting · pick, then weigh')) + '</small></span>' + ic('arrow') + '</a>' : '') +
+        (can('ops.receive') ? '<div class="row2 plant-row">' + A.btn('outline', L('+ Terima Langsung (klien datang)', '+ Direct Drop-off (client at plant)'), 'user', { go: 'OPS-RCV-003' }) +
+          A.btn('outline', T(L('Diambil Klien di Plant', 'Collected at Plant')) + (collectable().length ? ' · ' + collectable().length : ''), 'package', { go: 'OPS-DLV-004' }) + '</div>' : '') +
         A.section(L('Tugas Saya Hari Ini', 'My Tasks Today'), '<div class="rls">' + queues.map(function (k) {
           var n = orders(k).length, u = orders(k).filter(urgent).length;
           return A.rowLink({ href: href(STAGE_SCREENS[k].q), icon: A.stage(k).i, t: t(C.screen(STAGE_SCREENS[k].q).n), s: u ? t(L(u + ' mendesak', u + ' urgent')) : t(L('Tidak ada yang mendesak', 'Nothing urgent')), n: n, tone: u ? 'warn' : '' });
@@ -225,12 +227,12 @@
         var aside = first ? '<aside class="qa hide-m hide-t"><div class="card"><div class="card-h"><h2>' + ic('target') + '<span>' + t(L('Prioritas Berikutnya', 'Next Priority')) + '</span></h2></div>' +
           '<b class="qa-n">' + esc(A.cname(first.cl)) + '</b><p class="qa-m">#' + esc(first.id) + '</p>' + infoGrid([[L('Berat', 'Weight'), first.kg != null ? fmt.kg(first.kg) : '± ' + fmt.kg(first.estKg)], [L('Bag', 'Bags'), first.bags], [L('Jenis', 'Type'), t(A.typeL(first.type))], [L('SLA', 'SLA'), A.slaChip(first.dueAt)]]) +
           A.btn('primary', o.cta || C.screen(target).n, 'arrow', { go: target, rec: first.id, cls: 'w100' }) + '</div></aside>' : '';
-        return A.pageHead(null, t(L(rows.length + ' antrian', rows.length + ' in queue')) + (urg.length ? ' · ' + t(L(urg.length + ' mendesak', urg.length + ' urgent')) : '')) +
+        return A.pageHead(null, t(L(rows.length + ' antrian', rows.length + ' in queue')) + (urg.length ? ' · ' + t(L(urg.length + ' mendesak', urg.length + ' urgent')) : ''), o.actions ? o.actions() : null) +
           '<div class="qwrap"><div class="qmain">' + tabs + (shown.length ? '<div class="qcs">' + shown.map(function (r) { return qcard(r, target); }).join('') + '</div>' : A.empty(C.screen(id).emp)) + '</div>' + aside + '</div>';
       }
     };
   }
-  queueScreen('OPS-RCV-002', 'receive', 'OPS-RCV-001', { cta: L('Terima Cucian', 'Receive Laundry') });
+  queueScreen('OPS-RCV-002', 'receive', 'OPS-RCV-001', { cta: L('Terima Cucian', 'Receive Laundry'), actions: function () { return A.pbtn('ops.receive', 'primary', L('+ Terima Langsung', '+ Direct Drop-off'), 'user', { go: 'OPS-RCV-003' }); } });
   queueScreen('OPS-SRT-002', 'sort', 'OPS-SRT-001', { cta: L('Mulai Sorting', 'Start Sorting') });
   queueScreen('OPS-WSH-002', 'wash', 'OPS-WSH-001', { cta: L('Buka Batch', 'Open Batch') });
   queueScreen('OPS-QC-002', 'qc', 'OPS-QC-001', { cta: L('Cek QC', 'Check QC') });
@@ -267,7 +269,7 @@
         fld('kg', L('Berat Total', 'Total Weight'), numIn('kg', '', 'kg', { ph: '0,0' }), { big: true, req: true }) +
         fld('bags', L('Jumlah Bag', 'Bag Count'), numIn('bags', o.bags, '', { int: true, step: true }), { big: true, req: true, from: L('dari pickup', 'from pickup') }) +
         fld('type', L('Jenis Cucian', 'Laundry Type'), selIn('type', TYPE_OPTS, o.type), { big: true, from: L('dari pickup', 'from pickup') }) +
-        '</div><p class="hint">' + ic('scale') + t(L('Perkiraan saat pickup', 'Estimate at pickup')) + ': <b>' + fmt.kg(o.estKg) + '</b></p>' +
+        '</div>' + (o.src === 'drop' ? '<p class="hint">' + ic('user') + t(L('Diantar klien ke plant', 'Brought to the plant by the client')) + ': <b>' + esc(o.dropBy || '—') + '</b>' + (o.estGiven ? ' · ' + t(L('perkiraan', 'estimate')) + ' <b>' + fmt.kg(o.estKg) + '</b>' : '') + '</p>' : '<p class="hint">' + ic('scale') + t(L('Perkiraan saat pickup', 'Estimate at pickup')) + ': <b>' + fmt.kg(o.estKg) + '</b></p>') +
         '<div class="fgrid f2">' + noteBox(o) + photo('rcv') + '</div><div id="diffbox"></div></section>' +
         actionBar(A.btn('primary', L('Terima Cucian', 'Receive Laundry'), 'check', { act: 'ok', id: 'cta' }), A.pbtn('ops.issue', 'outline', L('Ada Masalah', 'Report Issue'), 'alert', { go: 'OPS-ISS-001', qs: 'ord=' + o.id }));
     },
@@ -279,7 +281,7 @@
         if (!raw) { setErr('kg', s.v[0]); errs.push(s.v[0]); } else if (!(kg > 0)) { setErr('kg', s.v[1]); errs.push(s.v[1]); }
         if (!(bags > 0)) { setErr('bags', s.v[2]); errs.push(s.v[2]); }
         errSummary(errs); if (errs.length) { document.getElementById(raw && kg > 0 ? 'f-bags' : 'f-kg').focus(); return; }
-        var diff = Math.abs(kg - o.estKg) / o.estKg;
+        var diff = o.src === 'drop' && !o.estGiven ? 0 : Math.abs(kg - o.estKg) / o.estKg;
         if (diff > 0.05 && pendingDiff !== kg) {
           pendingDiff = kg;
           document.getElementById('diffbox').innerHTML = '<div class="bnr warn" role="alert">' + ic('alert') + '<span><b>' + t(L('Berat berbeda ' + fmt.num(diff * 100, 1) + '% dari pickup (' + fmt.kg(o.estKg) + ').', 'Weight differs ' + fmt.num(diff * 100, 1) + '% from pickup (' + fmt.kg(o.estKg) + ').')) + '</b> ' +
@@ -499,6 +501,95 @@
           A.audit('DLV.POD', o.id, null, rn); A.audit('ORD.STATUS', o.id, T(L('Diserahkan', 'Handed Over')), T(A.stage('done').wait));
           var nx = orders('deliver').sort(bySla)[0];
           A.success(L('Pengiriman selesai. Bukti tersimpan.', 'Delivery done. Proof saved.'), nx ? { l: L('Tujuan berikutnya: ' + A.cname(nx.cl), 'Next: ' + A.cname(nx.cl)), go: 'OPS-DLV-001', rec: nx.id } : null, { l: L('Kembali ke daftar', 'Back to list'), go: 'OPS-DLV-002' }, esc(A.cname(o.cl)) + ' · ' + esc(rn));
+        });
+      }
+    })
+  };
+
+  /* ================= Client at the plant: direct drop-off (OPS-RCV-003) and collection (OPS-DLV-004) ================= */
+  // Ready loads a client can collect: in the delivery stage and not yet taken by a driver.
+  function collectable() { return orders('deliver').filter(function (o) { return !o.sub && !o.hold; }); }
+  A.collectable = collectable;
+  function nextOrderId() {
+    var max = 0; DB.get().orders.forEach(function (o) { var m = /^JF2610-(\d+)$/.exec(o.id); if (m) max = Math.max(max, parseInt(m[1], 10)); });
+    return 'JF2610-' + String(max + 1).padStart(5, '0');
+  }
+  V['OPS-RCV-003'] = {
+    render: function (ctx) {
+      var s = ctx.s, props = DB.PROPS.filter(function (p) { var c = DB.client(p.cl); return c && c.status === 'active' && (!A.ctx() || window.JFACCESS.inScope(A.ctx(), { cl: p.cl })); });
+      var popts = [['', L('— pilih klien / property —', '— choose client / property —')]].concat(props.map(function (p) { return [p.id, [DB.client(p.cl).n + ' · ' + p.n, DB.client(p.cl).n + ' · ' + p.n]]; }));
+      return A.pageHead(null, t(L('Klien mengantar cucian sendiri ke plant. Catat di sini, lalu timbang seperti biasa.', 'The client brings the laundry to the plant. Record it here, then weigh it as usual.'))) +
+        '<section class="card"><div class="card-h"><h2>' + ic('user') + '<span>' + t(L('Cucian dari klien', 'Laundry from the client')) + '</span></h2></div>' +
+        '<div class="fgrid f2">' + fld('prop', L('Klien · Property', 'Client · Property'), selIn('prop', popts, ''), { big: true, req: true }) +
+        fld('by', L('Diantar oleh', 'Brought by'), txtIn('by', '', L('Nama & jabatan, mis. Ibu Sari (HK)', 'Name & role, e.g. Ibu Sari (HK)')), { big: true, req: true }) + '</div>' +
+        '<div class="fgrid f3">' + fld('bags', L('Jumlah Bag', 'Bag Count'), numIn('bags', 1, '', { int: true, step: true }), { big: true, req: true }) +
+        fld('type', L('Jenis Cucian', 'Laundry Type'), selIn('type', TYPE_OPTS, 'bed'), { big: true }) +
+        fld('est', L('Perkiraan Berat', 'Estimated Weight'), numIn('est', '', 'kg', { ph: '0,0' }), { big: true }) + '</div>' +
+        '<div class="fgrid f2">' + fld('note', L('Catatan', 'Note'), txtIn('note', '', L('Mis. ada noda, minta express', 'E.g. stains, express requested'), true)) + photo('drop') + '</div></section>' +
+        actionBar(A.btn('primary', L('Catat & Timbang', 'Record & Weigh'), 'scale', { act: 'ok' }), A.btn('ghost', L('Batal', 'Cancel'), 'x', { go: 'OPS-RCV-002' }));
+    },
+    act: acts({
+      ok: function (el) {
+        var s = C.screen('OPS-RCV-003'), errs = [], pid = val('f-prop'), by = val('f-by'), bags = parseInt(val('f-bags'), 10), est = parseFloat(val('f-est').replace(',', '.'));
+        setErr('prop'); setErr('bags'); setErr('by');
+        if (!pid) { setErr('prop', s.v[0]); errs.push(s.v[0]); }
+        if (!(bags > 0)) { setErr('bags', s.v[1]); errs.push(s.v[1]); }
+        if (!by) { setErr('by', s.v[2]); errs.push(s.v[2]); }
+        errSummary(errs); if (errs.length) return;
+        var pr = DB.prop(pid), cl = DB.client(pr.cl), now = A.now(), type = val('f-type');
+        var kgEst = est > 0 ? est : Math.round(bags * 10 * 10) / 10;
+        A.submit('drop:' + pid + ':' + now, el, function () {
+          var o = { id: nextOrderId(), cl: cl.id, prop: pr.id, stage: 'receive', sub: null, type: type, estKg: kgEst, kg: null, bags: bags, cleanBags: null, note: val('f-note'),
+            dueAt: now + cl.sla * 36e5, createdAt: now, rewash: 0, machine: null, pod: null, pickupAt: now, estGiven: est > 0, deliverAt: now + cl.sla * 36e5 - 30 * 6e4, history: [],
+            src: 'drop', dropBy: by, dropAt: now, dropPhoto: !!document.querySelector('#ph-drop.on') };
+          DB.get().orders.push(o);
+          A.audit('ORD.CREATE', o.id, null, T(L('Antar Klien', 'Client Drop')) + ' · ' + pr.n);
+          A.audit('ORD.DROP', o.id, null, by + ' · ' + bags + ' bag');
+          A.go('OPS-RCV-001', o.id);
+          setTimeout(function () { A.toast(L('Cucian tercatat. Lanjut timbang.', 'Laundry recorded. Weigh it next.')); }, 300);
+        });
+      }
+    })
+  };
+  V['OPS-DLV-004'] = {
+    render: function (ctx) {
+      var s = ctx.s;
+      if (!ctx.rec) {
+        var rows = collectable().slice().sort(bySla);
+        return A.pageHead(null, t(L('Cucian bersih yang siap. Pilih cucian saat klien datang mengambil ke plant.', 'Clean laundry that is ready. Pick the load when the client comes to the plant.'))) +
+          (rows.length ? '<div class="qcs">' + rows.map(function (r) { return qcard(r, 'OPS-DLV-004'); }).join('') + '</div>' : A.empty(s.emp));
+      }
+      var o = DB.order(ctx.rec); if (!o) return notFound();
+      if (o.stage === 'done') return A.stateCard('success', o.pod && o.pod.method === 'plant' ? L('Sudah diambil di plant oleh ' + o.pod.name + '.', 'Already collected at the plant by ' + o.pod.name + '.') : s.emp, A.btn('blue', L('Kembali', 'Back'), 'list', { go: 'OPS-DLV-004' }), L('Sudah selesai', 'Already done'));
+      if (o.stage !== 'deliver' || o.sub) return A.stateCard('warning', o.sub ? L('Cucian ini sudah dibawa driver untuk diantar.', 'A driver has already taken this load for delivery.') : L('Cucian ini belum siap diambil.', 'This load is not ready for collection yet.'), A.btn('blue', L('Kembali', 'Back'), 'list', { go: 'OPS-DLV-004' }));
+      var cl = DB.client(o.cl);
+      return A.pageHead(null, esc(cl.n) + ' · #' + esc(o.id)) + statusBar(o) +
+        '<section class="card">' + infoGrid([[L('Property', 'Property'), esc(DB.prop(o.prop).n)], [L('Jumlah', 'Count'), (o.cleanBags || o.bags) + ' bag'], [L('Berat', 'Weight'), fmt.kg(o.kg != null ? o.kg : o.estKg)], [L('Kontak klien', 'Client contact'), esc(cl.pic) + ' · ' + esc(cl.phone)]]) + '</section>' +
+        '<section class="card"><div class="card-h"><h2>' + ic('package') + '<span>' + t(L('Serah terima di plant', 'Handover at the plant')) + '</span></h2></div><div class="fgrid f2">' +
+        fld('rn', L('Nama pengambil', 'Collector name'), txtIn('rn', '', L('Nama orang yang mengambil', 'Name of the person collecting')), { big: true, req: true }) +
+        fld('rb', L('Jumlah bag diserahkan', 'Bags handed over'), numIn('rb', o.cleanBags || o.bags, 'bag', { int: true, step: true }), { big: true }) + '</div>' +
+        '<div class="fgrid f2"><button type="button" class="photo" data-act="photo" id="ph-pod"><span class="photo-im">' + ic('camera') + '</span><span>' + t(L('Ambil Foto Serah Terima', 'Take Handover Photo')) + '</span></button>' +
+        '<button type="button" class="photo sign" data-act="sign" id="sg"><span class="photo-im">' + ic('sign') + '</span><span>' + t(L('Ketuk untuk tanda tangan', 'Tap to sign')) + '</span></button></div><span class="fld-e" id="e-pod" aria-live="polite"></span></section>' +
+        actionBar(A.btn('primary', L('Serahkan & Selesai', 'Hand Over & Done'), 'checkc', { act: 'ok' }), A.pbtn('ops.issue', 'outline', L('Ada Masalah', 'Report Issue'), 'alert', { go: 'OPS-ISS-001', qs: 'ord=' + o.id }));
+    },
+    act: acts({
+      sign: function (el) { el.classList.toggle('on'); el.querySelector('span:last-child').textContent = el.classList.contains('on') ? T(L('Ditandatangani ✓', 'Signed ✓')) : T(L('Ketuk untuk tanda tangan', 'Tap to sign')); },
+      photo: function (el) { el.classList.toggle('on'); el.querySelector('span:last-child').textContent = el.classList.contains('on') ? T(L('Foto ditambahkan ✓', 'Photo added ✓')) : T(L('Ambil Foto Serah Terima', 'Take Handover Photo')); },
+      ok: function (el) {
+        var o = DB.order(A.S.rec), s = C.screen('OPS-DLV-004'), errs = [], rn = val('f-rn');
+        setErr('rn'); document.getElementById('e-pod').textContent = '';
+        if (!rn) { setErr('rn', s.v[0]); errs.push(s.v[0]); }
+        if (!document.querySelector('#ph-pod.on, #sg.on')) { document.getElementById('e-pod').textContent = T(s.v[1]); errs.push(s.v[1]); }
+        errSummary(errs); if (errs.length) return;
+        if (o.stage !== 'deliver' || o.sub) { A.toast(L('Cucian ini sudah dibawa driver.', 'A driver already took this load.'), 'warn'); A.rerender(); return; }
+        A.submit('collect:' + o.id, el, function () {
+          var bags = parseInt(val('f-rb'), 10);
+          o.stage = 'done'; o.sub = null; o.deliveredAt = A.now(); o.pod = { name: rn, at: A.now(), photo: !!document.querySelector('#ph-pod.on'), sign: !!document.querySelector('#sg.on'), bags: bags, method: 'plant', by: A.R().person };
+          A.audit('DLV.COLLECT', o.id, null, rn + ' · ' + T(L('diambil di plant', 'collected at plant')));
+          A.audit('ORD.STATUS', o.id, T(A.stage('deliver').wait), T(A.stage('done').wait));
+          var nx = collectable().sort(bySla)[0];
+          A.success(L('Cucian diserahkan. Order selesai.', 'Laundry handed over. Order done.'), nx ? { l: L('Cucian siap berikutnya: ' + A.cname(nx.cl), 'Next ready load: ' + A.cname(nx.cl)), go: 'OPS-DLV-004', rec: nx.id } : null, { l: L('Kembali ke Beranda', 'Back to Home'), go: 'HOM-OPR-001' },
+            esc(A.cname(o.cl)) + ' · ' + esc(rn) + (bags !== (o.cleanBags || o.bags) ? '<br>' + t(s.warn) : ''));
         });
       }
     })
