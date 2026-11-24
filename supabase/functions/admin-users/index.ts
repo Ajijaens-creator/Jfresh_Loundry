@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
     const { data: target } = await caller.from("profiles").select("id,email,full_access").eq("id", userId).maybeSingle();
     if (!target) return fail(404, "missing", "account not found");
     if (target.full_access && !full) return fail(403, "noperm", "only a full-access user can change this account");
-    const { error } = await admin.auth.admin.updateUserById(userId, { password });
+    const { error } = await admin.auth.admin.updateUserById(userId, { password, user_metadata: { must_change_password: true } });
     if (error) return fail(400, "system", error.message);
     await caller.rpc("log_event", { p_event: "ACC.PW_RESET", p_target: target.email, p_details: {} });
     return json(200, { ok: true });
@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
       existing = emp;
     }
     const { data: created, error: cErr } = await admin.auth.admin.createUser({
-      email, password, email_confirm: true, user_metadata: { display_name: name },
+      email, password, email_confirm: true, user_metadata: { display_name: name, must_change_password: true },
     });
     if (cErr || !created?.user) {
       const dup = /already|registered|exists/i.test(cErr?.message ?? "");

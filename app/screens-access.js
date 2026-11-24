@@ -77,7 +77,12 @@
     });
   }
   V['USER-002'] = {
-    render: function () { return A.pageHead(null, t(L('Gunakan minimal 8 karakter. Password lama diperlukan.', 'Use at least 8 characters. Your current password is required.'))) + '<section class="card" id="pw-wrap">' + pwForm() + '</section>'; },
+    render: function (o) {
+      var first = o && o.q && o.q.first === '1';
+      return A.pageHead(null, t(L('Gunakan minimal 8 karakter. Password lama diperlukan.', 'Use at least 8 characters. Your current password is required.'))) +
+        (first ? '<div style="margin-bottom:var(--jf-space-4)">' + DS.Feedback.Inline({ type: 'warning', text: L('Akun Anda masih memakai password sementara. Buat password baru dulu sebelum mulai bekerja.', 'Your account still uses a temporary password. Create a new one before you start.') }) + '</div>' : '') +
+        '<section class="card" id="pw-wrap">' + pwForm() + '</section>';
+    },
     after: bindPw
   };
 

@@ -17,7 +17,7 @@
     url: 'https://qixksilrbyslmomxlevi.supabase.co',
     key: 'sb_publishable_1rYLhJdxxhSwyvF6YXlpSQ_TXxvA2lv'
   };
-  var C = { on: !!SITE.cloud && !!X, cfg: CFG };
+  var C = { on: !!SITE.cloud && !!X, cfg: CFG, DOMAIN: 'jfreshlaundry.app' };
   root.JFCLOUD = C;
   if (!C.on) return;
   if (!root.supabase || !root.supabase.createClient) { C.on = false; C.broken = true; return; }
@@ -57,6 +57,8 @@
   // Login page: email + password → local session. Same result shape as JFACCESS.login().
   C.signIn = function (email, password, o) {
     email = String(email || '').trim().toLowerCase();
+    // Team accounts may sign in with the short name: "niken" = niken@jfreshlaundry.app
+    if (email && email.indexOf('@') < 0) email = email + '@' + C.DOMAIN;
     if (!email) return Promise.resolve({ ok: false, code: 'empty_user', field: 'user' });
     if (!password) return Promise.resolve({ ok: false, code: 'empty_pass', field: 'pass' });
     if (offline()) return Promise.resolve({ ok: false, code: 'network' });
@@ -85,12 +87,20 @@
     var email = v0.ctx.user.email;
     return sb.auth.signInWithPassword({ email: email, password: old }).then(function (r) {
       if (r.error) return { ok: false, code: errCode(r.error) === 'invalid' ? 'pw_old' : errCode(r.error), field: errCode(r.error) === 'invalid' ? 'old' : undefined };
-      return sb.auth.updateUser({ password: p1 }).then(function (u) {
+      return sb.auth.updateUser({ password: p1, data: { must_change_password: false } }).then(function (u) {
         if (u.error) return { ok: false, code: /weak|short|characters/i.test(u.error.message || '') ? 'pw_short' : errCode(u.error), field: /weak|short|characters/i.test(u.error.message || '') ? 'p1' : undefined };
         log('AUTH.PW_CHANGED', email, { reason: 'profile' });
         return { ok: true };
       });
     }, function (e) { return { ok: false, code: errCode(e) }; });
+  };
+
+  // A new account (or one an admin reset) carries must_change_password: send it to Ganti Password first.
+  C.mustChange = function () {
+    return sb.auth.getSession().then(function (r) {
+      var u = r.data && r.data.session && r.data.session.user;
+      return !!(u && u.user_metadata && u.user_metadata.must_change_password);
+    }, function () { return false; });
   };
 
   // Call an Edge Function with the signed-in token.

@@ -17,7 +17,7 @@
 (function () {
   var X = window.JFACCESS, DS = window.JFDS, L = DS.L, ic = DS.ic, esc = DS.esc;
   var CL = window.JFCLOUD && window.JFCLOUD.on ? window.JFCLOUD : null;   // mode asli: real accounts (Supabase)
-  if (CL) { X.MSG.invalid = L('Email atau password belum benar.', 'Email or password is not correct.'); X.MSG.empty_user = L('Email wajib diisi.', 'Email is required.'); }
+  if (CL) { X.MSG.invalid = L('Nama pengguna/email atau password belum benar.', 'Username/email or password is not correct.'); X.MSG.empty_user = L('Email atau nama pengguna wajib diisi.', 'Email or username is required.'); }
   var LANG = 'id';
   try { LANG = localStorage.getItem('jfresh-lang') === 'en' ? 'en' : 'id'; } catch (e) {}
   window.JF = window.JF || { lang: function () { return LANG; }, onLang: function () {} };
@@ -59,7 +59,7 @@
     if (r.q.pw === '1') alert = alertBox('success', L('Password berhasil diperbarui. Silakan masuk.', 'Password updated. Please sign in.'));
     paint(head(L('Selamat Datang di', 'Welcome to'), 'JFRESH OS', L('Masuk untuk melanjutkan', 'Sign in to continue')) + alert +
       '<form class="au-form" id="f-login" novalidate>' +
-      DS.Input.Text({ label: CL ? L('Email', 'Email') : L('Username atau Email', 'Username or Email'), icon: 'user', placeholder: CL ? L('nama@email.com', 'name@email.com') : L('Username atau email', 'Username or email'), value: userVal, name: 'username', autocomplete: CL ? 'email' : 'username', autocapitalize: 'none', spellcheck: 'false', req: true,
+      DS.Input.Text({ label: CL ? L('Email atau nama pengguna', 'Email or username') : L('Username atau Email', 'Username or Email'), icon: 'user', placeholder: CL ? L('cth. niken atau nama@email.com', 'e.g. niken or name@email.com') : L('Username atau email', 'Username or email'), value: userVal, name: 'username', autocomplete: 'username', autocapitalize: 'none', spellcheck: 'false', req: true,
         state: userErr ? 'error' : null, help: userErr ? X.MSG[e.code] : null }).replace('<input ', '<input autofocus ') +
       DS.Input.Password({ label: L('Password', 'Password'), placeholder: L('Password', 'Password'), name: 'password', autocomplete: 'current-password', req: true, state: passErr ? 'error' : null, help: passErr ? X.MSG[e.code] : null }) +
       '<div class="au-row">' + DS.Input.Checkbox({ label: L('Ingat saya', 'Remember me'), checked: !!remembered }) + '</div>' +
