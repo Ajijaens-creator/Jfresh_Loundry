@@ -17,9 +17,9 @@
 (function () {
   var A = window.JFAPP, X = window.JFACCESS, DS = window.JFDS, CL = window.JFCLOUD, V = A.V;
   var T = A.T, L = A.L, t = A.t, esc = A.esc, ic = A.ic;
-  A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [] });
+  A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [], 'MD-PLT-001': [] });
   if (!CL || !CL.on) {
-    ['USER-000', 'USER-010', 'USER-011'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
+    ['USER-000', 'USER-010', 'USER-011', 'MD-PLT-001'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
     return;
   }
   var sb = CL.sb;
@@ -170,6 +170,7 @@
       var c = A.ctx(), short = [];
       if (X.can(c, 'hr.manage') || X.can(c, 'sys.users')) short.push(A.btn('primary', L('Data Karyawan', 'Employees'), 'idcard', { go: 'USER-011' }));
       if (X.can(c, 'sys.users')) short.push(A.btn('ghost', L('Akun & Akses', 'Accounts & Access'), 'shield', { go: 'USER-010' }));
+      if (X.can(c, 'sys.master')) short.push(A.btn('ghost', L('Master Data Plant', 'Plant Master Data'), 'building', { go: 'MD-PLT-001' }));
       short.push(A.btn('ghost', L('Profil Saya', 'My Profile'), 'user', { go: 'USER-001' }));
       return '<div class="acc">' +
         '<div class="acc-r"><div class="acc-n"><h1 class="acc-hi">' + t(L('Halo, ', 'Hello, ')) + esc(c.name) + '</h1>' +
@@ -412,6 +413,91 @@
     accPaint();
     var mx2 = document.querySelector('.acc-mx'); if (mx2) mx2.scrollLeft = sx; window.scrollTo(0, y);
   });
+  /* =====================================================================
+     MD-PLT-001 Master Data · Plant (sys.master)
+     A plant is never deleted: other records point to it. It is switched off.
+     ===================================================================== */
+  var P = { view: 'list', id: null, rows: null, err: null, loadErr: false };
+  function loadPlants() {
+    P.loadErr = false;
+    return sb.from('plants').select('id,name,short_name,active,created_at').order('id').then(function (r) {
+      if (r.error) throw r.error;
+      P.rows = r.data || [];
+    }).catch(function () { P.loadErr = true; });
+  }
+  function nextPlantId() {
+    var n = 0; (P.rows || []).forEach(function (p) { var m = /^PL-(\d+)$/.exec(p.id); if (m) n = Math.max(n, +m[1]); });
+    return 'PL-' + String(n + 1).padStart(2, '0');
+  }
+  function pltList() {
+    var list = P.rows.map(function (p) {
+      return '<article class="acc-r"><div class="acc-h"><span class="av">' + ic('building') + '</span><div class="acc-n"><b>' + esc(p.name) + '</b><small>' + esc(p.id) + (p.short_name ? ' · ' + esc(p.short_name) : '') + '</small></div>' +
+        (p.active ? A.chip('ok', L('Aktif', 'Active'), 'checkc') : A.chip('mute', L('Nonaktif', 'Inactive'), 'ban')) + '</div>' +
+        '<div class="acc-a">' + b('ghost', L('Ubah', 'Edit'), 'edit', 'data-p="edit" data-id="' + esc(p.id) + '"') +
+          (p.active ? b('ghost', L('Nonaktifkan', 'Deactivate'), 'ban', 'data-p="off" data-id="' + esc(p.id) + '"') : b('ghost', L('Aktifkan', 'Activate'), 'check', 'data-p="on" data-id="' + esc(p.id) + '"')) + '</div></article>';
+    }).join('');
+    return A.pageHead(null, t(L('Lokasi laundry milik J\'Fresh. Plant dipakai untuk karyawan, akun, order dan laporan.', 'J\'Fresh laundry locations. Plants are used for employees, accounts, orders and reports.')),
+        b('primary', L('Tambah Plant', 'Add Plant'), 'plus', 'data-p="new"')) + errBox(P) +
+      (list ? '<div class="acc-list">' + list + '</div>' : A.empty(L('Belum ada plant. Tekan Tambah Plant.', 'No plants yet. Press Add Plant.')));
+  }
+  function pltForm(p) {
+    var isNew = !p; p = p || { id: nextPlantId() };
+    return A.pageHead(isNew ? L('Tambah Plant', 'Add Plant') : L('Ubah Plant', 'Edit Plant'), t(L('Kode plant tidak bisa diubah setelah disimpan.', 'The plant code cannot change after saving.'))) + errBox(P) +
+      '<form class="ds acc-f" id="plt-f" novalidate>' +
+        '<div class="acc-2">' + field(L('Kode plant', 'Plant code'), isNew ? input('id', 'text', p.id, 'PL-03') : '<div class="ds-control"><input name="id" type="text" value="' + esc(p.id) + '" readonly></div>', L('Format PL-01, PL-02, ...', 'Format PL-01, PL-02, ...')) +
+          field(L('Nama singkat', 'Short name'), input('short_name', 'text', p.short_name, L('cth. Ubud', 'e.g. Ubud'))) + '</div>' +
+        field(L('Nama plant', 'Plant name'), input('name', 'text', p.name, L('cth. J\'Fresh Plant Ubud', 'e.g. J\'Fresh Plant Ubud'))) +
+        '<div class="row2">' + b('ghost', L('Batal', 'Cancel'), 'arrowl', 'data-p="back"') + '<button type="submit" class="btn btn-primary" id="acc-go">' + ic('check') + '<span>' + t(L('Simpan', 'Save')) + '</span></button></div>' +
+      '</form>';
+  }
+  function pltPaint() {
+    var root = document.getElementById('plt-root'); if (!root) return;
+    if (P.loadErr) { root.innerHTML = loadErr(); return; }
+    if (!P.rows) { root.innerHTML = skel(); return; }
+    var p = P.id && P.rows.filter(function (x) { return x.id === P.id; })[0];
+    root.innerHTML = P.view === 'new' ? pltForm(null) : P.view === 'edit' && p ? pltForm(p) : pltList();
+    DS.lang(root);
+    var f = root.querySelector('#plt-f'); if (f) f.addEventListener('submit', function (ev) { ev.preventDefault(); pltSave(f); });
+  }
+  function pltGo(view, id) { P.view = view; P.id = id || null; P.err = null; pltPaint(); window.scrollTo(0, 0); }
+  function pltDone(msg) { REF = null; loadPlants().then(function () { P.view = 'list'; P.id = null; P.err = null; pltPaint(); A.toast(msg); }); }
+  function pltSave(f) {
+    var isNew = P.view === 'new', id = val(f, 'id').toUpperCase(), row = { name: val(f, 'name'), short_name: val(f, 'short_name') || null };
+    if (isNew && !/^PL-\d{2,3}$/.test(id)) { P.err = T(L('Kode plant harus seperti PL-03.', 'The plant code must look like PL-03.')); return pltPaint(); }
+    if (!row.name) { P.err = T(L('Nama plant wajib diisi.', 'Plant name is required.')); return pltPaint(); }
+    if (isNew && P.rows.some(function (x) { return x.id === id; })) { P.err = T(L('Kode plant ini sudah dipakai.', 'This plant code is already used.')); return pltPaint(); }
+    busy(true);
+    var q = isNew ? sb.from('plants').insert(Object.assign({ id: id, active: true }, row)) : sb.from('plants').update(row).eq('id', P.id);
+    q.then(function (r) {
+      busy(false);
+      if (r.error) { P.err = T(errMsg(null, r.error.message)); return pltPaint(); }
+      CL.log(isNew ? 'MD.PLANT_CREATED' : 'MD.PLANT_UPDATED', isNew ? id : P.id, { name: row.name });
+      pltDone(isNew ? L('Plant ditambahkan.', 'Plant added.') : L('Plant disimpan.', 'Plant saved.'));
+    }, function () { busy(false); P.err = T(ERR.network); pltPaint(); });
+  }
+  function pltActive(id, on) {
+    if (!on && P.rows.filter(function (x) { return x.active; }).length < 2) { P.err = T(L('Minimal harus ada satu plant aktif.', 'At least one plant must stay active.')); return pltPaint(); }
+    sb.from('plants').update({ active: on }).eq('id', id).then(function (r) {
+      if (r.error) { P.err = T(errMsg(null, r.error.message)); return pltPaint(); }
+      CL.log(on ? 'MD.PLANT_ON' : 'MD.PLANT_OFF', id, {});
+      pltDone(on ? L('Plant diaktifkan.', 'Plant activated.') : L('Plant dinonaktifkan. Data lamanya tetap tersimpan.', 'Plant deactivated. Its records are kept.'));
+    }, function () { P.err = T(ERR.network); pltPaint(); });
+  }
+  V['MD-PLT-001'] = {
+    render: function () { return '<div id="plt-root" class="acc"></div>'; },
+    after: function () { pltPaint(); if (!P.rows) loadPlants().then(pltPaint); }
+  };
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('#plt-root [data-p], #plt-root [data-x]'); if (!el) return;
+    var x = el.getAttribute('data-p'), id = el.getAttribute('data-id');
+    if (x === 'new') pltGo('new');
+    else if (x === 'edit') pltGo('edit', id);
+    else if (x === 'back') pltGo('list');
+    else if (x === 'off') pltActive(id, false);
+    else if (x === 'on') pltActive(id, true);
+    else if (el.getAttribute('data-x') === 'reload') { P.rows = null; pltPaint(); loadPlants().then(pltPaint); }
+  });
+
   document.addEventListener('click', function (e) {
     var el = e.target.closest('#acc-root [data-x], #emp-root [data-x], #emp-root [data-e]'); if (!el) return;
     var x = el.getAttribute('data-x'), ex = el.getAttribute('data-e'), id = el.getAttribute('data-id');
