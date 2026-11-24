@@ -119,6 +119,7 @@
   /* Safe back: each screen has an explicit parent; the first one this role can open wins. */
   var PARENT = {
     'OPS-RCV-001': ['OPS-RCV-002'], 'OPS-RCV-002': ['OPS-TSK-001', 'OPS-BRD-001'],
+    'OPS-RCV-003': ['OPS-RCV-002'], 'OPS-DLV-004': ['HOM-OPR-001'],
     'OPS-SRT-001': ['OPS-SRT-002'], 'OPS-SRT-002': ['OPS-TSK-001', 'OPS-BRD-001'],
     'OPS-WSH-001': ['OPS-WSH-002'], 'OPS-WSH-002': ['OPS-TSK-001', 'OPS-BRD-001'],
     'OPS-QC-001': ['OPS-QC-002'], 'OPS-QC-003': ['OPS-QC-001'], 'OPS-QC-002': ['OPS-TSK-001'],
