@@ -17,9 +17,9 @@
 (function () {
   var A = window.JFAPP, X = window.JFACCESS, DS = window.JFDS, CL = window.JFCLOUD, V = A.V;
   var T = A.T, L = A.L, t = A.t, esc = A.esc, ic = A.ic;
-  A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [], 'MD-PLT-001': [], 'MD-CLT-001': [] });
+  A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [], 'MD-PLT-001': [], 'MD-CLT-001': [], 'MD-SVC-001': [], 'MD-VEH-001': [] });
   if (!CL || !CL.on) {
-    ['USER-000', 'USER-010', 'USER-011', 'MD-PLT-001', 'MD-CLT-001'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
+    ['USER-000', 'USER-010', 'USER-011', 'MD-PLT-001', 'MD-CLT-001', 'MD-SVC-001', 'MD-VEH-001'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
     return;
   }
   var sb = CL.sb;
@@ -170,7 +170,7 @@
       var c = A.ctx(), short = [];
       if (X.can(c, 'hr.manage') || X.can(c, 'sys.users')) short.push(A.btn('primary', L('Data Karyawan', 'Employees'), 'idcard', { go: 'USER-011' }));
       if (X.can(c, 'sys.users')) short.push(A.btn('ghost', L('Akun & Akses', 'Accounts & Access'), 'shield', { go: 'USER-010' }));
-      if (X.can(c, 'sys.master')) short.push(A.btn('ghost', L('Klien & Properti', 'Clients & Properties'), 'hotel', { go: 'MD-CLT-001' }), A.btn('ghost', L('Plant', 'Plants'), 'building', { go: 'MD-PLT-001' }));
+      if (X.can(c, 'sys.master')) short.push(A.btn('ghost', L('Klien & Properti', 'Clients & Properties'), 'hotel', { go: 'MD-CLT-001' }), A.btn('ghost', L('Layanan & Harga', 'Services & Prices'), 'tag', { go: 'MD-SVC-001' }), A.btn('ghost', L('Kendaraan', 'Vehicles'), 'truck', { go: 'MD-VEH-001' }), A.btn('ghost', L('Plant', 'Plants'), 'building', { go: 'MD-PLT-001' }));
       short.push(A.btn('ghost', L('Profil Saya', 'My Profile'), 'user', { go: 'USER-001' }));
       return '<div class="acc">' +
         '<div class="acc-r"><div class="acc-n"><h1 class="acc-hi">' + t(L('Halo, ', 'Hello, ')) + esc(c.name) + '</h1>' +
@@ -578,7 +578,8 @@
     return A.pageHead(c.name, t(c.id + ' · ' + T(typeName(c.client_type))), b('ghost', L('Semua Klien', 'All Clients'), 'arrowl', 'data-k="back"') + b('ghost', L('Ubah Klien', 'Edit Client'), 'edit', 'data-k="edit" data-id="' + esc(c.id) + '"')) + errBox(K) +
       '<div class="acc-r"><div class="acc-h"><div class="acc-n"><b>' + t(L('Data klien', 'Client details')) + '</b></div>' + A.chip(st[0], st[1], st[2]) + '</div>' + (info ? '<dl class="md-dl">' + info + '</dl>' : '') + '</div>' +
       '<div class="acc-tools"><h2 class="acc-hi2">' + t(L('Properti', 'Properties')) + ' (' + ps.length + ')</h2><span class="hd-sp"></span>' + b('primary', L('Tambah Properti', 'Add Property'), 'plus', 'data-k="pnew"') + '</div>' +
-      (plist ? '<div class="acc-list">' + plist + '</div>' : A.empty(L('Belum ada properti. Tambahkan minimal satu lokasi pickup.', 'No properties yet. Add at least one pickup location.')));
+      (plist ? '<div class="acc-list">' + plist + '</div>' : A.empty(L('Belum ada properti. Tambahkan minimal satu lokasi pickup.', 'No properties yet. Add at least one pickup location.'))) +
+      ratesCard(c);
   }
   function propForm(c, p) {
     var isNew = !p; p = p || { id: nextPropId(c.id), property_type: c.client_type, city: c.city, plant_id: c.plant_id };
@@ -604,12 +605,14 @@
     if (!K.rows) { root.innerHTML = skel(); return; }
     var c = K.id && K.rows.filter(function (x) { return x.id === K.id; })[0], p = K.pid && K.props.filter(function (x) { return x.id === K.pid; })[0];
     root.innerHTML = K.view === 'new' ? cltForm(null) : K.view === 'edit' && c ? cltForm(c) : K.view === 'open' && c ? cltDetail(c) :
-      K.view === 'pnew' && c ? propForm(c, null) : K.view === 'pedit' && c && p ? propForm(c, p) : cltList();
+      K.view === 'pnew' && c ? propForm(c, null) : K.view === 'pedit' && c && p ? propForm(c, p) : K.view === 'rates' && c && R.rows ? ratesForm(c) : cltList();
+    if (K.view === 'open' && c && R.cid !== c.id) loadRates(c.id).then(cltPaint);
     DS.lang(root);
     var q = root.querySelector('input[name="kq"]');
     if (q) q.addEventListener('input', function () { K.q = this.value; var pos = this.selectionStart; cltPaint(); var n = document.querySelector('#clt-root input[name="kq"]'); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (x) {} } });
     var f = root.querySelector('#clt-f'); if (f) f.addEventListener('submit', function (ev) { ev.preventDefault(); cltSave(f); });
     var g = root.querySelector('#prp-f'); if (g) g.addEventListener('submit', function (ev) { ev.preventDefault(); propSave(g); });
+    var h = root.querySelector('#rate-f'); if (h) h.addEventListener('submit', function (ev) { ev.preventDefault(); ratesSave(h); });
   }
   function cltGo(view, id, pid) { K.view = view; K.id = id || null; K.pid = pid || null; K.err = null; cltPaint(); window.scrollTo(0, 0); }
   function cltReload(view, id, msg) { loadClients().then(function () { cltGo(view, id); if (msg) A.toast(msg); }); }
@@ -666,10 +669,220 @@
     else if (k === 'open') cltGo('open', id);
     else if (k === 'back') cltGo('list');
     else if (k === 'pnew') cltGo('pnew', K.id);
+    else if (k === 'rates') cltGo('rates', K.id);
     else if (k === 'pedit') cltGo('pedit', K.id, id);
     else if (k === 'poff') propActive(id, false);
     else if (k === 'pon') propActive(id, true);
-    else if (el.getAttribute('data-x') === 'reload') { K.rows = null; cltPaint(); loadClients().then(cltPaint); }
+    else if (el.getAttribute('data-x') === 'reload') { K.rows = null; R.cid = null; cltPaint(); loadClients().then(cltPaint); }
+  });
+
+  /* =====================================================================
+     MD-SVC-001 Master Data · Layanan & Harga (sys.master)
+     List price per unit. A client's contract price lives in client_rates and
+     is set from the client page (Harga Kontrak).
+     ===================================================================== */
+  var UNITS = [['kg', L('per kg', 'per kg')], ['pcs', L('per potong', 'per piece')], ['set', L('per set', 'per set')], ['m2', L('per m²', 'per m²')]];
+  var S = { view: 'list', id: null, rows: null, err: null, loadErr: false };
+  function rp(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
+  function unitName(u) { var x = UNITS.filter(function (y) { return y[0] === u; })[0]; return x ? x[1] : L(u, u); }
+  function loadSvc() {
+    S.loadErr = false;
+    return sb.from('services').select('id,name,description,unit,base_price,sla_hours,active').order('id').then(function (r) { if (r.error) throw r.error; S.rows = r.data || []; }).catch(function () { S.loadErr = true; });
+  }
+  function svcList() {
+    var list = S.rows.map(function (v) {
+      return '<article class="acc-r"><div class="acc-h"><span class="av">' + ic('washer') + '</span><div class="acc-n"><b>' + esc(v.name) + '</b><small>' + esc(v.id) + (v.sla_hours ? ' · ' + t(L('selesai ' + v.sla_hours + ' jam', 'done in ' + v.sla_hours + ' h')) : '') + '</small></div>' +
+        (v.active ? A.chip('ok', L('Aktif', 'Active'), 'checkc') : A.chip('mute', L('Nonaktif', 'Inactive'), 'ban')) + '</div>' +
+        '<div class="acc-m"><span>' + ic('tag') + '<b>' + rp(v.base_price) + '</b>&nbsp;' + t(unitName(v.unit)) + '</span>' + (v.description ? '<span>' + ic('file') + esc(v.description) + '</span>' : '') + '</div>' +
+        '<div class="acc-a">' + b('ghost', L('Ubah', 'Edit'), 'edit', 'data-s="edit" data-id="' + esc(v.id) + '"') +
+          (v.active ? b('ghost', L('Nonaktifkan', 'Deactivate'), 'ban', 'data-s="off" data-id="' + esc(v.id) + '"') : b('ghost', L('Aktifkan', 'Activate'), 'check', 'data-s="on" data-id="' + esc(v.id) + '"')) + '</div></article>';
+    }).join('');
+    return A.pageHead(null, t(L('Daftar layanan dan harga standar. Harga kontrak tiap klien diatur di halaman klien.', 'Services and their list price. Each client\'s contract price is set on the client page.')),
+        b('primary', L('Tambah Layanan', 'Add Service'), 'plus', 'data-s="new"')) + errBox(S) +
+      (list ? '<div class="acc-list">' + list + '</div>' : A.empty(L('Belum ada layanan. Tekan Tambah Layanan.', 'No services yet. Press Add Service.')));
+  }
+  function svcForm(v) {
+    var isNew = !v; v = v || { id: nextCode(S.rows, /^SV-(\d+)$/, function (n) { return 'SV-' + String(n).padStart(3, '0'); }), unit: 'kg', sla_hours: 24 };
+    return A.pageHead(isNew ? L('Tambah Layanan', 'Add Service') : L('Ubah Layanan', 'Edit Service'), t(L('Harga di sini adalah harga standar, bukan harga kontrak klien.', 'This is the list price, not a client\'s contract price.'))) + errBox(S) +
+      '<form class="ds acc-f" id="svc-f" novalidate>' +
+        '<div class="acc-2">' + field(L('Kode layanan', 'Service code'), '<div class="ds-control"><input name="id" type="text" value="' + esc(v.id) + '"' + (isNew ? '' : ' readonly') + '></div>') +
+          field(L('Satuan', 'Unit'), select('unit', UNITS, v.unit)) + '</div>' +
+        field(L('Nama layanan', 'Service name'), input('name', 'text', v.name, L('cth. Cuci Reguler', 'e.g. Regular Wash'))) +
+        '<div class="acc-2">' + field(L('Harga standar (Rp per satuan)', 'List price (Rp per unit)'), input('base_price', 'number', v.base_price == null ? '' : String(v.base_price), '7500')) +
+          field(L('Selesai dalam (jam)', 'Done within (hours)'), input('sla_hours', 'number', v.sla_hours == null ? '' : String(v.sla_hours), '24')) + '</div>' +
+        field(L('Keterangan', 'Description'), area('description', v.description, L('cth. Cuci, kering, lipat standar.', 'e.g. Standard wash, dry, fold.'))) +
+        '<div class="row2">' + b('ghost', L('Batal', 'Cancel'), 'arrowl', 'data-s="back"') + '<button type="submit" class="btn btn-primary" id="acc-go">' + ic('check') + '<span>' + t(L('Simpan', 'Save')) + '</span></button></div>' +
+      '</form>';
+  }
+  function svcPaint() {
+    var root = document.getElementById('svc-root'); if (!root) return;
+    if (S.loadErr) { root.innerHTML = loadErr(); return; }
+    if (!S.rows) { root.innerHTML = skel(); return; }
+    var v = S.id && S.rows.filter(function (x) { return x.id === S.id; })[0];
+    root.innerHTML = S.view === 'new' ? svcForm(null) : S.view === 'edit' && v ? svcForm(v) : svcList();
+    DS.lang(root);
+    var f = root.querySelector('#svc-f'); if (f) f.addEventListener('submit', function (ev) { ev.preventDefault(); svcSave(f); });
+  }
+  function svcGo(view, id) { S.view = view; S.id = id || null; S.err = null; svcPaint(); window.scrollTo(0, 0); }
+  function svcDone(msg) { loadSvc().then(function () { svcGo('list'); A.toast(msg); }); }
+  function svcSave(f) {
+    var isNew = S.view === 'new', id = isNew ? val(f, 'id').toUpperCase() : S.id, price = parseInt(val(f, 'base_price'), 10), sla = parseInt(val(f, 'sla_hours'), 10);
+    var row = { name: val(f, 'name'), unit: val(f, 'unit'), base_price: price, sla_hours: isNaN(sla) ? null : sla, description: val(f, 'description') || null };
+    if (isNew && !/^SV-\d{3,4}$/.test(id)) { S.err = T(L('Kode layanan harus seperti SV-001.', 'The service code must look like SV-001.')); return svcPaint(); }
+    if (isNew && S.rows.some(function (x) { return x.id === id; })) { S.err = T(L('Kode layanan ini sudah dipakai.', 'This service code is already used.')); return svcPaint(); }
+    if (!row.name) { S.err = T(L('Nama layanan wajib diisi.', 'Service name is required.')); return svcPaint(); }
+    if (isNaN(price) || price < 0) { S.err = T(L('Isi harga standar (angka, Rp).', 'Enter the list price (a number, Rp).')); return svcPaint(); }
+    if (row.sla_hours != null && (row.sla_hours < 1 || row.sla_hours > 720)) { S.err = T(L('Waktu selesai antara 1 dan 720 jam.', 'Completion time must be 1 to 720 hours.')); return svcPaint(); }
+    busy(true);
+    (isNew ? sb.from('services').insert(Object.assign({ id: id, active: true }, row)) : sb.from('services').update(row).eq('id', id)).then(function (r) {
+      busy(false);
+      if (r.error) { S.err = T(errMsg(null, r.error.message)); return svcPaint(); }
+      CL.log(isNew ? 'MD.SERVICE_CREATED' : 'MD.SERVICE_UPDATED', id, { price: price, unit: row.unit });
+      svcDone(isNew ? L('Layanan ditambahkan.', 'Service added.') : L('Layanan disimpan.', 'Service saved.'));
+    }, function () { busy(false); S.err = T(ERR.network); svcPaint(); });
+  }
+  function svcActive(id, on) {
+    sb.from('services').update({ active: on }).eq('id', id).then(function (r) {
+      if (r.error) { S.err = T(errMsg(null, r.error.message)); return svcPaint(); }
+      CL.log(on ? 'MD.SERVICE_ON' : 'MD.SERVICE_OFF', id, {});
+      svcDone(on ? L('Layanan diaktifkan.', 'Service activated.') : L('Layanan dinonaktifkan.', 'Service deactivated.'));
+    }, function () { S.err = T(ERR.network); svcPaint(); });
+  }
+  V['MD-SVC-001'] = {
+    render: function () { return '<div id="svc-root" class="acc"></div>'; },
+    after: function () { svcPaint(); if (!S.rows) loadSvc().then(svcPaint); }
+  };
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('#svc-root [data-s], #svc-root [data-x]'); if (!el) return;
+    var k = el.getAttribute('data-s'), id = el.getAttribute('data-id');
+    if (k === 'new') svcGo('new'); else if (k === 'edit') svcGo('edit', id); else if (k === 'back') svcGo('list');
+    else if (k === 'off') svcActive(id, false); else if (k === 'on') svcActive(id, true);
+    else if (el.getAttribute('data-x') === 'reload') { S.rows = null; svcPaint(); loadSvc().then(svcPaint); }
+  });
+
+  /* ---------- Harga Kontrak on the client page (client_rates) ---------- */
+  var R = { cid: null, rows: null, svcs: null };
+  function loadRates(cid) {
+    R.cid = cid; R.rows = null;
+    return Promise.all([sb.from('services').select('id,name,unit,base_price,active').order('id'), sb.from('client_rates').select('service_id,price,active').eq('client_id', cid)]).then(function (r) {
+      if (r[0].error || r[1].error) throw (r[0].error || r[1].error);
+      R.svcs = r[0].data || []; R.rows = r[1].data || [];
+    }).catch(function () { R.rows = []; R.svcs = []; R.err = true; });
+  }
+  function rateOf(sid) { return (R.rows || []).filter(function (x) { return x.service_id === sid && x.active; })[0]; }
+  function ratesCard(c) {
+    if (R.cid !== c.id || !R.rows) return '<div class="acc-r">' + skel() + '</div>';
+    var used = R.svcs.filter(function (v) { return rateOf(v.id); });
+    var rows = used.map(function (v) { var r = rateOf(v.id), d = v.base_price ? Math.round((r.price - v.base_price) / v.base_price * 100) : 0;
+      return '<tr><td><b>' + esc(v.name) + '</b><small>' + esc(v.id) + '</small></td><td class="num">' + rp(v.base_price) + '</td><td class="num"><b>' + rp(r.price) + '</b>' + (d ? ' <small>(' + (d > 0 ? '+' : '') + d + '%)</small>' : '') + '</td><td>' + t(unitName(v.unit)) + '</td></tr>'; }).join('');
+    return '<div class="acc-r"><div class="acc-h"><div class="acc-n"><b>' + t(L('Harga kontrak', 'Contract prices')) + '</b><small>' + t(L('Harga yang dipakai saat menagih klien ini. Layanan tanpa harga kontrak belum bisa ditagih.', 'Prices used when billing this client. Services without a contract price cannot be billed yet.')) + '</small></div>' + b('ghost', L('Atur Harga', 'Set Prices'), 'tag', 'data-k="rates"') + '</div>' +
+      (rows ? '<div class="acc-mx"><table class="acc-t md-t"><thead><tr><th>' + t(L('Layanan', 'Service')) + '</th><th>' + t(L('Harga standar', 'List price')) + '</th><th>' + t(L('Harga kontrak', 'Contract price')) + '</th><th>' + t(L('Satuan', 'Unit')) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+        : A.empty(L('Belum ada harga kontrak. Tekan Atur Harga.', 'No contract prices yet. Press Set Prices.'))) + '</div>';
+  }
+  function ratesForm(c) {
+    var svcs = R.svcs.filter(function (v) { return v.active || rateOf(v.id); });
+    return A.pageHead(L('Harga Kontrak', 'Contract Prices'), t(c.name + ' · ' + T(L('kosongkan untuk layanan yang tidak dipakai klien ini.', 'leave empty for services this client does not use.')))) + errBox(K) +
+      (svcs.length ? '<form class="ds acc-f" id="rate-f" novalidate>' + svcs.map(function (v) { var r = rateOf(v.id);
+        return field(L(v.name + ' · standar ' + rp(v.base_price) + ' ' + T(unitName(v.unit)), v.name + ' · list ' + rp(v.base_price) + ' ' + T(unitName(v.unit))), input('r_' + v.id, 'number', r ? String(r.price) : '', L('Harga kontrak (Rp)', 'Contract price (Rp)')));
+      }).join('') +
+        '<div class="row2">' + b('ghost', L('Batal', 'Cancel'), 'arrowl', 'data-k="open" data-id="' + esc(c.id) + '"') + '<button type="submit" class="btn btn-primary" id="acc-go">' + ic('check') + '<span>' + t(L('Simpan Harga', 'Save Prices')) + '</span></button></div></form>'
+        : A.empty(L('Belum ada layanan aktif. Tambahkan dulu di Master Data · Layanan & Harga.', 'No active services yet. Add them first in Master Data · Services & Prices.')));
+  }
+  function ratesSave(f) {
+    var cid = K.id, up = [], off = [], bad = false;
+    R.svcs.forEach(function (v) {
+      var el = f.querySelector('[name="r_' + v.id + '"]'); if (!el) return;
+      var raw = String(el.value || '').trim(), cur = rateOf(v.id);
+      if (raw === '') { if (cur) off.push(v.id); return; }
+      var n = parseInt(raw, 10); if (isNaN(n) || n < 0) { bad = true; return; }
+      if (!cur || cur.price !== n) up.push({ client_id: cid, service_id: v.id, price: n, active: true });
+    });
+    if (bad) { K.err = T(L('Harga harus angka 0 atau lebih.', 'Prices must be numbers, 0 or more.')); return cltPaint(); }
+    if (!up.length && !off.length) return cltGo('open', cid);
+    busy(true);
+    Promise.all([up.length ? sb.from('client_rates').upsert(up, { onConflict: 'client_id,service_id' }) : Promise.resolve({}),
+      off.length ? sb.from('client_rates').update({ active: false }).eq('client_id', cid).in('service_id', off) : Promise.resolve({})]).then(function (r) {
+      busy(false);
+      var er = r[0].error || r[1].error; if (er) { K.err = T(errMsg(null, er.message)); return cltPaint(); }
+      CL.log('MD.RATES_UPDATED', cid, { set: up.map(function (x) { return x.service_id + '=' + x.price; }), removed: off });
+      loadRates(cid).then(function () { cltGo('open', cid); A.toast(L('Harga kontrak disimpan.', 'Contract prices saved.')); });
+    }, function () { busy(false); K.err = T(ERR.network); cltPaint(); });
+  }
+
+  /* =====================================================================
+     MD-VEH-001 Master Data · Kendaraan (sys.master)
+     ===================================================================== */
+  var VT = [['van', L('Mobil van', 'Van')], ['pickup', L('Mobil pickup', 'Pickup truck')], ['motor', L('Motor', 'Motorbike')], ['truck', L('Truk', 'Truck')], ['other', L('Lainnya', 'Other')]];
+  var VST = { active: ['ok', L('Siap jalan', 'In service'), 'checkc'], repair: ['warn', L('Di bengkel', 'In repair'), 'wrench'], inactive: ['mute', L('Nonaktif', 'Inactive'), 'ban'] };
+  var Q = { view: 'list', id: null, rows: null, emps: null, err: null, loadErr: false };
+  function loadVeh() {
+    Q.loadErr = false;
+    return Promise.all([loadRef(), sb.from('vehicles').select('id,plate,vehicle_type,capacity_kg,plant_id,driver_employee_id,status,notes').order('id'),
+      sb.from('employees').select('id,full_name,status').order('full_name')]).then(function (r) {
+      if (r[1].error) throw r[1].error;
+      Q.rows = r[1].data || []; Q.emps = (r[2] && r[2].data) || [];
+    }).catch(function () { Q.loadErr = true; });
+  }
+  function empName(id) { var e = (Q.emps || []).filter(function (x) { return x.id === id; })[0]; return e ? e.full_name : (id || ''); }
+  function vehList() {
+    var list = Q.rows.map(function (v) { var st = VST[v.status] || VST.active, vt = VT.filter(function (x) { return x[0] === v.vehicle_type; })[0];
+      return '<article class="acc-r"><div class="acc-h"><span class="av">' + ic('truck') + '</span><div class="acc-n"><b>' + esc(v.plate) + '</b><small>' + esc(v.id) + ' · ' + t(vt ? vt[1] : L(v.vehicle_type, v.vehicle_type)) + (v.capacity_kg ? ' · ' + v.capacity_kg + ' kg' : '') + '</small></div>' + A.chip(st[0], st[1], st[2]) + '</div>' +
+        '<div class="acc-m"><span>' + ic('building') + esc(plantName(v.plant_id)) + '</span><span>' + ic('user') + (v.driver_employee_id ? esc(empName(v.driver_employee_id)) : t(L('Belum ada driver tetap', 'No regular driver'))) + '</span>' + (v.notes ? '<span>' + ic('file') + esc(v.notes) + '</span>' : '') + '</div>' +
+        '<div class="acc-a">' + b('ghost', L('Ubah', 'Edit'), 'edit', 'data-v="edit" data-id="' + esc(v.id) + '"') + '</div></article>';
+    }).join('');
+    return A.pageHead(null, t(L('Kendaraan pickup dan pengiriman, plant asalnya, dan driver tetapnya.', 'Pickup and delivery vehicles, their plant and regular driver.')),
+        b('primary', L('Tambah Kendaraan', 'Add Vehicle'), 'plus', 'data-v="new"')) + errBox(Q) +
+      (list ? '<div class="acc-list">' + list + '</div>' : A.empty(L('Belum ada kendaraan. Tekan Tambah Kendaraan.', 'No vehicles yet. Press Add Vehicle.')));
+  }
+  function vehForm(v) {
+    var isNew = !v; v = v || { id: nextCode(Q.rows, /^JF-(\d+)$/, function (n) { return 'JF-' + String(n).padStart(2, '0'); }), vehicle_type: 'van', status: 'active', plant_id: REF.plants.length === 1 ? REF.plants[0].id : '' };
+    var emps = [['', L('— Belum ada —', '— None —')]].concat((Q.emps || []).filter(function (e) { return e.status === 'active' || e.id === v.driver_employee_id; }).map(function (e) { return [e.id, L(e.full_name, e.full_name)]; }));
+    return A.pageHead(isNew ? L('Tambah Kendaraan', 'Add Vehicle') : L('Ubah Kendaraan', 'Edit Vehicle'), t(L('Driver dipilih dari Data Karyawan.', 'The driver is picked from Employees.'))) + errBox(Q) +
+      '<form class="ds acc-f" id="veh-f" novalidate>' +
+        '<div class="acc-2">' + field(L('Kode kendaraan', 'Vehicle code'), '<div class="ds-control"><input name="id" type="text" value="' + esc(v.id) + '"' + (isNew ? '' : ' readonly') + '></div>') +
+          field(L('Nomor polisi', 'Plate number'), input('plate', 'text', v.plate, 'DK 1234 AB')) + '</div>' +
+        '<div class="acc-2">' + field(L('Jenis', 'Type'), select('vehicle_type', VT, v.vehicle_type)) + field(L('Kapasitas (kg)', 'Capacity (kg)'), input('capacity_kg', 'number', v.capacity_kg ? String(v.capacity_kg) : '', '400')) + '</div>' +
+        '<div class="acc-2">' + field(L('Plant', 'Plant'), select('plant_id', plantOpts(true), v.plant_id)) + field(L('Driver tetap', 'Regular driver'), select('driver_employee_id', emps, v.driver_employee_id || '')) + '</div>' +
+        field(L('Status', 'Status'), select('status', Object.keys(VST).map(function (k) { return [k, VST[k][1]]; }), v.status)) +
+        field(L('Catatan', 'Notes'), area('notes', v.notes, L('cth. Servis berikutnya 1 Des.', 'e.g. Next service 1 Dec.'))) +
+        '<div class="row2">' + b('ghost', L('Batal', 'Cancel'), 'arrowl', 'data-v="back"') + '<button type="submit" class="btn btn-primary" id="acc-go">' + ic('check') + '<span>' + t(L('Simpan', 'Save')) + '</span></button></div>' +
+      '</form>';
+  }
+  function vehPaint() {
+    var root = document.getElementById('veh-root'); if (!root) return;
+    if (Q.loadErr) { root.innerHTML = loadErr(); return; }
+    if (!Q.rows) { root.innerHTML = skel(); return; }
+    var v = Q.id && Q.rows.filter(function (x) { return x.id === Q.id; })[0];
+    root.innerHTML = Q.view === 'new' ? vehForm(null) : Q.view === 'edit' && v ? vehForm(v) : vehList();
+    DS.lang(root);
+    var f = root.querySelector('#veh-f'); if (f) f.addEventListener('submit', function (ev) { ev.preventDefault(); vehSave(f); });
+  }
+  function vehGo(view, id) { Q.view = view; Q.id = id || null; Q.err = null; vehPaint(); window.scrollTo(0, 0); }
+  function vehSave(f) {
+    var isNew = Q.view === 'new', id = isNew ? val(f, 'id').toUpperCase() : Q.id, cap = parseInt(val(f, 'capacity_kg'), 10);
+    var row = { plate: val(f, 'plate').toUpperCase().replace(/\s+/g, ' '), vehicle_type: val(f, 'vehicle_type'), capacity_kg: isNaN(cap) ? null : cap, plant_id: val(f, 'plant_id') || null, driver_employee_id: val(f, 'driver_employee_id') || null, status: val(f, 'status'), notes: val(f, 'notes') || null };
+    if (isNew && !/^JF-\d{2,3}$/.test(id)) { Q.err = T(L('Kode kendaraan harus seperti JF-01.', 'The vehicle code must look like JF-01.')); return vehPaint(); }
+    if (isNew && Q.rows.some(function (x) { return x.id === id; })) { Q.err = T(L('Kode kendaraan ini sudah dipakai.', 'This vehicle code is already used.')); return vehPaint(); }
+    if (!row.plate) { Q.err = T(L('Nomor polisi wajib diisi.', 'Plate number is required.')); return vehPaint(); }
+    if (Q.rows.some(function (x) { return x.plate === row.plate && x.id !== id; })) { Q.err = T(L('Nomor polisi ini sudah terdaftar.', 'This plate is already registered.')); return vehPaint(); }
+    if (!row.plant_id) { Q.err = T(ERR.plant); return vehPaint(); }
+    busy(true);
+    (isNew ? sb.from('vehicles').insert(Object.assign({ id: id }, row)) : sb.from('vehicles').update(row).eq('id', id)).then(function (r) {
+      busy(false);
+      if (r.error) { Q.err = T(errMsg(null, r.error.message)); return vehPaint(); }
+      CL.log(isNew ? 'MD.VEHICLE_CREATED' : 'MD.VEHICLE_UPDATED', id, { plate: row.plate, status: row.status });
+      loadVeh().then(function () { vehGo('list'); A.toast(isNew ? L('Kendaraan ditambahkan.', 'Vehicle added.') : L('Kendaraan disimpan.', 'Vehicle saved.')); });
+    }, function () { busy(false); Q.err = T(ERR.network); vehPaint(); });
+  }
+  V['MD-VEH-001'] = {
+    render: function () { return '<div id="veh-root" class="acc"></div>'; },
+    after: function () { vehPaint(); if (!Q.rows) loadVeh().then(vehPaint); }
+  };
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('#veh-root [data-v], #veh-root [data-x]'); if (!el) return;
+    var k = el.getAttribute('data-v'), id = el.getAttribute('data-id');
+    if (k === 'new') vehGo('new'); else if (k === 'edit') vehGo('edit', id); else if (k === 'back') vehGo('list');
+    else if (el.getAttribute('data-x') === 'reload') { Q.rows = null; vehPaint(); loadVeh().then(vehPaint); }
   });
 
   document.addEventListener('click', function (e) {
