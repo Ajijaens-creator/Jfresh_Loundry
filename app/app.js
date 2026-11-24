@@ -32,6 +32,7 @@
   function ic(n, cls) { return '<svg class="i' + (cls ? ' ' + cls : '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
   function R() { return AX.R || C.ROLES[S.role]; }
   function can(p) { return !p || (AX.ctx ? X.can(AX.ctx, p) : C.can(S.role, p)); }
+  function can4(id) { return !AX.ctx || X.canScreen(AX.ctx, id); }
   function mode() { return MQ_M.matches ? 'm' : (MQ_T.matches ? 't' : 'd'); }
   /* Plant / client scope (§13, §63): screens only ever see records inside the
      session's scope. The arrays hold the same objects, so edits still save. */
@@ -143,7 +144,7 @@
   }
   function chain(id) { var out = [id], p, guard = 0; while ((p = parentOf(out[0])) && guard++ < 6) { out.unshift(p); if (isRoot(p)) break; } return out; }
   function activeNav(id) {
-    if (C.screen(id).p4) return 'menu';      // profile, notifications, help: reached from the header / Lainnya
+    if (C.screen(id).p4 && !isRoot(id)) return 'menu';      // profile, notifications, help: reached from the header / Lainnya
     var ch = chain(id);
     for (var i = ch.length - 1; i >= 0; i--) {
       var hit = navItems(R()).concat(R().mnav).filter(function (n) { return n.s === ch[i] || (n.also || []).indexOf(ch[i]) >= 0; })[0];
@@ -266,7 +267,7 @@
   function meItems(sheet) {
     var ctx = AX.ctx; if (!ctx) return '';
     var cls = sheet ? 'sheet-a' : 'pop-a';
-    function a(screen, icon, label) { var on = S.screen === screen; return '<a class="' + cls + (on && sheet ? ' on' : '') + '" href="' + href(screen) + '" role="menuitem">' + (sheet ? '<span class="ni">' + ic(icon) + '</span><span class="nl">' + t(label) + '</span>' : ic(icon) + '<span>' + t(label) + '</span>') + '</a>'; }
+    function a(screen, icon, label) { if (!can4(screen)) return ''; var on = S.screen === screen; return '<a class="' + cls + (on && sheet ? ' on' : '') + '" href="' + href(screen) + '" role="menuitem">' + (sheet ? '<span class="ni">' + ic(icon) + '</span><span class="nl">' + t(label) + '</span>' : ic(icon) + '<span>' + t(label) + '</span>') + '</a>'; }
     var h = a('USER-001', 'user', L('Profil Saya', 'My Profile')) + a('NOTIF-001', 'bell', L('Notifikasi', 'Notifications'));
     if (ctx.roles.length > 1 && ctx.user.switchRole) h += a('USER-003', 'swap', L('Ganti Peran', 'Switch Role'));
     if (!ctx.client && ctx.plants.length > 1) h += a('USER-004', 'building', L('Ganti Plant', 'Switch Plant'));
@@ -354,7 +355,7 @@
       '<div class="sb-os">JFRESH <b>OS</b></div>' +
       '<nav class="sb-nav">' + r.nav.map(function (n) { return n.sub ? navGroup(n) : navLink(n, 'sb-a'); }).join('') + '</nav>' +
       '<div class="sb-foot">' +
-        '<a class="sb-a' + (S.screen === 'HELP-001' ? ' on' : '') + '" href="' + href('HELP-001') + '"><span class="ni">' + ic('help') + '</span><span class="nl">' + t(L('Bantuan', 'Help')) + '</span></a>' +
+        (can4('HELP-001') ? '<a class="sb-a' + (S.screen === 'HELP-001' ? ' on' : '') + '" href="' + href('HELP-001') + '"><span class="ni">' + ic('help') + '</span><span class="nl">' + t(L('Bantuan', 'Help')) + '</span></a>' : '') +
         '<a class="sb-a' + (S.screen === 'USER-001' ? ' on' : '') + '" href="' + href('USER-001') + '"><span class="ni">' + ic('user') + '</span><span class="nl">' + t(L('Profil', 'Profile')) + '</span></a>' +
         '<button type="button" class="sb-a" data-act="logout"><span class="ni">' + ic('logout') + '</span><span class="nl">' + t(L('Keluar', 'Sign Out')) + '</span></button>' +
       '</div>' +
@@ -386,14 +387,14 @@
       var sc = C.screen(id); return i < ch.length - 1 ? '<a href="' + href(id) + '">' + t(sc.n) + '</a>' + ic('chevr') : '<span aria-current="page">' + t(cur().title || sc.n) + '</span>';
     }).join('') + '</nav>' : '';
     var apr = (r.extra || []).some(function (n) { return n.k === 'apr'; }) && can('apr.view') ? '<a class="ib hd-apr" href="' + href('APR-INB-001') + '" aria-label="' + t(L('Persetujuan', 'Approvals')) + '" title="' + t(L('Persetujuan', 'Approvals')) + '">' + ic('filecheck') + (aprCount() ? '<b class="nb">' + aprCount() + '</b>' : '') + '</a>' : '';
-    var search = r.group === 'management' ? '<label class="hd-search hide-m hide-t">' + ic('search') + '<input type="search" placeholder="' + t(L('Cari order, klien, invoice…', 'Search orders, clients, invoices…')) + '" id="hd-q"></label>' : '';
+    var search = r.group === 'management' && !X.isCloud() ? '<label class="hd-search hide-m hide-t">' + ic('search') + '<input type="search" placeholder="' + t(L('Cari order, klien, invoice…', 'Search orders, clients, invoices…')) + '" id="hd-q"></label>' : '';
     document.getElementById('hd').innerHTML =
       '<button type="button" class="ib hd-menu hide-d hide-m" id="sb-open" aria-label="Menu">' + ic('menu') + '</button>' +
       (par && !root ? '<a class="ib hd-back" href="' + href(par) + '" aria-label="' + t(L('Kembali', 'Back')) + '">' + ic('arrowl') + '</a>' : '<img class="hd-logo hide-d hide-t" src="../assets/brand/jfresh-logo.png" alt="J\'Fresh Laundry" width="605" height="373">') +
       '<div class="hd-t">' + (crumbs ? '<div class="hide-m">' + crumbs + '</div>' : '') + '<div class="hd-title">' + t(cur().title || s.n) + '</div></div>' +
       '<span class="hd-sp"></span>' + search + apr +
       plantBtn() +
-      '<a class="ib hd-bell" href="' + href('NOTIF-001') + '" aria-label="' + t(L('Notifikasi', 'Notifications')) + (unread() ? ' · ' + unread() + ' ' + t(L('belum dibaca', 'unread')) : '') + '"' + (S.screen === 'NOTIF-001' ? ' aria-current="page"' : '') + '>' + ic('bell') + (unread() ? '<b class="nb nbc">' + (unread() > 9 ? '9+' : unread()) + '</b>' : '') + '</a>' +
+      (can4('NOTIF-001') ? '<a class="ib hd-bell" href="' + href('NOTIF-001') + '" aria-label="' + t(L('Notifikasi', 'Notifications')) + (unread() ? ' · ' + unread() + ' ' + t(L('belum dibaca', 'unread')) : '') + '"' + (S.screen === 'NOTIF-001' ? ' aria-current="page"' : '') + '>' + ic('bell') + (unread() ? '<b class="nb nbc">' + (unread() > 9 ? '9+' : unread()) + '</b>' : '') + '</a>' : '') +
       '<span class="hide-m hide-t">' + langSw() + '</span>' +
       '<button type="button" class="hd-meb" id="hd-me" aria-haspopup="menu" aria-expanded="false" aria-label="' + t(L('Menu profil', 'Profile menu')) + '"><span class="av">' + esc(r.person.charAt(0)) + '</span><span class="hide-m hide-t"><b>' + esc(r.person) + '</b><small>' + t(r.title) + '</small></span>' + ic('chevd', 'hide-m') + '</button>';
   }

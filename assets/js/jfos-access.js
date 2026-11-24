@@ -354,21 +354,30 @@
   X.nav = function (ctx, device) {
     var R = C.ROLES[ctx.exp]; if (!R) return [];
     function ok(n) { if (!n.s) return true; var sc = C.screen(n.s); return !!sc && X.can(ctx, sc.p); }
+    // Phase 5: a group (item with sub) keeps only the screens this user can open; empty groups drop out.
+    // Mode asli: HR and user admins get "Tim & Akses" (employees, accounts and roles).
+    var team = X.isCloud() ? [{ k: 'team', l: L('Tim & Akses', 'Team & Access'), i: 'users', sub: [
+      { k: 'emp', l: L('Data Karyawan', 'Employees'), i: 'idcard', s: 'USER-011' },
+      { k: 'acc', l: L('Akun & Akses', 'Accounts & Access'), i: 'shield', s: 'USER-010' }
+    ].filter(function (n) { return X.canScreen(ctx, n.s); }) }].filter(function (g) { return g.sub.length; }) : [];
+    // Mode asli shows only what already runs on real server data: Beranda + Tim & Akses.
+    // Operational modules still run on demo data in this browser, so they stay
+    // hidden until each one is connected to the server (tahap 3).
+    if (X.isCloud()) {
+      var home = { k: 'home', l: L('Beranda', 'Home'), i: 'home', s: 'USER-000' };
+      if (device === 'm') return [home].concat(team.length ? team[0].sub : []).concat([{ k: 'menu', l: L('Menu', 'Menu'), i: 'menu' }]);
+      return [home].concat(team);
+    }
     if (device === 'm') {
       var items = R.mnav.filter(ok);
       // max 5: four tasks + Lainnya (menu)
       var main = items.filter(function (n) { return n.k !== 'menu'; }).slice(0, 4), menu = items.filter(function (n) { return n.k === 'menu'; });
       return main.concat(menu);
     }
-    // Phase 5: a group (item with sub) keeps only the screens this user can open; empty groups drop out.
-    // Mode asli: HR and user admins get "Tim & Akses" (employees, accounts and roles).
-    var team = X.isCloud() && device !== 'm' ? [{ k: 'team', l: L('Tim & Akses', 'Team & Access'), i: 'users', sub: [
-      { k: 'emp', l: L('Data Karyawan', 'Employees'), i: 'idcard', s: 'USER-011' },
-      { k: 'acc', l: L('Akun & Akses', 'Accounts & Access'), i: 'shield', s: 'USER-010' }
-    ].filter(function (n) { return X.canScreen(ctx, n.s); }) }].filter(function (g) { return g.sub.length; }) : [];
     return R.nav.concat(team).map(function (n) { return n.sub ? Object.assign({}, n, { sub: n.sub.filter(ok) }) : n; }).filter(function (n) { return n.sub ? n.sub.length > 0 : ok(n); });
   };
   X.landing = function (ctx) {
+    if (X.isCloud()) return 'USER-000';
     var want = ctx.role.landing;
     if (X.canScreen(ctx, want)) return want;
     var first = ctx.nav[0]; return first ? (first.sub ? first.sub[0].s : first.s) : null;
@@ -376,6 +385,7 @@
   // Phase 4 screens join the Phase 2 screen index (registered by registerScreens)
   X.canScreen = function (ctx, id) {
     var sc = C.screen(id); if (!sc) return false;
+    if (X.isCloud() && !sc.cloud) return false;
     if (sc.p4) return sc.p4 === true || (Array.isArray(sc.p4) ? sc.p4.some(function (k) { return X.can(ctx, k); }) : X.can(ctx, sc.p4));
     return X.can(ctx, sc.p);
   };
@@ -544,6 +554,7 @@
   ];
   function seedTime(n) { var s = load(); if (!s.nseed) { s.nseed = X.now(); save(); } return s.nseed - n.ago; }
   X.notifsFor = function (ctx) {
+    if (X.isCloud()) return [];   // the sample notifications are demo data
     var reads = (load().reads[ctx.uid] || []);
     return X.NOTIFS.filter(function (n) {
       if (ctx.client) return n.to.indexOf('client') >= 0 && (!n.client || n.client === ctx.client);
@@ -572,16 +583,17 @@
 
   /* ---------- Phase 4 screens (registered into the app's screen index) ---------- */
   X.SCREENS = [
-    { id: 'USER-001', n: L('Profil Saya', 'My Profile'), a: 'T03', p4: true, icon: 'user' },
-    { id: 'USER-002', n: L('Ganti Password', 'Change Password'), a: 'T06', p4: true, icon: 'key' },
-    { id: 'USER-003', n: L('Ganti Peran', 'Switch Role'), a: 'T06', p4: true, icon: 'swap' },
-    { id: 'USER-004', n: L('Ganti Plant', 'Switch Plant'), a: 'T06', p4: true, icon: 'building' },
+    { id: 'USER-000', n: L('Beranda', 'Home'), a: 'T01', p4: true, icon: 'home', cloud: true },
+    { id: 'USER-001', n: L('Profil Saya', 'My Profile'), a: 'T03', p4: true, icon: 'user', cloud: true },
+    { id: 'USER-002', n: L('Ganti Password', 'Change Password'), a: 'T06', p4: true, icon: 'key', cloud: true },
+    { id: 'USER-003', n: L('Ganti Peran', 'Switch Role'), a: 'T06', p4: true, icon: 'swap', cloud: true },
+    { id: 'USER-004', n: L('Ganti Plant', 'Switch Plant'), a: 'T06', p4: true, icon: 'building', cloud: true },
     { id: 'NOTIF-001', n: L('Notifikasi', 'Notifications'), a: 'T02', p4: true, icon: 'bell' },
     { id: 'NOTIF-002', n: L('Detail Notifikasi', 'Notification Detail'), a: 'T03', p4: true, icon: 'bell' },
     { id: 'NOTIF-003', n: L('Pengaturan Notifikasi', 'Notification Settings'), a: 'T06', p4: true, icon: 'cog' },
     { id: 'HELP-001', n: L('Bantuan', 'Help'), a: 'T03', p4: true, icon: 'help' },
-    { id: 'USER-010', n: L('Akun & Akses', 'Accounts & Access'), a: 'T02', p4: 'sys.users', icon: 'users' },
-    { id: 'USER-011', n: L('Data Karyawan', 'Employees'), a: 'T02', p4: ['hr.manage', 'sys.users'], icon: 'idcard' }
+    { id: 'USER-010', n: L('Akun & Akses', 'Accounts & Access'), a: 'T02', p4: 'sys.users', icon: 'users', cloud: true },
+    { id: 'USER-011', n: L('Data Karyawan', 'Employees'), a: 'T02', p4: ['hr.manage', 'sys.users'], icon: 'idcard', cloud: true }
   ].map(function (s) {
     return Object.assign({ p: null, dom: 'user', lvl: 2, bf: ['BF-03'], nb: [], emp: L('Belum ada data.', 'Nothing here yet.'), err: L('Data belum berhasil dimuat. Coba lagi.', 'Could not load the data. Try again.'), warn: L('Perlu perhatian.', 'Needs attention.'), ok: L('Tersimpan.', 'Saved.') }, s);
   });

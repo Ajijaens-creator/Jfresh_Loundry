@@ -283,6 +283,7 @@
   /* ---------- Help button in the header (next to the bell) ---------- */
   function ensureButton() {
     var hd = document.getElementById('hd'); if (!hd || !cx()) return;
+    if (window.JFACCESS && window.JFACCESS.isCloud()) return;   // help content is still demo-based
     if (hd.querySelector('.hp12-hb')) return;
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'hp12-hb'; b.setAttribute('aria-haspopup', 'dialog'); b.setAttribute('aria-expanded', String(PN.open));

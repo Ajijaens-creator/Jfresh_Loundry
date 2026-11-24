@@ -17,9 +17,9 @@
 (function () {
   var A = window.JFAPP, X = window.JFACCESS, DS = window.JFDS, CL = window.JFCLOUD, V = A.V;
   var T = A.T, L = A.L, t = A.t, esc = A.esc, ic = A.ic;
-  A.addParents({ 'USER-010': [], 'USER-011': [] });
+  A.addParents({ 'USER-000': [], 'USER-010': [], 'USER-011': [] });
   if (!CL || !CL.on) {
-    ['USER-010', 'USER-011'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
+    ['USER-000', 'USER-010', 'USER-011'].forEach(function (k) { V[k] = { render: function () { return A.pageHead() + A.stateCard('empty', L('Halaman ini hanya tersedia di mode asli.', 'This page is only available in real mode.'), A.backBtn()); } }; });
     return;
   }
   var sb = CL.sb;
@@ -155,6 +155,34 @@
       E.rows = null; empGo('list'); loadEmp().then(empPaint);
     });
   }
+  /* =====================================================================
+     USER-000 Beranda (mode asli). No demo numbers: only what is real today
+     (the team and accounts) and the modules that are still being connected.
+     ===================================================================== */
+  var SOON = [
+    [L('Klien & Properti', 'Clients & Properties'), 'building'], [L('Order & Pickup', 'Orders & Pickup'), 'truck'],
+    [L('Produksi Laundry', 'Laundry Production'), 'shirt'], [L('Pengiriman', 'Delivery'), 'route'],
+    [L('Invoice & Keuangan', 'Invoices & Finance'), 'coins'], [L('Laporan', 'Reports'), 'chart']
+  ];
+  V['USER-000'] = {
+    title: function () { return L('Beranda', 'Home'); },
+    render: function () {
+      var c = A.ctx(), short = [];
+      if (X.can(c, 'hr.manage') || X.can(c, 'sys.users')) short.push(A.btn('primary', L('Data Karyawan', 'Employees'), 'idcard', { go: 'USER-011' }));
+      if (X.can(c, 'sys.users')) short.push(A.btn('ghost', L('Akun & Akses', 'Accounts & Access'), 'shield', { go: 'USER-010' }));
+      short.push(A.btn('ghost', L('Profil Saya', 'My Profile'), 'user', { go: 'USER-001' }));
+      return '<div class="acc">' +
+        '<div class="acc-r"><div class="acc-n"><h1 class="acc-hi">' + t(L('Halo, ', 'Hello, ')) + esc(c.name) + '</h1>' +
+        '<p class="acc-sub">' + t(c.role.n) + ' · ' + esc(T(X.plantName(c.plant))) + '</p></div>' +
+        '<p>' + t(L('Ini mode asli: akun dan data di sini milik J\'Fresh, bukan data contoh.', 'This is real mode: accounts and data here belong to J\'Fresh, not sample data.')) + '</p>' +
+        '<div class="acc-a">' + short.join('') + '</div></div>' +
+        '<div class="acc-r"><div class="acc-n"><h2 class="acc-hi2">' + t(L('Modul operasional', 'Operational modules')) + '</h2>' +
+        '<p class="acc-sub">' + t(L('Sedang disambungkan ke server satu per satu. Modul muncul di menu setelah siap, mulai dalam keadaan kosong.', 'Being connected to the server one by one. Each appears in the menu once ready, starting empty.')) + '</p></div>' +
+        '<ul class="acc-soon">' + SOON.map(function (m) { return '<li>' + ic(m[1]) + '<span>' + t(m[0]) + '</span><small>' + t(L('Menyusul', 'Coming')) + '</small></li>'; }).join('') + '</ul></div>' +
+        '</div>';
+    }
+  };
+
   V['USER-011'] = {
     render: function () { return '<div id="emp-root" class="acc"></div>'; },
     after: function () { empPaint(); if (!E.rows) loadEmp().then(empPaint); }
