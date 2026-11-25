@@ -825,13 +825,122 @@
       return head + '<div class="tabs scroll">' + cols.map(function (s) { return '<a href="' + href('OPS-BRD-001', null, { stage: s.k }) + '" aria-selected="' + (sel === s.k) + '">' + t(s.l) + ' <b>' + orders(s.k).length + '</b></a>'; }).join('') + '</div>' + col(A.stage(sel));
     }
   };
+  /* ---- OPS-TEAM-001 export (NP-JF-OPS-TEAM-001): same data as the screen, read-only. ---- */
+  // One source for the screen and the export, so both always match.
+  function teamData() {
+    var staff = A.db().staff.filter(function (s) { return s.st !== 'driver'; });
+    var opts = ['receive', 'sort', 'wash', 'qc', 'pack'];
+    var load = opts.map(function (k) { return { k: k, staff: staff.filter(function (s) { return s.present && s.st === k; }).length, q: orders(k).length }; });
+    var short = load.filter(function (x) { return x.q > 0 && x.q / Math.max(1, x.staff) >= 4; });
+    return { staff: staff, opts: opts, short: short, present: staff.filter(function (s) { return s.present; }).length };
+  }
+  // Demo data is saved in this browser (JFDB, key jfos-demo-v1). "Saved" = what is in memory equals what is stored.
+  // Before the first save nothing is stored yet, so then it must still equal the data as loaded.
+  var TEAM_DB0 = (function () { try { return JSON.stringify(DB.get()); } catch (e) { return null; } })();
+  function teamSaved() {
+    try {
+      var cur = JSON.stringify(DB.get()), raw = localStorage.getItem('jfos-demo-v1');
+      return raw != null ? raw === cur : cur === TEAM_DB0;
+    } catch (e) { return false; }
+  }
+  // Why export is not possible right now (null = allowed). Checked when drawing and again on click.
+  function teamBlock() {
+    if (!teamData().staff.length) return L('Tidak ada data untuk diexport.', 'No data to export.');
+    if (navigator.onLine === false) return L('Tidak ada koneksi. Export aktif lagi saat online.', 'No connection. Export returns when you are online.');
+    if (!teamSaved()) return L('Ada perubahan yang belum tersimpan. Export aktif setelah tersimpan.', 'There are unsaved changes. Export returns once they are saved.');
+    return null;
+  }
+  var TEAM_BUSY = false;
+  function teamSync() {
+    var bs = document.querySelectorAll('[data-act="teamxlsx"],[data-act="teampdf"]'); if (!bs.length) return;
+    var why = teamBlock();
+    bs.forEach(function (b) {
+      b.disabled = TEAM_BUSY || !!why;
+      if (why) { b.setAttribute('aria-disabled', 'true'); b.title = T(why); } else { b.removeAttribute('aria-disabled'); b.removeAttribute('title'); }
+    });
+  }
+  window.addEventListener('online', teamSync); window.addEventListener('offline', teamSync);
+  function teamBtn(act, label, icon) { return '<button type="button" class="btn btn-outline his-x" data-act="' + act + '">' + ic(icon) + '<span>' + t(label) + '</span></button>'; }
+  function teamReport() {
+    var d = teamData(), en = A.S.lang === 'en', c = A.ctx(), X = window.JFACCESS, now = Date.now();
+    var plant = c && X ? T(X.plantName(c.plant)) : (A.R().site || '');
+    var ymd = new Date(now), stamp = ymd.getFullYear() + String(ymd.getMonth() + 1).padStart(2, '0') + String(ymd.getDate()).padStart(2, '0');
+    return {
+      en: en,
+      title: T(L('Laporan Tugas Tim', 'Team Tasks Report')),
+      file: (en ? 'JFRESH_Team_Tasks_' : 'JFRESH_Tugas_Tim_') + String(plant).replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '') + '_' + stamp,
+      meta: [
+        [T(L('Plant', 'Plant')), plant],
+        [T(L('Shift', 'Shift')), T(L('Shift pagi', 'Morning shift'))],
+        [T(L('Staf hadir', 'Staff present')), String(d.present)],
+        [T(L('Kekurangan orang', 'Understaffed')), d.short.length ? d.short.map(function (x) { return T(A.stage(x.k).l); }).join(', ') : '—'],
+        [T(L('Waktu export', 'Exported at')), fmt.date(now) + ' ' + fmt.time(now)],
+        [T(L('Diexport oleh', 'Exported by')), (A.R().person || '') + (c && X && X.ROLES[c.roleKey] ? ' · ' + T(X.ROLES[c.roleKey].n) : '')]
+      ],
+      head: [L('Nama', 'Name'), L('Status', 'Status'), L('Stasiun', 'Station'), L('Antrian stasiun', 'Station queue'), L('Selesai hari ini', 'Done today')].map(T),
+      rows: d.staff.map(function (s) { return [s.n, T(s.present ? L('Hadir', 'Present') : L('Tidak hadir', 'Absent')), T(A.stage(s.st).l), orders(s.st).length, s.done + ' · ' + fmt.kg(s.kg)]; })
+    };
+  }
+  function teamXlsx(r) {
+    var X = window.XLSX, aoa = [['JFRESH OS'], [r.title]].concat(r.meta).concat([[], r.head]).concat(r.rows);
+    var ws = X.utils.aoa_to_sheet(aoa);   // text stays text (type s), counts stay numbers; no formulas are written
+    ws['!cols'] = [{ wch: 22 }, { wch: 16 }, { wch: 14 }, { wch: 16 }, { wch: 18 }];
+    var h = 2 + r.meta.length + 1;   // header row index (0-based)
+    ws['!autofilter'] = { ref: X.utils.encode_range({ s: { r: h, c: 0 }, e: { r: h + r.rows.length, c: 4 } }) };
+    var wb = X.utils.book_new();
+    X.utils.book_append_sheet(wb, ws, r.en ? 'Team Tasks' : 'Tugas Tim');
+    X.writeFile(wb, r.file + '.xlsx', { compression: true });
+  }
+  function teamPdf(r) {
+    return hisLogo().then(function (logo) {
+      var doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 12, TOTAL = '{total_pages_count_string}', BLUE = [7, 84, 166];
+      function header() {
+        var x = M;
+        if (logo) { var lh = 14, lw = lh * logo.w / logo.h; doc.addImage(logo.src, 'PNG', M, 8, lw, lh); x = M + lw + 5; }   // original logo, aspect ratio kept
+        doc.setTextColor(BLUE[0], BLUE[1], BLUE[2]); doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.text(r.title, x, 13);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(60, 60, 60);
+        doc.text(r.meta.slice(0, 3).map(function (m) { return m[0] + ': ' + m[1]; }).join('   |   '), x, 18.5);
+        doc.text(r.meta.slice(3).map(function (m) { return m[0] + ': ' + m[1]; }).join('   |   '), x, 23);
+        doc.setDrawColor(BLUE[0], BLUE[1], BLUE[2]); doc.setLineWidth(0.4); doc.line(M, 27, W - M, 27);
+      }
+      doc.autoTable({
+        head: [r.head], body: r.rows.map(function (x) { return x.map(String); }),
+        startY: 31, margin: { top: 31, left: M, right: M, bottom: 16 }, showHead: 'everyPage', theme: 'grid',
+        styles: { font: 'helvetica', fontSize: 9.5, cellPadding: 2.2, overflow: 'linebreak', valign: 'top' },
+        headStyles: { fillColor: BLUE, textColor: 255, fontStyle: 'bold' }, alternateRowStyles: { fillColor: [245, 248, 252] },
+        columnStyles: { 0: { cellWidth: 'auto' }, 1: { cellWidth: 40 }, 2: { cellWidth: 40 }, 3: { cellWidth: 38, halign: 'right' }, 4: { cellWidth: 45, halign: 'right' } },
+        didDrawPage: function (dp) {
+          header();
+          doc.setFontSize(8); doc.setTextColor(110, 110, 110);
+          doc.text('JFRESH OS · ' + r.title + ' · ' + r.meta[4][1], M, H - 7);
+          doc.text(T(L('Halaman ', 'Page ')) + dp.pageNumber + T(L(' dari ', ' of ')) + TOTAL, W - M, H - 7, { align: 'right' });
+        }
+      });
+      if (typeof doc.putTotalPages === 'function') doc.putTotalPages(TOTAL);
+      doc.save(r.file + '.pdf');
+    });
+  }
+  function teamExport(kind, el) {
+    if (TEAM_BUSY || !can('ops.team')) return;   // no double requests, no export without the page permission
+    var why = teamBlock();
+    if (why) { A.toast(why, 'warn'); teamSync(); return; }
+    var r = teamReport(), sp = el.querySelector('span'), lbl = sp ? sp.textContent : '';
+    TEAM_BUSY = true; teamSync(); el.setAttribute('aria-busy', 'true'); el.classList.add('busy'); if (sp) sp.textContent = T(L('Menyiapkan…', 'Preparing…'));
+    function done() { TEAM_BUSY = false; el.removeAttribute('aria-busy'); el.classList.remove('busy'); if (sp) sp.textContent = lbl; teamSync(); }
+    var V0 = '../assets/vendor/';
+    var job = kind === 'xlsx'
+      ? hisLoad(V0 + 'xlsx-0.18.5.mini.min.js').then(function () { teamXlsx(r); })
+      : hisLoad(V0 + 'jspdf-2.5.1.umd.min.js').then(function () { return hisLoad(V0 + 'jspdf-autotable-3.8.2.min.js'); }).then(function () { return teamPdf(r); });
+    job.then(function () { done(); A.toast(kind === 'xlsx' ? L('File Excel diunduh.', 'Excel file downloaded.') : L('File PDF diunduh.', 'PDF file downloaded.')); },
+      function (err) { done(); if (window.console) console.error('[OPS-TEAM-001 export]', err); A.toast(L('Export gagal. Periksa koneksi lalu coba lagi.', 'Export failed. Check your connection and try again.'), 'crit'); });
+  }
+
   V['OPS-TEAM-001'] = {
     render: function () {
-      var staff = A.db().staff.filter(function (s) { return s.st !== 'driver'; });
-      var opts = ['receive', 'sort', 'wash', 'qc', 'pack'];
-      var load = opts.map(function (k) { return { k: k, staff: staff.filter(function (s) { return s.present && s.st === k; }).length, q: orders(k).length }; });
-      var short = load.filter(function (x) { return x.q > 0 && x.q / Math.max(1, x.staff) >= 4; });
-      return A.pageHead(null, t(L(staff.filter(function (s) { return s.present; }).length + ' hadir · shift pagi', staff.filter(function (s) { return s.present; }).length + ' present · morning shift'))) +
+      var td = teamData(), staff = td.staff, opts = td.opts, short = td.short;
+      var exp = can('ops.team') ? teamBtn('teamxlsx', L('Excel', 'Excel'), 'grid') + teamBtn('teampdf', L('PDF', 'PDF'), 'file') : null;
+      return A.pageHead(null, t(L(staff.filter(function (s) { return s.present; }).length + ' hadir · shift pagi', staff.filter(function (s) { return s.present; }).length + ' present · morning shift')), exp) +
         (short.length ? '<div class="bnr warn">' + ic('alert') + '<span>' + t(L('Kekurangan orang di: ', 'Understaffed: ')) + short.map(function (x) { return t(A.stage(x.k).l); }).join(', ') + '</span></div>' : '') +
         A.list(staff, [
           { h: L('Nama', 'Name'), v: function (s) { return '<span class="who"><span class="av sm">' + esc(s.n.charAt(0)) + '</span><b>' + esc(s.n) + '</b></span>'; } },
@@ -845,6 +954,11 @@
       document.querySelectorAll('[data-staff]').forEach(function (el) {
         el.onchange = function () { var s = A.db().staff.filter(function (x) { return x.id === el.getAttribute('data-staff'); })[0]; var prev = s.st; s.st = el.value; A.audit('SYS.CHANGE', s.n, T(A.stage(prev).l), T(A.stage(s.st).l)); DB.save(); A.toast(L('Stasiun diperbarui.', 'Station updated.')); A.rerender(); };
       });
+      teamSync();
+    },
+    act: {
+      teamxlsx: function (el) { teamExport('xlsx', el); },
+      teampdf: function (el) { teamExport('pdf', el); }
     }
   };
   function issueRows() { return A.db().issues.slice().sort(function (a, b) { return (a.status === 'closed') - (b.status === 'closed') || b.at - a.at; }); }
