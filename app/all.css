@@ -1,0 +1,30 @@
+/* ALL-001 Semua Modul */
+.am-top { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin: 4px 0 16px; }
+.am-sum { font-size: 15px; color: var(--muted); }
+.am-sum b { color: var(--blue-ink); font-size: 18px; }
+.am-s { display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--white); color: var(--muted); width: min(420px, 100%); }
+.am-s:focus-within { border-color: var(--blue); }
+.am-s input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 16px; }
+.am-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; align-items: start; }
+.am-g { margin: 0; }
+.am-g > summary { cursor: pointer; list-style: none; flex-wrap: wrap; }
+.am-g > summary::-webkit-details-marker { display: none; }
+.am-g > summary h2 { flex: 1 1 auto; }
+.am-d { flex-basis: 100%; order: 3; font-size: 13px; color: var(--muted); margin-top: 2px; }
+.am-l { display: flex; flex-direction: column; padding: 4px 0; }
+.am-i { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 8px 4px; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.am-i:first-child { border-top: 0; }
+a.am-i:hover { background: var(--blue-50); }
+.am-i[hidden], .am-g[hidden] { display: none; }
+.am-t { flex: 1; min-width: 0; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; }
+.am-t b { font-size: 15.5px; font-weight: 600; color: var(--blue-ink); }
+.am-id { font-size: 12px; color: var(--muted); align-self: center; }
+.am-r { grid-column: 1 / -1; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.am-go { flex: none; width: 18px; height: 18px; color: var(--blue); }
+.am-off .am-t b { color: var(--muted); }
+.am-lock { flex: none; display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; color: var(--muted); max-width: 46%; text-align: right; }
+.am-lock svg { width: 14px; height: 14px; flex: none; }
+@media (max-width: 700px) {
+  .am-grid { grid-template-columns: 1fr; gap: 12px; }
+  .am-s { width: 100%; }
+}
