@@ -351,6 +351,7 @@
   X.can = function (ctx, perm) { return !perm || !!(ctx && ctx.perms && ctx.perms.indexOf(perm) >= 0); };
 
   /* ---------- Navigation (§29–§34): role × permission × device × plant ---------- */
+  var ALLNAV = { k: 'all', l: L('Semua Modul', 'All Modules'), i: 'grid', s: 'ALL-001' };
   X.nav = function (ctx, device) {
     var R = C.ROLES[ctx.exp]; if (!R) return [];
     function ok(n) { if (!n.s) return true; var sc = C.screen(n.s); return !!sc && X.can(ctx, sc.p); }
@@ -372,6 +373,7 @@
       ].filter(function (n) { return X.canScreen(ctx, n.s); }) }].filter(function (g) { return g.sub.length; });
       team = team.concat(md);
       var home = { k: 'home', l: L('Beranda', 'Home'), i: 'home', s: 'USER-000' };
+      if (X.isFull(ctx) && device !== 'm') team = [ALLNAV].concat(team);
       if (device === 'm') return [home].concat(team.reduce(function (a, g) { return a.concat(g.sub); }, []).slice(0, 3)).concat([{ k: 'menu', l: L('Menu', 'Menu'), i: 'menu' }]);
       return [home].concat(team);
     }
@@ -381,7 +383,9 @@
       var main = items.filter(function (n) { return n.k !== 'menu'; }).slice(0, 4), menu = items.filter(function (n) { return n.k === 'menu'; });
       return main.concat(menu);
     }
-    return R.nav.concat(team).map(function (n) { return n.sub ? Object.assign({}, n, { sub: n.sub.filter(ok) }) : n; }).filter(function (n) { return n.sub ? n.sub.length > 0 : ok(n); });
+    var list = R.nav.concat(team);
+    if (X.isFull(ctx)) list = list.slice(0, 1).concat([ALLNAV], list.slice(1));
+    return list.map(function (n) { return n.sub ? Object.assign({}, n, { sub: n.sub.filter(ok) }) : n; }).filter(function (n) { return n.sub ? n.sub.length > 0 : ok(n); });
   };
   X.landing = function (ctx) {
     if (X.isCloud()) return 'USER-000';
@@ -389,10 +393,21 @@
     if (X.canScreen(ctx, want)) return want;
     var first = ctx.nav[0]; return first ? (first.sub ? first.sub[0].s : first.s) : null;
   };
+  // Full access (owner account, profiles.full_access in mode asli). Client accounts never count as full.
+  X.isFull = function (ctx) { return !!(ctx && ctx.ok && ctx.full && !ctx.client); };
+  // A permission that at least one staff (non-client) role holds.
+  X.internalPerm = function (p) {
+    return Object.keys(X.ROLES).some(function (k) { return X.ROLES[k].group !== 'client' && X.rolePerms(k).indexOf(p) >= 0; });
+  };
   // Phase 4 screens join the Phase 2 screen index (registered by registerScreens)
   X.canScreen = function (ctx, id) {
     var sc = C.screen(id); if (!sc) return false;
     if (X.isCloud() && !sc.cloud) return false;
+    if (id === 'ALL-001') return X.isFull(ctx);
+    // Semua Modul: a full-access account may OPEN every internal screen to look at it.
+    // Actions inside a screen still check their own permission, so this grants no new action.
+    // Client portal screens stay with client accounts (they need a client to show data).
+    if (X.isFull(ctx) && !sc.p4 && sc.p && X.internalPerm(sc.p)) return true;
     if (sc.p4) return sc.p4 === true || (Array.isArray(sc.p4) ? sc.p4.some(function (k) { return X.can(ctx, k); }) : X.can(ctx, sc.p4));
     return X.can(ctx, sc.p);
   };
@@ -604,7 +619,8 @@
     { id: 'MD-PLT-001', n: L('Plant', 'Plants'), a: 'T02', p4: 'sys.master', icon: 'building', cloud: true },
     { id: 'MD-CLT-001', n: L('Klien & Properti', 'Clients & Properties'), a: 'T02', p4: 'sys.master', icon: 'hotel', cloud: true },
     { id: 'MD-SVC-001', n: L('Layanan & Harga', 'Services & Prices'), a: 'T02', p4: 'sys.master', icon: 'tag', cloud: true },
-    { id: 'MD-VEH-001', n: L('Kendaraan', 'Vehicles'), a: 'T02', p4: 'sys.master', icon: 'truck', cloud: true }
+    { id: 'MD-VEH-001', n: L('Kendaraan', 'Vehicles'), a: 'T02', p4: 'sys.master', icon: 'truck', cloud: true },
+    { id: 'ALL-001', n: L('Semua Modul', 'All Modules'), a: 'T02', p4: 'all.modules', icon: 'grid', cloud: true }
   ].map(function (s) {
     return Object.assign({ p: null, dom: 'user', lvl: 2, bf: ['BF-03'], nb: [], emp: L('Belum ada data.', 'Nothing here yet.'), err: L('Data belum berhasil dimuat. Coba lagi.', 'Could not load the data. Try again.'), warn: L('Perlu perhatian.', 'Needs attention.'), ok: L('Tersimpan.', 'Saved.') }, s);
   });
